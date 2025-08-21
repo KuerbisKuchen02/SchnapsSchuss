@@ -2,8 +2,52 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
              x:Class="SchnapsSchuss.Views.CashRegisterPage">
+
+    <ContentPage.BindingContext>
+        <vm:CashRegisterViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
-        
+        <ScrollView>
+            <VerticalStackLayout Margin="20" Spacing="20">
+                
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
+                    <!-- Back Button -->
+                    <Button Grid.Column="0" Text="Zurück" />
+                    
+                    <!-- Customer Name Label -->
+                    <Label
+                        Grid.Column="1"
+                        Text="{Binding PersonLabel}"
+                        HorizontalTextAlignment="Center"
+                        Style="{StaticResource Headline}"
+                        MaxLines="1"
+                        LineBreakMode="TailTruncation" 
+                    />
+                </Grid>
+
+                <FlexLayout JustifyContent="SpaceBetween">
+                    <!-- Purchased Articles Table -->
+                    <Grid>
+                        
+                    </Grid>
+
+                    <!-- Current Article Options -->
+                    <CollectionView>
+                        
+                    </CollectionView>
+                    <VerticalStackLayout Spacing="10">
+                        <Button Text="Getränke" HeightRequest="100" WidthRequest="100" />
+                        <Button Text="Gerichte" HeightRequest="100" WidthRequest="100" />
+                        <Button Text="Munition" HeightRequest="100" WidthRequest="100" />
+                        <Button Text="Disziplin" HeightRequest="100" WidthRequest="100" />
+                        <Button Text="Sonstiges" HeightRequest="100" WidthRequest="100" />
+                    </VerticalStackLayout>
+                </FlexLayout>
+                <Button Text="Bezahlen" />
+            </VerticalStackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

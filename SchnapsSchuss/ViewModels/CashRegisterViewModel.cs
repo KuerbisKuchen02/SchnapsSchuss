@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
 
@@ -8,44 +9,132 @@ public class CashRegisterViewModel : BaseViewModel
 {
     private InvoiceDatabase _invoiceDb;
     private ArticleDatabase _articleDb;
-    
-    // All Articles as an Observable Collection
-    public ObservableCollection<Article> Articles { get; } = new ObservableCollection<Article>();
-    
-    // Current Invoice
-    private Invoice _invoice;
 
+    public ObservableCollection<Article> AllArticles { get; } = new ObservableCollection<Article>();
+    public ObservableCollection<Article> FilteredArticles { get; set; } = new ObservableCollection<Article>();
+
+    // Current Person
+    private Person _Person;
+    public Person Person
+    {
+        get => _Person;
+        set => SetProperty(ref _Person, value);
+    }
+
+    public string PersonLabel => $"Person - {_Invoice.Person.FirstName} {_Person.LastName}";
+
+    // Current Invoice
+    private Invoice _Invoice;
     public Invoice Invoice
     {
-        get => _invoice;
-        set =>  SetProperty(ref _invoice, value);
+        get => _Invoice;
+        set => SetProperty(ref _Invoice, value);
     }
-    
-    public CashRegisterViewModel(Person person)
+
+    // Current ArticleType used for filtering
+    private ArticleType _curArticleType;
+    public ArticleType CurArticleType
     {
+        get => _curArticleType;
+        set => SetProperty(ref _curArticleType, value);
+    }
+
+    // Commands for UI Buttons
+    public ICommand AddArticleCommand { get; }
+    public ICommand FilterArticlesCommand { get; }
+
+    public CashRegisterViewModel()
+    {
+        // TODO: Remove hardcoded Person:
+        _Person = new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth = new DateTime(0) };
+
         _articleDb = new ArticleDatabase();
         _invoiceDb = new InvoiceDatabase();
-        
-        // TODO: Load Invoice here
+
         InitAsync();
+
+        AddArticleCommand = new Command<Article>(AddArticleToInvoice);
+        FilterArticlesCommand = new Command<ArticleType>(FilterArticlesByType);
+
+        FilterArticlesByType(ArticleType.DRINK);  // Default category is always Drink
     }
 
     private async Task InitAsync()
     {
         await LoadArticlesAsync();
+        await LoadInvoiceAsync();
     }
 
     private async Task LoadArticlesAsync()
     {
-        var articles = await _articleDb.GetArticlesAsync();
+        List<Article> articles = await _articleDb.GetArticlesAsync();
         foreach (var article in articles)
-            Articles.Add(article);
+            AllArticles.Add(article);
     }
 
-    private void addArticleToInvoice(Article article)
+    private async Task LoadInvoiceAsync()
     {
-        InvoiceItem invoiceItem = new InvoiceItem();
-        
-        // _invoice.invoiceItems.Add();
+        List<Invoice> openInvoices = await _invoiceDb.GetInvoicesAsync();
+        openInvoices = openInvoices.Where(i => i.isPaidFor == false).ToList();
+
+        // If there is an open Invoice, show it. If not, create a new Invoice.
+        if (openInvoices.Count() == 1) _Invoice = openInvoices[0];
+        else if (openInvoices.Count == 0)
+        {
+            _Invoice = new Invoice
+            {
+                Date = DateTime.Now,
+                isPaidFor = false,
+                invoiceItems = new List<InvoiceItem>()
+            };
+        }
+    }
+
+    private void AddArticleToInvoice(Article article)
+    {
+        // To add articles to an invoice, first check if the article is alreay contained in the invoice.
+        InvoiceItem ExistingInvoiceItem = _Invoice.invoiceItems
+            .FirstOrDefault(i => i.Article.Id == article.Id);
+
+        // Article already exists. Just increase the amount and re-calculate the price.
+        if (ExistingInvoiceItem != null)
+        {
+            ExistingInvoiceItem.Amount++;
+            ExistingInvoiceItem.TotalPrice = ExistingInvoiceItem.Amount * article.PriceMember;
+        }
+        else
+        // Article new, create a new InvoiceItem with the article.
+        {
+            InvoiceItem newItem = new InvoiceItem
+            {
+                Article = article,
+                Amount = 1,
+                TotalPrice = article.PriceMember
+            };
+            _Invoice.invoiceItems.Add(newItem);
+        }
+    }
+
+    private void FilterArticlesByType(ArticleType articleType)
+    {
+        CurArticleType = articleType;
+        var filtered = AllArticles.Where(a => a.Type == articleType).ToList();
+
+        // Reset the FilteredArticles and repopulate it according to the ArticleType
+        FilteredArticles.Clear();
+        foreach (var article in filtered)
+        {
+            FilteredArticles.Add(article);
+        }
+    }
+
+    private void PayInvoice()
+    {
+        _Invoice.isPaidFor = true;
+    }
+
+    public void CloseView()
+    {
+        _invoiceDb.SaveInvoiceAsync(_Invoice);
     }
 }
