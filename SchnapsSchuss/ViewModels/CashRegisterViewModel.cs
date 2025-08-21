@@ -41,6 +41,10 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         set => SetProperty(ref _invoice, value);
     }
 
+    // Total is calculated by aggregating InvoiceItems
+    public float InvoiceTotal => InvoiceItems.Sum(i => i.TotalPrice);
+
+
     private ObservableCollection<InvoiceItem> _invoiceItems;
 
     public ObservableCollection<InvoiceItem> InvoiceItems
@@ -164,6 +168,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
             InvoiceItems.Add(newItem);
             //OnPropertyChanged(nameof(Invoice));
         }
+        OnPropertyChanged(nameof(InvoiceTotal));
     }
 
     private void FilterArticlesByType(ArticleType articleType)

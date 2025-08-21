@@ -31,21 +31,23 @@
                 </Grid>
 
                 <!-- Main Part -->
-                <FlexLayout JustifyContent="SpaceBetween" Direction="Column">
-                    <!-- Purchased Articles Table -->
-                    <ContentView>
-                        <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
-                                <Label Text="Name"  Grid.Column="0" />
-                                <Label Text="Menge" Grid.Column="1" />
-                                <Label Text="Preis" Grid.Column="2" />
+                <Grid ColumnDefinitions="2*,6*,2*">
+                    <!-- Left Column: Purchased Articles with border -->
+                    <Border Grid.Column="0" Stroke="Gray" StrokeThickness="2" Padding="10" Margin="0,0,10,0">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <!-- Header Row -->
+                            <Grid ColumnDefinitions="*,Auto,Auto" Grid.Row="0">
+                                <Label Text="Name"  Grid.Column="0" FontAttributes="Bold" />
+                                <Label Text="Menge" Grid.Column="1" FontAttributes="Bold" />
+                                <Label Text="Preis" Grid.Column="2" FontAttributes="Bold" />
+                                <!-- Bottom border for header -->
+                                <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="3" VerticalOptions="End"/>
                             </Grid>
-                            <CollectionView ItemsSource="{Binding InvoiceItems}">
+
+                            <!-- Invoice Items Collection -->
+                            <CollectionView ItemsSource="{Binding InvoiceItems}" Grid.Row="1">
                                 <CollectionView.ItemsLayout>
-                                    <LinearItemsLayout
-                                        Orientation="Vertical"
-                                        ItemSpacing="15"
-                                    />          
+                                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
@@ -57,30 +59,54 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
-                        </VerticalStackLayout>
-                    </ContentView>
 
-                    <!-- Current Article Options -->
-                    <CollectionView ItemsSource="{Binding FilteredArticles}">
+                            <!-- Total Row pinned at bottom with top border -->
+                            <Grid ColumnDefinitions="*,Auto" Grid.Row="2" Padding="0,10,0,0">
+                                <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="2" VerticalOptions="Start"/>
+                                <Label Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" Margin="0,5,0,0"/>
+                                <Label Text="{Binding InvoiceTotal}" FontAttributes="Bold" Grid.Column="1" Margin="0,5,0,0"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Middle Column: Article Buttons with gaps -->
+                    <CollectionView Grid.Column="1" ItemsSource="{Binding FilteredArticles}">
                         <CollectionView.ItemsLayout>
-                            <!-- Span = number of columns -->
-                            <GridItemsLayout Orientation="Vertical" Span="4" />
+                            <!-- span = number of buttons per row -->
+                            <GridItemsLayout Orientation="Vertical" Span="3" />
                         </CollectionView.ItemsLayout>
-                        
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Button Text="{Binding Name}"  Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}" CommandParameter="{Binding .}" />
+                                <!-- Button fills its cell with margin for spacing -->
+                                <Button Text="{Binding Name}" 
+                        Margin="5"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill"
+                        Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}" 
+                        CommandParameter="{Binding .}" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <VerticalStackLayout Spacing="10">
-                        <Button Text="Getränke" HeightRequest="100" WidthRequest="100" Command="{Binding FilterArticlesCommand}" CommandParameter="{x:Static entities:ArticleType.DRINK}" />
-                        <Button Text="Gerichte" HeightRequest="100" WidthRequest="100" Command="{Binding FilterArticlesCommand}" CommandParameter="{x:Static entities:ArticleType.FOOD}" />
-                        <Button Text="Munition" HeightRequest="100" WidthRequest="100" Command="{Binding FilterArticlesCommand}" CommandParameter="{x:Static entities:ArticleType.MUNITION}" />
-                        <Button Text="Disziplin" HeightRequest="100" WidthRequest="100" Command="{Binding FilterArticlesCommand}" CommandParameter="{x:Static entities:ArticleType.DISCIPLINE}" />
-                        <Button Text="Sonstiges" HeightRequest="100" WidthRequest="100" Command="{Binding FilterArticlesCommand}" CommandParameter="{x:Static entities:ArticleType.OTHER}" />
+
+                    <!-- Right Column: Categories -->
+                    <VerticalStackLayout Grid.Column="2" Spacing="10" HorizontalOptions="End" VerticalOptions="Start">
+                        <Button Text="Getränke" HeightRequest="100" WidthRequest="120"
+                Command="{Binding FilterArticlesCommand}" 
+                CommandParameter="{x:Static entities:ArticleType.DRINK}" />
+                        <Button Text="Gerichte" HeightRequest="100" WidthRequest="120"
+                Command="{Binding FilterArticlesCommand}" 
+                CommandParameter="{x:Static entities:ArticleType.FOOD}" />
+                        <Button Text="Munition" HeightRequest="100" WidthRequest="120"
+                Command="{Binding FilterArticlesCommand}" 
+                CommandParameter="{x:Static entities:ArticleType.MUNITION}" />
+                        <Button Text="Disziplin" HeightRequest="100" WidthRequest="120"
+                Command="{Binding FilterArticlesCommand}" 
+                CommandParameter="{x:Static entities:ArticleType.DISCIPLINE}" />
+                        <Button Text="Sonstiges" HeightRequest="100" WidthRequest="120"
+                Command="{Binding FilterArticlesCommand}" 
+                CommandParameter="{x:Static entities:ArticleType.OTHER}" />
                     </VerticalStackLayout>
-                </FlexLayout>
+                </Grid>
                 <Button Text="Bezahlen" Command="{Binding PayInvoiceCommand}" />
             </VerticalStackLayout>
         </ScrollView>
