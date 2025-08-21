@@ -36,12 +36,12 @@ namespace SchnapsSchuss.ViewModels
         }
 
 
-        public GunOwnershipPopUpViewModel()
+        public GunOwnershipPopUpViewModel(Person Person)
         {
             CloseCommand = new Command(async () => await OnOkayClicked());
-            
+
             // TODO: Remove hardcoded Person:
-            _person = new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth = new DateTime(0), OwnsGunOwnershipCard=false };
+            this._person = Person;
             setLabelTextAndColor();
         }
 

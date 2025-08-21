@@ -6,9 +6,6 @@
            xmlns:views="clr-namespace:SchnapsSchuss.Views"
            x:Class="SchnapsSchuss.Views.GunOwnershipPopUp"
            x:TypeArguments="system:String">
-    <mct:Popup.BindingContext>
-        <vm:GunOwnershipPopUpViewModel />
-    </mct:Popup.BindingContext>
 
     <mct:Popup.Resources>
         <Style TargetType="{x:Type views:GunOwnershipPopUp}">

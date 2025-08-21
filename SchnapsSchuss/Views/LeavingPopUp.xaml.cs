@@ -5,10 +5,11 @@ namespace SchnapsSchuss.Views;
 
 public partial class LeavingPopUp : Popup<string>
 {
-    public LeavingPopUp()
+    public LeavingPopUp(LeavingPopUpViewModel viewModel)
     {
+        BindingContext = viewModel;
         InitializeComponent();
-
+        
         Opened += HandlePopupOpened;
     }
 
