@@ -2,7 +2,13 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
              x:Class="SchnapsSchuss.Views.CashRegisterPage">
+
+    <ContentPage.BindingContext>
+        <vm:CashRegisterViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Margin="20" Spacing="20">
@@ -14,7 +20,7 @@
                     <!-- Customer Name Label -->
                     <Label
                         Grid.Column="1"
-                        Text="Gast - Gottfried ☆*: .｡. o(≧▽≦)o .｡.:*☆"
+                        Text="{Binding PersonLabel}"
                         HorizontalTextAlignment="Center"
                         Style="{StaticResource Headline}"
                         MaxLines="1"

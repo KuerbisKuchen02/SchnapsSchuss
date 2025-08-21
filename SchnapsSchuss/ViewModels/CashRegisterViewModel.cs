@@ -21,6 +21,8 @@ public class CashRegisterViewModel : BaseViewModel
         set => SetProperty(ref _Person, value);
     }
 
+    public string PersonLabel => $"Person - {_Invoice.Person.FirstName} {_Person.LastName}";
+
     // Current Invoice
     private Invoice _Invoice;
     public Invoice Invoice
@@ -41,9 +43,10 @@ public class CashRegisterViewModel : BaseViewModel
     public ICommand AddArticleCommand { get; }
     public ICommand FilterArticlesCommand { get; }
 
-    public CashRegisterViewModel(Person person)
+    public CashRegisterViewModel()
     {
-        _Person = person;
+        // TODO: Remove hardcoded Person:
+        _Person = new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth = new DateTime(0) };
 
         _articleDb = new ArticleDatabase();
         _invoiceDb = new InvoiceDatabase();
