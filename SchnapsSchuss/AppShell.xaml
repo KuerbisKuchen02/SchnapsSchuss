@@ -6,8 +6,10 @@
     xmlns:local="clr-namespace:SchnapsSchuss.Views"
     Title="SchnapsSchuss">
 
-    <ShellContent
-        ContentTemplate="{DataTemplate local:HomePage}"
-        Route="LoginPage" />
+    <ShellContent ContentTemplate="{DataTemplate local:HomePage}" Route="HomePage" />
+    <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" Route="LoginPage" />
+    <ShellContent ContentTemplate="{DataTemplate local:CrudPage}" Route="CrudePage" />
+    <ShellContent ContentTemplate="{DataTemplate local:CashRegisterPage}" Route="CashRegisterPage" />
+    <ShellContent ContentTemplate="{DataTemplate local:AdminPage}" Route="AdminPage" />
 
 </Shell>

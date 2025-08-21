@@ -1,6 +1,8 @@
 using SchnapsSchuss.Models.Entities;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using SchnapsSchuss.Views;
 namespace SchnapsSchuss.ViewModels;
 
 public class HomePageViewModel : BaseViewModel
@@ -25,12 +27,12 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnManageButtonClicked()
     {
-     
+        Shell.Current.GoToAsync(nameof(AdminPage));
     }
 
     private void OnLogOffButtonClicked()
     {
-
+        Shell.Current.GoToAsync(nameof(LoginPage));
     }
 
     private void OnAddPersonButtonClick()

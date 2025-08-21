@@ -31,8 +31,8 @@
                         <FlexLayout Direction="Row" AlignItems="Center" JustifyContent="SpaceBetween">
                             <Label Text="{Binding FirstName}" VerticalOptions="Center" />
                             <Label Text="{Binding LastName}" VerticalOptions="Center" />
-                            <Label Text="Total:" />
-                            <Button Text="Gehen" />
+                            <Label Text="Total:"/>
+                            <Button Text="Gehen"/>
                             <Button Text="Buchen" />
                         </FlexLayout>
                         
