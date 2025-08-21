@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp2.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="25">
+            <FlexLayout
+                Direction="Row" 
+                JustifyContent="SpaceBetween" 
+                AlignItems="Center">
+                <Button Text="Verwalten"></Button>
+                <Button Text="Abmelden" FlexLayout.AlignSelf="End"></Button>
+            </FlexLayout>
+            <CollectionView ItemsSource="{Binding Person}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <FlexLayout Direction="Row" AlignItems="Center" JustifyContent="SpaceBetween" Margin="0,5">
+                            <Label Text="{Binding Person.name}" VerticalOptions="Center" />
+
+                            <FlexLayout Direction="Row" AlignItems="Center">
+                                <Label Text="Total: + {Binding Rechnung.total}"/>
+                                <Button Text="Gehen" Command="{Binding Aktion1Command}" />
+                                <Button Text="Buchen" Command="{Binding Aktion2Command}" />
+                            </FlexLayout>
+                        </FlexLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

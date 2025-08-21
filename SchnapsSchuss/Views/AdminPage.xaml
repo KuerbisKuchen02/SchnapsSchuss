@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SchnapsSchuss.Views.AdminPage">
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid
+                Padding="80,0"
+                VerticalOptions="Center"
+                RowSpacing="20"
+                ColumnSpacing="20"
+            >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="0" Text="Getränke" />
+                <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="1" Text="Gerichte" />
+                <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="2" Text="Disziplinen" />
+                <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="0" Text="Munition" />
+                <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="1" Text="Mitglieder" />
+                <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="2" Text="Sonstiges" />
+            </Grid>
+        </ScrollView>  
+    </ContentPage.Content>
+</ContentPage>

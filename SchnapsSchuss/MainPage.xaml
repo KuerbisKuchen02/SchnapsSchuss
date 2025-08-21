@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SchnapsSchuss.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="80,0"
+            VerticalOptions="Center"
+            Spacing="25"
+        >
+            <Label
+                Text="SchnapsSchuss"
+                Style="{StaticResource Headline}"
+            />
+            <Image
+                Source="schnaps_schuss_logo.png"
+                Aspect="AspectFit"
+                HeightRequest="200"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+            />
+         
+            <Label Text="Benutzername" />
+            <Entry />
+
+            <Label Text="Password" />
+            <Entry IsPassword="true"/>
+
+            <Button Text="Anmelden" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
