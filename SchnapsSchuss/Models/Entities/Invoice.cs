@@ -17,5 +17,5 @@ public class Invoice
     public Person Person { get; set; }
     
     [OneToMany(CascadeOperations = CascadeOperation.All)]
-    public List<InvoiceItem> invoiceItems { get; set; }
+    public List<InvoiceItem> InvoiceItems { get; set; }
 }
