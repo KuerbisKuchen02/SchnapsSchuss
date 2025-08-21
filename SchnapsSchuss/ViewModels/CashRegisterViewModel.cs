@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows.Input;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
@@ -17,7 +16,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     public ObservableCollection<Article> FilteredArticles { get; set; } = [
         ];
 
-    public string PersonLabel => $"Person - {_Invoice.Person.FirstName} {_Invoice.Person.LastName}";
+    public string PersonLabel => $"Person - {Invoice.Person.FirstName} {Invoice.Person.LastName}";
 
     // Person
     private Person _person;
@@ -29,12 +28,20 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     }
 
     // Current Invoice
-    private Invoice _Invoice;
+    private Invoice _invoice;
 
     public Invoice Invoice
     {
-        get => _Invoice;
-        set => SetProperty(ref _Invoice, value);
+        get => _invoice;
+        set => SetProperty(ref _invoice, value);
+    }
+
+    private ObservableCollection<InvoiceItem> _invoiceItems;
+
+    public ObservableCollection<InvoiceItem> InvoiceItems
+    {
+        get => _invoiceItems ??= new ObservableCollection<InvoiceItem>(_invoice.InvoiceItems);
+        set => SetProperty(ref _invoiceItems, value);
     }
 
     // Current ArticleType used for filtering
@@ -57,7 +64,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         _invoiceDb = new InvoiceDatabase();
 
         // Test Invoice for testing purposes
-        _Invoice = new()
+        Invoice = new()
         {
             Date = DateTime.Now,
             isPaidFor = false,
@@ -115,10 +122,10 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         openInvoices = openInvoices.Where(i => i.isPaidFor == false && i.PersonId == personId).ToList();
 
         // If there is an open Invoice, show it. If not, create a new Invoice.
-        if (openInvoices.Count() == 1) _Invoice = openInvoices[0];
+        if (openInvoices.Count() == 1) Invoice = openInvoices[0];
         else if (openInvoices.Count == 0)
         {
-            _Invoice = new Invoice
+            Invoice = new Invoice
             {
                 Date = DateTime.Now,
                 isPaidFor = false,
@@ -130,7 +137,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     private void AddArticleToInvoice(Article article)
     {
         // To add articles to an invoice, first check if the article is alreay contained in the invoice.
-        InvoiceItem ExistingInvoiceItem = _Invoice.InvoiceItems
+        InvoiceItem ExistingInvoiceItem = InvoiceItems
             .FirstOrDefault(i => i.Article.Id == article.Id);
 
         // Article already exists. Just increase the amount and re-calculate the price.
@@ -138,6 +145,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         {
             ExistingInvoiceItem.Amount++;
             ExistingInvoiceItem.TotalPrice = ExistingInvoiceItem.Amount * article.PriceMember;
+            OnPropertyChanged(nameof(ExistingInvoiceItem.Amount));
         }
         else
         // Article new, create a new InvoiceItem with the article.
@@ -148,8 +156,8 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
                 Amount = 1,
                 TotalPrice = article.PriceMember
             };
-            _Invoice.InvoiceItems.Add(newItem);
-            OnPropertyChanged(nameof(Invoice));
+            InvoiceItems.Add(newItem);
+            //OnPropertyChanged(nameof(Invoice));
         }
     }
 
@@ -168,14 +176,14 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 
     public void PayInvoice()
     {
-        _Invoice.isPaidFor = true;
+        Invoice.isPaidFor = true;
 
         CloseView();
     }
 
     public void CloseView()
     {
-        _invoiceDb.SaveInvoiceAsync(_Invoice);
+        _invoiceDb.SaveInvoiceAsync(Invoice);
 
         Shell.Current.GoToAsync(nameof(HomePage));
     }

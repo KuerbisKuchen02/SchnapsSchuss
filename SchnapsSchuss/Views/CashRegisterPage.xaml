@@ -40,7 +40,7 @@
                                 <Label Text="Menge" Grid.Column="1" />
                                 <Label Text="Preis" Grid.Column="2" />
                             </Grid>
-                            <CollectionView ItemsSource="{Binding Invoice.InvoiceItems}">
+                            <CollectionView ItemsSource="{Binding InvoiceItems}">
                                 <CollectionView.ItemsLayout>
                                     <LinearItemsLayout
                                         Orientation="Vertical"
