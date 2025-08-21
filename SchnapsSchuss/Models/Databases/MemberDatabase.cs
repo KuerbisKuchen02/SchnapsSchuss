@@ -35,12 +35,19 @@ public class MemberDatabase
         return await database.Table<Member>().ToListAsync();
     }
 
-    public async Task<Member> GetMemberAsync(int id)
+    public async Task<Member> GetMemberAsync(int Id)
     {
         await Init();
-        return await database.Table<Member>().Where(m => m.PersonId == id).FirstOrDefaultAsync();
+        return await database.Table<Member>().Where(m => m.PersonId == Id).FirstOrDefaultAsync();
     }
-    
+
+    public async Task<int> CheckIfUserExists(string Username, string Password)
+    {
+        await Init();
+        return await database.Table<Member>().Where(m => m.Username == Username && m.Password == Password).CountAsync();
+    }
+
+
     public async Task<int> SaveMemberAsync(Member member)
     {
         await Init();

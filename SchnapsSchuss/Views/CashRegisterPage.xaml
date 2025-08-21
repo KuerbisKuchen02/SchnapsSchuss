@@ -2,7 +2,13 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
              x:Class="SchnapsSchuss.Views.CashRegisterPage">
+
+    <ContentPage.BindingContext>
+        <vm:CashRegisterViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Margin="20" Spacing="20">
@@ -14,7 +20,7 @@
                     <!-- Customer Name Label -->
                     <Label
                         Grid.Column="1"
-                        Text="Gast - Gottfried ☆*: .｡. o(≧▽≦)o .｡.:*☆"
+                        Text="{Binding PersonLabel}"
                         HorizontalTextAlignment="Center"
                         Style="{StaticResource Headline}"
                         MaxLines="1"
@@ -22,15 +28,48 @@
                     />
                 </Grid>
 
-                <FlexLayout JustifyContent="SpaceBetween">
-                    <!-- Ordered Articles Table -->
-                    <Grid>
-                        
-                    </Grid>
+                <!-- Main Part -->
+                <FlexLayout JustifyContent="SpaceBetween" Direction="Column">
+                    <!-- Purchased Articles Table -->
+                    <ContentView>
+                        <VerticalStackLayout>
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                                <Label Text="Name"  Grid.Column="0" />
+                                <Label Text="Menge" Grid.Column="1" />
+                                <Label Text="Preis" Grid.Column="2" />
+                            </Grid>
+                            <CollectionView ItemsSource="{Binding Invoice.InvoiceItems}">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout
+                                        Orientation="Vertical"
+                                        ItemSpacing="15"
+                                    />          
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                                            <Label Text="{Binding Article.Name}" Grid.Column="0" />
+                                            <Label Text="{Binding Amount}" Grid.Column="1" />
+                                            <Label Text="{Binding TotalPrice}" Grid.Column="2" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </ContentView>
 
                     <!-- Current Article Options -->
-                    <CollectionView>
+                    <CollectionView ItemsSource="{Binding FilteredArticles}">
+                        <CollectionView.ItemsLayout>
+                            <!-- Span = number of columns -->
+                            <GridItemsLayout Orientation="Vertical" Span="4" />
+                        </CollectionView.ItemsLayout>
                         
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Button Text="{Binding Name}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
                     </CollectionView>
                     <VerticalStackLayout Spacing="10">
                         <Button Text="Getränke" HeightRequest="100" WidthRequest="100" />
