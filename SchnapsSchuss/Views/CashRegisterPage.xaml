@@ -29,7 +29,7 @@
                 </Grid>
 
                 <FlexLayout JustifyContent="SpaceBetween">
-                    <!-- Ordered Articles Table -->
+                    <!-- Purchased Articles Table -->
                     <Grid>
                         
                     </Grid>

@@ -85,8 +85,6 @@ public class CashRegisterViewModel : BaseViewModel
             {
                 Date = DateTime.Now,
                 isPaidFor = false,
-                Person = _Person,
-                PersonId = _Person.Id,
                 invoiceItems = new List<InvoiceItem>()
             };
         }
