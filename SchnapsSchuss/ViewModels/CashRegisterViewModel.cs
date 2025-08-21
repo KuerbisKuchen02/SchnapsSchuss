@@ -13,14 +13,6 @@ public class CashRegisterViewModel : BaseViewModel
     public ObservableCollection<Article> AllArticles { get; } = new ObservableCollection<Article>();
     public ObservableCollection<Article> FilteredArticles { get; set; } = new ObservableCollection<Article>();
 
-    // Current Person
-    private Person _Person;
-    public Person Person
-    {
-        get => _Person;
-        set => SetProperty(ref _Person, value);
-    }
-
     // Current Invoice
     private Invoice _Invoice;
     public Invoice Invoice
@@ -43,8 +35,6 @@ public class CashRegisterViewModel : BaseViewModel
 
     public CashRegisterViewModel(Person person)
     {
-        _Person = person;
-
         _articleDb = new ArticleDatabase();
         _invoiceDb = new InvoiceDatabase();
 
@@ -82,8 +72,6 @@ public class CashRegisterViewModel : BaseViewModel
             {
                 Date = DateTime.Now,
                 isPaidFor = false,
-                Person = _Person,
-                PersonId = _Person.Id,
                 invoiceItems = new List<InvoiceItem>()
             };
         }

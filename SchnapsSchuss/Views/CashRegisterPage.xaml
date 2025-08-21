@@ -14,7 +14,7 @@
                     <!-- Customer Name Label -->
                     <Label
                         Grid.Column="1"
-                        Text="Gast - Gottfried ☆*: .｡. o(≧▽≦)o .｡.:*☆"
+                        Text=""
                         HorizontalTextAlignment="Center"
                         Style="{StaticResource Headline}"
                         MaxLines="1"
@@ -23,7 +23,7 @@
                 </Grid>
 
                 <FlexLayout JustifyContent="SpaceBetween">
-                    <!-- Ordered Articles Table -->
+                    <!-- Purchased Articles Table -->
                     <Grid>
                         
                     </Grid>
