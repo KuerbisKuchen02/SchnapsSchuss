@@ -1,14 +1,32 @@
+using System.Reflection;
+using SchnapsSchuss.ViewModels;
+
 namespace SchnapsSchuss.Views;
 
 public class GenericTableView<T> : ContentView
 {
-    public static readonly BindableProperty ItemsSourceProperty =
-        BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable<T>), typeof(GenericTableView<T>), null, propertyChanged: OnItemsSourceChanged);
 
+    private CrudViewModel<T> _viewModel;
+    
+    // ReSharper disable once MemberCanBePrivate.Global
+    public static readonly BindableProperty ItemsSourceProperty =
+        BindableProperty.Create(
+            nameof(ItemsSource), 
+            typeof(IEnumerable<T>), 
+            typeof(GenericTableView<T>), 
+            null, 
+            propertyChanged: OnItemsSourceChanged);
+
+    public GenericTableView(CrudViewModel<T> viewModel)
+    {
+        _viewModel = viewModel;
+        BindingContext = viewModel;
+    }
+    
     public IEnumerable<T> ItemsSource
     {
         get => (IEnumerable<T>)GetValue(ItemsSourceProperty);
-        set => SetValue(ItemsSourceProperty, value);
+        init => SetValue(ItemsSourceProperty, value);
     }
 
     private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
@@ -21,7 +39,8 @@ public class GenericTableView<T> : ContentView
 
     private void BuildTable()
     {
-        var properties = typeof(T).GetProperties();
+        var properties = typeof(T).GetProperties()
+            .Where(property => _viewModel.ShownColumnNames.Contains(property.Name)).ToArray();
 
         var grid = new Grid
         {

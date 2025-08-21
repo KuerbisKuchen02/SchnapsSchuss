@@ -1,7 +1,9 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
+using SchnapsSchuss.Views;
 
 namespace SchnapsSchuss.ViewModels;
 
@@ -19,6 +21,7 @@ public class CashRegisterViewModel : BaseViewModel
 
     // Current Invoice
     private Invoice _Invoice;
+
     public Invoice Invoice
     {
         get => _Invoice;
@@ -34,8 +37,10 @@ public class CashRegisterViewModel : BaseViewModel
     }
 
     // Commands for UI Buttons
-    public ICommand AddArticleCommand { get; }
-    public ICommand FilterArticlesCommand { get; }
+    public ICommand AddArticleCommand { get; private set; }
+    public ICommand FilterArticlesCommand { get; private set; }
+    public ICommand PayInvoiceCommand { get; private set; }
+
 
     public CashRegisterViewModel()
     {
@@ -66,10 +71,10 @@ public class CashRegisterViewModel : BaseViewModel
             ],
             Person = new() { FirstName = "Max", LastName = "Mustermann" }
         };
-
+        
         AllArticles =
         [
-            new Article { Id = 1, Name = "Bier", PriceMember = 3.00f, Type = ArticleType.DRINK },
+            new Article { Id = 1, Name = "Bier", PriceMember = 3.00f, Type = ArticleType.FOOD },
             new Article { Id = 2, Name = "Wasser", PriceMember = 1.50f, Type = ArticleType.DRINK },
             new Article { Id = 3, Name = "Cola", PriceMember = 2.00f, Type = ArticleType.DRINK },
             new Article { Id = 4, Name = "Pizza", PriceMember = 8.00f, Type = ArticleType.FOOD },
@@ -80,6 +85,8 @@ public class CashRegisterViewModel : BaseViewModel
 
         AddArticleCommand = new Command<Article>(AddArticleToInvoice);
         FilterArticlesCommand = new Command<ArticleType>(FilterArticlesByType);
+        PayInvoiceCommand = new Command(PayInvoice);
+
 
         FilterArticlesByType(ArticleType.DRINK);  // Default category is always Drink
     }
@@ -137,6 +144,7 @@ public class CashRegisterViewModel : BaseViewModel
                 TotalPrice = article.PriceMember
             };
             _Invoice.InvoiceItems.Add(newItem);
+            OnPropertyChanged(nameof(Invoice));
         }
     }
 
@@ -153,13 +161,17 @@ public class CashRegisterViewModel : BaseViewModel
         }
     }
 
-    private void PayInvoice()
+    public void PayInvoice()
     {
         _Invoice.isPaidFor = true;
+
+        CloseView();
     }
 
     public void CloseView()
     {
         _invoiceDb.SaveInvoiceAsync(_Invoice);
+
+        Shell.Current.GoToAsync(nameof(HomePage));
     }
 }

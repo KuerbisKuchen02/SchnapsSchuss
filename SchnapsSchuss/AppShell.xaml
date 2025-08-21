@@ -11,5 +11,6 @@
     <ShellContent ContentTemplate="{DataTemplate local:CrudPage}" Route="CrudePage" />
     <ShellContent ContentTemplate="{DataTemplate local:CashRegisterPage}" Route="CashRegisterPage" />
     <ShellContent ContentTemplate="{DataTemplate local:AdminPage}" Route="AdminPage" />
+    <ShellContent ContentTemplate="{DataTemplate local:AddPersonPage}" Route="AddPersonPage" />
 
 </Shell>
