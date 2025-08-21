@@ -2,8 +2,13 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
              x:Class="SchnapsSchuss.Views.HomePage">
 
+    <ContentPage.BindingContext>
+        <vm:HomePageViewModel />
+    </ContentPage.BindingContext>
+    
     <ScrollView>
         <VerticalStackLayout
             Padding="30"
@@ -12,24 +17,30 @@
                 Direction="Row" 
                 JustifyContent="SpaceBetween" 
                 AlignItems="Center">
-                <Button Text="Verwalten"></Button>
-                <Button Text="Abmelden" FlexLayout.AlignSelf="End"></Button>
+                <Button Text="Verwalten" Command="{Binding ManageButtonCommand}"></Button>
+                <Button Text="Abmelden" Command="{Binding LogOffButtonCommand}"></Button>
             </FlexLayout>
-            <CollectionView ItemsSource="{Binding Person}">
+            <CollectionView ItemsSource="{Binding Persons}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout
+                    Orientation="Vertical"
+                    ItemSpacing="15"/>
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <FlexLayout Direction="Row" AlignItems="Center" JustifyContent="SpaceBetween" Margin="0,5">
-                            <Label Text="{Binding Person.name}" VerticalOptions="Center" />
-
-                            <FlexLayout Direction="Row" AlignItems="Center">
-                                <Label Text="Total: + {Binding Rechnung.total}"/>
-                                <Button Text="Gehen" Command="{Binding Aktion1Command}" />
-                                <Button Text="Buchen" Command="{Binding Aktion2Command}" />
-                            </FlexLayout>
+                        <FlexLayout Direction="Row" AlignItems="Center" JustifyContent="SpaceBetween">
+                            <Label Text="{Binding FirstName}" VerticalOptions="Center" />
+                            <Label Text="{Binding LastName}" VerticalOptions="Center" />
+                            <Label Text="Total:" />
+                            <Button Text="Gehen" />
+                            <Button Text="Buchen" />
                         </FlexLayout>
+                        
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+            <Button Text="+ Neue Person hinzufügen" Command="{Binding AddPersonCommand}"></Button>
         </VerticalStackLayout>
     </ScrollView>
 

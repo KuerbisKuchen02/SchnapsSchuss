@@ -7,7 +7,7 @@
     Title="SchnapsSchuss">
 
     <ShellContent
-        ContentTemplate="{DataTemplate local:LoginPage}"
+        ContentTemplate="{DataTemplate local:HomePage}"
         Route="LoginPage" />
 
 </Shell>
