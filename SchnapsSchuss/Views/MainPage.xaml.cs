@@ -1,4 +1,4 @@
-﻿namespace SchnapsSchuss;
+﻿namespace SchnapsSchuss.Views;
 
 public partial class MainPage : ContentPage
 {

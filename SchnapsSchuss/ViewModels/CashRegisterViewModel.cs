@@ -46,6 +46,6 @@ public class CashRegisterViewModel : BaseViewModel
     {
         InvoiceItem invoiceItem = new InvoiceItem();
         
-        _invoice.invoiceItems.Add();
+        // _invoice.invoiceItems.Add();
     }
 }

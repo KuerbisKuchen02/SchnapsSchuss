@@ -6,10 +6,11 @@
              xmlns:views="clr-namespace:SchnapsSchuss.Views"
              xmlns:models="clr-namespace:SchnapsSchuss.Models.Entities"
              x:Class="SchnapsSchuss.Views.CrudPage">
-    
+    <!--
     <ContentPage.BindingContext>
-        <viewmodels:CrudViewModel />
+     <viewmodels:CrudViewModel />
     </ContentPage.BindingContext>
+    -->
     
     <VerticalStackLayout Padding="20">
         <Label Text="Generische Tabelle"
