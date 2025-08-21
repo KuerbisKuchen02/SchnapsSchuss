@@ -7,7 +7,6 @@
     Title="SchnapsSchuss">
 
     <ShellContent
-        Title="Home"
         ContentTemplate="{DataTemplate local:LoginPage}"
         Route="LoginPage" />
 
