@@ -32,10 +32,15 @@
                             <Label Text="{Binding FirstName}" VerticalOptions="Center" />
                             <Label Text="{Binding LastName}" VerticalOptions="Center" />
                             <Label Text="Total:"/>
-                            <Button Text="Gehen"/>
-                            <Button Text="Buchen" />
+                            <Button Text="Gehen"
+                                    Command="{Binding Path=BindingContext.PersonLeaveCommand,
+                                            Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                    CommandParameter="{Binding .}" />
+                            <Button Text="Buchen"
+                                    Command="{Binding Path=BindingContext.PersonBookCommand,
+                                            Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                    CommandParameter="{Binding .}" />
                         </FlexLayout>
-                        
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

@@ -1,7 +1,6 @@
 using SchnapsSchuss.Models.Entities;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using SchnapsSchuss.Views;
 namespace SchnapsSchuss.ViewModels;
 
@@ -10,6 +9,10 @@ public class HomePageViewModel : BaseViewModel
     public ICommand ManageButtonCommand { get; }
     public ICommand LogOffButtonCommand { get; }
     public ICommand AddPersonCommand { get; }
+    public ICommand PersonLeaveCommand { get; }
+    public ICommand PersonBookCommand { get; }
+
+
     public ObservableCollection<Person> Persons { get; set; }
 
     public HomePageViewModel()
@@ -17,6 +20,8 @@ public class HomePageViewModel : BaseViewModel
         ManageButtonCommand = new Command(OnManageButtonClicked);
         LogOffButtonCommand = new Command(OnLogOffButtonClicked);
         AddPersonCommand = new Command(OnAddPersonButtonClick);
+        PersonLeaveCommand = new Command<Person>(OnPersonLeaveCommand);
+        PersonBookCommand = new Command<Person>(OnPersonBookCommand);
 
         Persons = new ObservableCollection<Person>
         {
@@ -37,7 +42,17 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnAddPersonButtonClick()
     {
-        // Hier deine Logik
-        Console.WriteLine("Add Person Button Clicked");
+        Shell.Current.GoToAsync(nameof(AddPersonPage));
+    }
+
+    private void OnPersonLeaveCommand(Person person)
+    {
+        // TODO call leave Pop Up
+        Console.WriteLine($"Person {person.FirstName} {person.LastName} is leaving.");
+    }
+
+    private void OnPersonBookCommand(Person person)
+    {
+        Shell.Current.GoToAsync(nameof(CashRegisterPage));
     }
 }
