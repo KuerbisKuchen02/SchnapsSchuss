@@ -16,7 +16,8 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     public ObservableCollection<Article> FilteredArticles { get; set; } = [
         ];
 
-    public string PersonLabel => $"Person - {Invoice.Person.FirstName} {Invoice.Person.LastName}";
+    public string PersonLabel => $"Person - {_Invoice.Person.FirstName} {_Invoice.Person.LastName}";
+
 
     // Person
     private Person _person;
@@ -24,7 +25,11 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     public Person Person
     {
         get => _person;
-        set => SetProperty(ref _person, value);
+        set
+        {
+            SetProperty(ref _person, value);
+            OnPropertyChanged(nameof(PersonLabel));
+        }
     }
 
     // Current Invoice
