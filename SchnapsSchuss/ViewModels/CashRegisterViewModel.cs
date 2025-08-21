@@ -10,18 +10,12 @@ public class CashRegisterViewModel : BaseViewModel
     private InvoiceDatabase _invoiceDb;
     private ArticleDatabase _articleDb;
 
-    public ObservableCollection<Article> AllArticles { get; } = new ObservableCollection<Article>();
-    public ObservableCollection<Article> FilteredArticles { get; set; } = new ObservableCollection<Article>();
+    public ObservableCollection<Article> AllArticles { get; } = [
+        ];
+    public ObservableCollection<Article> FilteredArticles { get; set; } = [
+        ];
 
-    // Current Person
-    private Person _Person;
-    public Person Person
-    {
-        get => _Person;
-        set => SetProperty(ref _Person, value);
-    }
-
-    public string PersonLabel => $"Person - {_Invoice.Person.FirstName} {_Person.LastName}";
+    public string PersonLabel => $"Person - {_Invoice.Person.FirstName} {_Invoice.Person.LastName}";
 
     // Current Invoice
     private Invoice _Invoice;
@@ -45,11 +39,42 @@ public class CashRegisterViewModel : BaseViewModel
 
     public CashRegisterViewModel()
     {
-        // TODO: Remove hardcoded Person:
-        _Person = new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth = new DateTime(0) };
-
         _articleDb = new ArticleDatabase();
         _invoiceDb = new InvoiceDatabase();
+
+        // Test Invoice for testing purposes
+        _Invoice = new()
+        {
+            Date = DateTime.Now,
+            isPaidFor = false,
+            InvoiceItems =
+            [
+                new() {
+                    Article = new() {
+                        Name = "Artikel 1"
+                    },
+                    TotalPrice = 7.00f,
+                    Amount = 2
+                },
+                new() {
+                    Article = new() {
+                        Name = "Artikel 2"
+                    },
+                    TotalPrice = 3.50f,
+                    Amount = 1
+                }
+            ],
+            Person = new() { FirstName = "Max", LastName = "Mustermann" }
+        };
+
+        AllArticles =
+        [
+            new Article { Id = 1, Name = "Bier", PriceMember = 3.00f, Type = ArticleType.DRINK },
+            new Article { Id = 2, Name = "Wasser", PriceMember = 1.50f, Type = ArticleType.DRINK },
+            new Article { Id = 3, Name = "Cola", PriceMember = 2.00f, Type = ArticleType.DRINK },
+            new Article { Id = 4, Name = "Pizza", PriceMember = 8.00f, Type = ArticleType.FOOD },
+            new Article { Id = 5, Name = "Burger", PriceMember = 6.50f, Type = ArticleType.FOOD }
+        ];
 
         InitAsync();
 
@@ -85,7 +110,7 @@ public class CashRegisterViewModel : BaseViewModel
             {
                 Date = DateTime.Now,
                 isPaidFor = false,
-                invoiceItems = new List<InvoiceItem>()
+                InvoiceItems = new List<InvoiceItem>()
             };
         }
     }
@@ -93,7 +118,7 @@ public class CashRegisterViewModel : BaseViewModel
     private void AddArticleToInvoice(Article article)
     {
         // To add articles to an invoice, first check if the article is alreay contained in the invoice.
-        InvoiceItem ExistingInvoiceItem = _Invoice.invoiceItems
+        InvoiceItem ExistingInvoiceItem = _Invoice.InvoiceItems
             .FirstOrDefault(i => i.Article.Id == article.Id);
 
         // Article already exists. Just increase the amount and re-calculate the price.
@@ -111,7 +136,7 @@ public class CashRegisterViewModel : BaseViewModel
                 Amount = 1,
                 TotalPrice = article.PriceMember
             };
-            _Invoice.invoiceItems.Add(newItem);
+            _Invoice.InvoiceItems.Add(newItem);
         }
     }
 
