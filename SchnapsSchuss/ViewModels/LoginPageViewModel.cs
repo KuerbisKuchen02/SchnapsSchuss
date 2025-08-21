@@ -76,11 +76,11 @@ public class LoginPageViewModel : BaseViewModel
         }
     }
 
-    private async Task<Boolean> ValidatePassword(String username, String password)
+    private async Task<bool> ValidatePassword(string Username, string Password)
     {
         // TODO: Hash the password here?
 
         int memberCount = await _MemberDatabase.CheckIfUserExists(Username, Password);
-        return memberCount != 0;
+        return memberCount == 1;
     }
 }
