@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+           xmlns:system="clr-namespace:System;assembly=System.Runtime"
+           xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
+           xmlns:views="clr-namespace:SchnapsSchuss.Views"
+           x:Class="SchnapsSchuss.Views.LeavingPopUp"
+           x:TypeArguments="system:String">
+
+    <mct:Popup.Resources>
+        <Style TargetType="{x:Type views:LeavingPopUp}">
+            <Setter Property="WidthRequest" Value="800" />
+            <Setter Property="HeightRequest" Value="600" />
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+
+        </Style>
+    </mct:Popup.Resources>
+
+    <Grid RowDefinitions="40,10,*" Padding="0" Margin="0">
+
+        <Label 
+            Grid.Row="0"
+            Text="Gehen"
+            TextColor="Black"
+            HorizontalTextAlignment="Center"
+            FontSize="Large" />
+
+        <BoxView Grid.Row="1" BackgroundColor="White"/>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" >
+
+            <ContentView Grid.Column="0" Grid.Row="1">
+                <!-- This is a placeholder for the invoice ContentView-->
+            </ContentView>
+
+            <Grid Grid.Column="1" Grid.Row="1">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="15" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Text="Bezahlen"
+                    Grid.Row="0"
+                    BackgroundColor="#b2f2bb"
+                    TextColor="Black"
+                    FontSize="Medium"
+                    />
+
+                <BoxView Grid.Row="1" BackgroundColor="White"/>
+
+                <Button Text="Zurück"
+                    Grid.Row="2"
+                    BackgroundColor="#ffc9c9"
+                    TextColor="Black"
+                    FontSize="Medium"
+                    />
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+
+</mct:Popup>
