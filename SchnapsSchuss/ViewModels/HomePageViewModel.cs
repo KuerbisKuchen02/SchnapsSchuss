@@ -53,6 +53,10 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnPersonBookCommand(Person person)
     {
-        Shell.Current.GoToAsync(nameof(CashRegisterPage));
+        var parameters = new Dictionary<string, object>
+        {
+            { "Person", person},
+        };
+        Shell.Current.GoToAsync(nameof(CashRegisterPage), parameters);
     }
 }

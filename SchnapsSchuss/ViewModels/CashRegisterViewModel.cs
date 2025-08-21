@@ -7,7 +7,7 @@ using SchnapsSchuss.Views;
 
 namespace SchnapsSchuss.ViewModels;
 
-public class CashRegisterViewModel : BaseViewModel
+public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 {
     private InvoiceDatabase _invoiceDb;
     private ArticleDatabase _articleDb;
@@ -18,6 +18,15 @@ public class CashRegisterViewModel : BaseViewModel
         ];
 
     public string PersonLabel => $"Person - {_Invoice.Person.FirstName} {_Invoice.Person.LastName}";
+
+    // Person
+    private Person _person;
+
+    public Person Person
+    {
+        get => _person;
+        set => SetProperty(ref _person, value);
+    }
 
     // Current Invoice
     private Invoice _Invoice;
@@ -42,7 +51,7 @@ public class CashRegisterViewModel : BaseViewModel
     public ICommand PayInvoiceCommand { get; private set; }
 
 
-    public CashRegisterViewModel()
+    public CashRegisterViewModel() 
     {
         _articleDb = new ArticleDatabase();
         _invoiceDb = new InvoiceDatabase();
@@ -81,20 +90,16 @@ public class CashRegisterViewModel : BaseViewModel
             new Article { Id = 5, Name = "Burger", PriceMember = 6.50f, Type = ArticleType.FOOD }
         ];
 
-        InitAsync();
-
         AddArticleCommand = new Command<Article>(AddArticleToInvoice);
         FilterArticlesCommand = new Command<ArticleType>(FilterArticlesByType);
         PayInvoiceCommand = new Command(PayInvoice);
-
-
-        FilterArticlesByType(ArticleType.DRINK);  // Default category is always Drink
     }
 
-    private async Task InitAsync()
+    private async Task InitAsync(int personId)
     {
         await LoadArticlesAsync();
-        await LoadInvoiceAsync();
+        await LoadInvoiceAsync(personId);
+        FilterArticlesByType(ArticleType.DRINK);
     }
 
     private async Task LoadArticlesAsync()
@@ -104,10 +109,10 @@ public class CashRegisterViewModel : BaseViewModel
             AllArticles.Add(article);
     }
 
-    private async Task LoadInvoiceAsync()
+    private async Task LoadInvoiceAsync(int personId)
     {
         List<Invoice> openInvoices = await _invoiceDb.GetInvoicesAsync();
-        openInvoices = openInvoices.Where(i => i.isPaidFor == false).ToList();
+        openInvoices = openInvoices.Where(i => i.isPaidFor == false && i.PersonId == personId).ToList();
 
         // If there is an open Invoice, show it. If not, create a new Invoice.
         if (openInvoices.Count() == 1) _Invoice = openInvoices[0];
@@ -173,5 +178,11 @@ public class CashRegisterViewModel : BaseViewModel
         _invoiceDb.SaveInvoiceAsync(_Invoice);
 
         Shell.Current.GoToAsync(nameof(HomePage));
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        Person = (Person) query["Person"];
+        InitAsync(Person.Id);
     }
 }
