@@ -2,7 +2,13 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
              x:Class="SchnapsSchuss.Views.LoginPage">
+
+    <ContentPage.BindingContext>
+        <vm:LoginPageViewModel />
+    </ContentPage.BindingContext>
+
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout
@@ -23,12 +29,15 @@
                 />
          
                 <Label Text="Benutzername" />
-                <Entry />
+                <Entry Placeholder="Username" Text="{Binding Username}" />
 
                 <Label Text="Password" />
-                <Entry IsPassword="true"/>
+                <Entry Placeholder="Password" Text="{Binding Password}" IsPassword="True"/>
 
-                <Button Text="Anmelden" />
+                <Button Text="{Binding LoginButtonText}" Command="{Binding LoginCommand}" />
+
+                <Label Text="{Binding ErrorMessage}" TextColor="Red" 
+               IsVisible="{Binding ErrorMessage}" />
             </VerticalStackLayout>
         </ScrollView> 
     </ContentPage.Content>
