@@ -192,11 +192,11 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         CloseView();
     }
 
-    public void CloseView()
+    public async void CloseView()
     {
         _invoiceDb.SaveInvoiceAsync(Invoice);
 
-        await Shell.Current.GoToAsync("///HomePage");
+        await Shell.Current.GoToAsync("..");
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
