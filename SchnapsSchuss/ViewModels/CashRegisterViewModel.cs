@@ -1,4 +1,5 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
@@ -62,7 +63,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     public ICommand AddArticleCommand { get; private set; }
     public ICommand FilterArticlesCommand { get; private set; }
     public ICommand PayInvoiceCommand { get; private set; }
-    public ICommand CloseViewCommand => new Command(CloseView);
+    public IAsyncRelayCommand BackCommand { get; }
 
 
     public CashRegisterViewModel() 
@@ -74,6 +75,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         AddArticleCommand = new Command<Article>(AddArticleToInvoice);
         FilterArticlesCommand = new Command<ArticleType>(FilterArticlesByType);
         PayInvoiceCommand = new Command(PayInvoice);
+        BackCommand = new AsyncRelayCommand(BackAsync);
     }
 
     private async Task InitAsync(Person person)
@@ -176,21 +178,20 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         }
     }
 
-    public void PayInvoice()
+    public async void PayInvoice()
     {
         Invoice.isPaidFor = true;
 
-        CloseView();
+        await BackAsync();
     }
 
-    public async void CloseView()
+    private async Task BackAsync()
     {
         Invoice.InvoiceItems = [.. InvoiceItems];
-
         await _invoiceDb.SaveAsync(Invoice);
         await _invoiceItemDb.SaveInvoiceItemsAsync([.. InvoiceItems]);
 
-        await Shell.Current.GoToAsync("..");
+        return;
     }
 
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
