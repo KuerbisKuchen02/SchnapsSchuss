@@ -11,7 +11,6 @@
         <Style TargetType="{x:Type views:GunOwnershipPopUp}">
             <Setter Property="WidthRequest" Value="400" />
             <Setter Property="HeightRequest" Value="200" />
-            <Setter Property="BackgroundColor" Value="White" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0" />
 
@@ -23,9 +22,7 @@
         <Label 
             Grid.Row="0"
             Text="Waffenbesitzschein" 
-            TextColor="Black"
             FontSize="Large"
-            BackgroundColor="White"
             HorizontalTextAlignment="Center"
             VerticalTextAlignment="Center"
             />
@@ -35,7 +32,6 @@
             Text="{Binding LabelText}" 
             TextColor="{Binding LabelTextColor}"
             FontSize="Medium"
-            BackgroundColor="White"
             HorizontalTextAlignment="Center"
             VerticalTextAlignment="Center"
             />
@@ -44,8 +40,8 @@
         <Button 
             Grid.Row="2"
             Text="Okay"
-            TextColor="Black"
             FontSize="Medium"
+            Style="{StaticResource SubmitButton}"
             Command="{Binding CloseCommand}"
             />
 

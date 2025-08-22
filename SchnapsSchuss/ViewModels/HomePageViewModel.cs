@@ -57,10 +57,20 @@ public class HomePageViewModel : BaseViewModel
         Shell.Current.GoToAsync(nameof(AddPersonPage), parameters);
     }
 
-    private void OnPersonLeaveCommand(Person person)
+    private async void OnPersonLeaveCommand(Person person)
     {
-        Shell.Current.ShowPopupAsync(new LeavingPopUp(new LeavingPopUpViewModel(person)), new PopupOptions());
         Console.WriteLine($"Person {person.FirstName} {person.LastName} is leaving.");
+
+        Invoice OpenInvoice = await new InvoiceDatabase().GetOpenInvoiceForPerson(person.Id);
+        if (OpenInvoice == null)
+        {
+            Console.WriteLine($"No open invoice found for {person.FirstName} {person.LastName}.");
+            Shell.Current.ShowPopupAsync(new GunOwnershipPopUp(new GunOwnershipPopUpViewModel(person)), new PopupOptions());
+        }
+        else
+        {
+            Shell.Current.ShowPopupAsync(new LeavingPopUp(new LeavingPopUpViewModel(OpenInvoice)), new PopupOptions());
+        }
     }
 
     private void OnPersonBookCommand(Person person)

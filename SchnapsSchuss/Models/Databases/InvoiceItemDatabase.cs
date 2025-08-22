@@ -34,6 +34,7 @@ public class InvoiceItemDatabase : Database<InvoiceItem>
 
     public async Task<List<InvoiceItem>> GetInvoiceItemsOfInvoiceAsync(Invoice invoice)
     {
+        await Init();
         if (invoice is null) throw new ArgumentNullException(nameof(invoice));
         
         return await database.Table<InvoiceItem>()
