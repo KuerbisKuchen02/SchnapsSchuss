@@ -2,31 +2,40 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
              x:Class="SchnapsSchuss.Views.AdminPage">
+
+    <ContentPage.BindingContext>
+        <vm:AdminPageViewModel />
+    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
         <ScrollView>
-            <Grid
-                Padding="80,0"
-                VerticalOptions="Center"
-                RowSpacing="20"
-                ColumnSpacing="20"
-            >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="0" Text="Getränke" />
-                <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="1" Text="Gerichte" />
-                <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="2" Text="Disziplinen" />
-                <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="0" Text="Munition" />
-                <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="1" Text="Mitglieder" />
-                <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="2" Text="Sonstiges" />
-            </Grid>
+            <VerticalStackLayout>
+                <Button Margin="20" HorizontalOptions="Start" WidthRequest="100" Command="{Binding BackButtonCommand}" Text="Zurück" />
+                <Grid
+                    Padding="80,0"
+                    VerticalOptions="Center"
+                    RowSpacing="20"
+                    ColumnSpacing="20"
+                >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="0" Text="Getränke" Command="{Binding DrinkButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="1" Text="Gerichte" Command="{Binding FoodButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="2" Text="Disziplinen" Command="{Binding DisciplineButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="0" Text="Munition" Command="{Binding MunitionButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="1" Text="Mitglieder" Command="{Binding MemberButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="2" Text="Sonstiges" Command="{Binding OthersButtonCommand}" />
+                </Grid>
+            </VerticalStackLayout>
         </ScrollView>  
     </ContentPage.Content>
 </ContentPage>

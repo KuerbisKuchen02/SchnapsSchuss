@@ -13,4 +13,6 @@ public class Member
     
     [OneToOne]
     public Person person { get; set; }
+
+    public static readonly List<string> Columns = ["Username", "Password", "IsRangeSupervisor"];
 }
