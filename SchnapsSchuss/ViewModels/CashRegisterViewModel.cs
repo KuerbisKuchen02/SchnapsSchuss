@@ -16,8 +16,10 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     public ObservableCollection<Article> FilteredArticles { get; set; } = [
         ];
 
-    public string PersonLabel => $"Person - {Invoice.Person.FirstName} {Invoice.Person.LastName}";
-
+    public string PersonLabel =>
+    Invoice?.Person != null
+        ? $"Person - {Invoice.Person.FirstName} {Invoice.Person.LastName}"
+        : "Person -";
 
     // Person
     private Person _person;
@@ -49,7 +51,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 
     public ObservableCollection<InvoiceItem> InvoiceItems
     {
-        get => _invoiceItems ??= new ObservableCollection<InvoiceItem>(_invoice.InvoiceItems);
+        get => _invoiceItems ??= new ObservableCollection<InvoiceItem>(_invoice?.InvoiceItems ?? Enumerable.Empty<InvoiceItem>());
         set => SetProperty(ref _invoiceItems, value);
     }
 
@@ -72,40 +74,6 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     {
         _articleDb = new ArticleDatabase();
         _invoiceDb = new InvoiceDatabase();
-
-        // Test Invoice for testing purposes
-        Invoice = new()
-        {
-            Date = DateTime.Now,
-            isPaidFor = false,
-            InvoiceItems =
-            [
-                new() {
-                    Article = new() {
-                        Name = "Artikel 1"
-                    },
-                    TotalPrice = 7.00f,
-                    Amount = 2
-                },
-                new() {
-                    Article = new() {
-                        Name = "Artikel 2"
-                    },
-                    TotalPrice = 3.50f,
-                    Amount = 1
-                }
-            ],
-            Person = new() { FirstName = "Max", LastName = "Mustermann" }
-        };
-        
-        AllArticles =
-        [
-            new Article { Id = 1, Name = "Bier", PriceMember = 3.00f, Type = ArticleType.FOOD },
-            new Article { Id = 2, Name = "Wasser", PriceMember = 1.50f, Type = ArticleType.DRINK },
-            new Article { Id = 3, Name = "Cola", PriceMember = 2.00f, Type = ArticleType.DRINK },
-            new Article { Id = 4, Name = "Pizza", PriceMember = 8.00f, Type = ArticleType.FOOD },
-            new Article { Id = 5, Name = "Burger", PriceMember = 6.50f, Type = ArticleType.FOOD }
-        ];
 
         AddArticleCommand = new Command<Article>(AddArticleToInvoice);
         FilterArticlesCommand = new Command<ArticleType>(FilterArticlesByType);
@@ -139,7 +107,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
             {
                 Date = DateTime.Now,
                 isPaidFor = false,
-                InvoiceItems = new List<InvoiceItem>()
+                InvoiceItems = []
             };
         }
     }
@@ -160,7 +128,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         else
         // Article new, create a new InvoiceItem with the article.
         {
-            InvoiceItem newItem = new InvoiceItem
+            InvoiceItem newItem = new()
             {
                 Article = article,
                 Amount = 1,
@@ -192,16 +160,16 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         CloseView();
     }
 
-    public void CloseView()
+    public async void CloseView()
     {
-        _invoiceDb.SaveInvoiceAsync(Invoice);
+        await _invoiceDb.SaveInvoiceAsync(Invoice);
 
         await Shell.Current.GoToAsync("///HomePage");
     }
 
-    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         Person = (Person) query["Person"];
-        InitAsync(Person.Id);
+        await InitAsync(Person.Id);
     }
 }
