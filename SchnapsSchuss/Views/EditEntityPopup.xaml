@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+           xmlns:system="clr-namespace:System;assembly=System.Runtime"
+           x:Class="SchnapsSchuss.Views.EditEntityPopup"
+           x:TypeArguments="system:String"
+           Style="{StaticResource Popup}"
+           MaximumWidthRequest="700">
+    
+    <VerticalStackLayout>
+        <Label Text="{Binding PopupTitle}" HorizontalTextAlignment="Center" FontSize="30"/>
+        <Button Text="Löschen" />
+        <ContentView x:Name="Properties" Margin="0, 20"/>
+        <FlexLayout JustifyContent="End">
+            <Button Text="Abbrechen"
+                    Style="{StaticResource CancelButton}"
+                    Margin="0, 0, 10, 0"
+                    Command="{Binding ClosePopUp}"/>
+            <Button Text="Speichern" 
+                    Style="{StaticResource SubmitButton}"/>
+        </FlexLayout>
+    </VerticalStackLayout>
+</mct:Popup>

@@ -56,6 +56,5 @@ public partial class CrudPage : IQueryAttributable
                 PriceMember = 8f,
             },
         ];
-        OnPropertyChanged();
     }
 }

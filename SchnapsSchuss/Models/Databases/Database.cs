@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchnapsSchuss.Models.Databases
 {
-    interface Database<T>
+    public interface Database<T>
     {
         Task<T> GetOneAsync(int id);
 

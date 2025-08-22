@@ -2,12 +2,19 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SchnapsSchuss.Views.CrudPage">
+             x:Class="SchnapsSchuss.Views.CrudPage" Padding="40">
     <ContentPage.Content>
         <VerticalStackLayout>
-            <Label Text="Test"/>
-            <FlexLayout>
-                <Label Text="{Binding Title}"/>
+            <FlexLayout JustifyContent="SpaceBetween">
+                <Label Text="{Binding Title}" FontSize="40"/>
+                <HorizontalStackLayout>
+                    <SearchBar SearchCommand="{Binding PerformSearch}"/>
+                    <Button Text="Hinzufügen" 
+                            Style="{StaticResource SubmitButton}"
+                            FontSize="20"
+                            Margin="5"
+                            Command="{Binding AddItem}"/>
+                </HorizontalStackLayout>
             </FlexLayout>
             <ContentView x:Name="Table"/>
         </VerticalStackLayout>
