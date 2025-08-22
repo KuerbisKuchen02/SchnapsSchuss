@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Reflection;
 using SchnapsSchuss.ViewModels;
 
@@ -11,16 +12,15 @@ public class GenericTableView<T> : ContentView
     // ReSharper disable once MemberCanBePrivate.Global
     public static readonly BindableProperty ItemsSourceProperty =
         BindableProperty.Create(
-            nameof(ItemsSourceProperty), 
+            nameof(ItemsSource), 
             typeof(IEnumerable<T>), 
             typeof(GenericTableView<T>), 
-            null, 
             propertyChanged: OnItemsSourceChanged);
     
     public IEnumerable<T> ItemsSource
     {
         get => (IEnumerable<T>)GetValue(ItemsSourceProperty);
-        init => SetValue(ItemsSourceProperty, value);
+        set => SetValue(ItemsSourceProperty, value);
     }
     
     public GenericTableView(CrudViewModel<T> viewModel)
@@ -31,10 +31,21 @@ public class GenericTableView<T> : ContentView
 
     private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is GenericTableView<T> tableView)
-        {
-            tableView.BuildTable();
-        }
+        var control = (GenericTableView<T>)bindable;
+
+        if (oldValue is INotifyCollectionChanged oldObs)
+            oldObs.CollectionChanged -= control.OnCollectionChanged;
+
+        if (newValue is INotifyCollectionChanged newObs)
+            newObs.CollectionChanged += control.OnCollectionChanged;
+
+        control.BuildTable();
+    }
+
+    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        // Sicher auf dem UI-Thread neu rendern
+        MainThread.BeginInvokeOnMainThread(BuildTable);
     }
 
     private void BuildTable()
