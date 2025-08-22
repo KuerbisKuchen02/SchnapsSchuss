@@ -5,8 +5,6 @@ using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui;
-using SchnapsSchuss.Models.Databases;
-using static SQLite.TableMapping;
 namespace SchnapsSchuss.ViewModels;
 
 public class HomePageViewModel : BaseViewModel
@@ -19,7 +17,6 @@ public class HomePageViewModel : BaseViewModel
 
 
     private ObservableCollection<Person> _persons;
-    public ObservableCollection<Person> Persons { get; set; }
 
     public ObservableCollection<Person> Persons
     {
