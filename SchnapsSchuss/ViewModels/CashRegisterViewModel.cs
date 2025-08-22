@@ -65,6 +65,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     public ICommand AddArticleCommand { get; private set; }
     public ICommand FilterArticlesCommand { get; private set; }
     public ICommand PayInvoiceCommand { get; private set; }
+    public ICommand CloseViewCommand => new Command(CloseView);
 
 
     public CashRegisterViewModel() 
@@ -195,7 +196,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     {
         _invoiceDb.SaveInvoiceAsync(Invoice);
 
-        Shell.Current.GoToAsync(nameof(HomePage));
+        await Shell.Current.GoToAsync("///HomePage");
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)

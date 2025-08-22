@@ -17,7 +17,7 @@
                 
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
                     <!-- Back Button -->
-                    <Button Grid.Column="0" Text="Zurück" />
+                    <Button Command="{Binding CloseViewCommand}" Grid.Column="0" Text="Zurück" />
                     
                     <!-- Customer Name Label -->
                     <Label
