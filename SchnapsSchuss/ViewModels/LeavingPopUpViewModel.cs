@@ -58,15 +58,6 @@ namespace SchnapsSchuss.ViewModels
             this._person = Person;
             LoadInvoiceAsync();
             LabelText = $"{Person.FirstName} {Person.LastName} auschecken";
-        }
-
-        public LeavingPopUpViewModel()
-        {
-            // TODO: DELETE THIS WHOLE CONSTRUCTOR !!!
-            _invoiceDb = new InvoiceDatabase();
-            CloseCommand = new Command(async () => await OnClicked());
-            PayCommand = new Command(async () => await OnPayClicked());
-
             
         }
 
@@ -79,25 +70,14 @@ namespace SchnapsSchuss.ViewModels
             }
 
             // Get all open Invoices for the current Person.
-            List<Invoice> openInvoices = await _invoiceDb.GetAllAsync();
-            openInvoices = openInvoices.Where(i => i.isPaidFor == false && i.PersonId == Person.Id).ToList();
+            Invoice openInvoice = await _invoiceDb.GetOpenInvoiceForPerson(Person.Id);
 
-            // If there is an open Invoice, show it. If not, create a new Invoice.
-            if (openInvoices.Count() == 1) _invoice = openInvoices[0];
-            else
+            // If there is an open Invoice, show it. If not, show the next popup.
+            if (openInvoice != null)
             {
-                _invoice = new Invoice
-                {
-                    Date = DateTime.Now,
-                    isPaidFor = false,
-                    InvoiceItems = []
-                };
+                InvoiceItems = new ObservableCollection<InvoiceItem>(_invoice.InvoiceItems);
+                OnPropertyChanged(nameof(InvoiceTotal));
             }
-
-            InvoiceItems = new ObservableCollection<InvoiceItem>(_invoice.InvoiceItems);
-            OnPropertyChanged(nameof(InvoiceTotal));
-
-
         }
 
 
