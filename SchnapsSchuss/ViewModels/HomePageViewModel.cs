@@ -2,6 +2,8 @@ using SchnapsSchuss.Models.Entities;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 using SchnapsSchuss.Views;
+using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui;
 namespace SchnapsSchuss.ViewModels;
 
 public class HomePageViewModel : BaseViewModel
@@ -47,7 +49,7 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnPersonLeaveCommand(Person person)
     {
-        // TODO call leave Pop Up
+        Shell.Current.ShowPopupAsync(new LeavingPopUp(new LeavingPopUpViewModel(person)), new PopupOptions());
         Console.WriteLine($"Person {person.FirstName} {person.LastName} is leaving.");
     }
 
