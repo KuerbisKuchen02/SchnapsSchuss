@@ -39,7 +39,7 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnLogOffButtonClicked()
     {
-        Shell.Current.GoToAsync(nameof(LoginPage));
+        Shell.Current.GoToAsync("..");
     }
 
     private void OnAddPersonButtonClick()
