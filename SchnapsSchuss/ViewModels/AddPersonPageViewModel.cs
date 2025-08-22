@@ -11,7 +11,6 @@ namespace SchnapsSchuss.ViewModels;
 
 public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 {
-    public ICommand BackCommand { get; }
     public ICommand AddGuestCommand { get; }
 
     private PersonDatabase _personDB;
@@ -75,7 +74,6 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 
     public AddPersonPageViewModel()
     {
-        BackCommand = new Command(OnBack);
         AddGuestCommand = new Command(OnAddGuest);
         Persons = new Collection<Person>();
         FilteredPersons = Persons.ToObservableCollection();
@@ -122,11 +120,6 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 
         FilteredPersons = collection_filtered;
     } 
-
-    public void OnBack()
-    {
-        Shell.Current.GoToAsync("///HomePage");
-    }
 
     public void OnAddGuest()
     {

@@ -6,7 +6,6 @@ namespace SchnapsSchuss.ViewModels;
 
 public class AdminPageViewModel : BaseViewModel
 {
-    public ICommand BackButtonCommand { get; }
     public ICommand DrinkButtonCommand { get; }
     public ICommand FoodButtonCommand { get; }
     public ICommand DisciplineButtonCommand { get; }
@@ -16,18 +15,12 @@ public class AdminPageViewModel : BaseViewModel
 
     public AdminPageViewModel()
     {
-        BackButtonCommand = new Command(OnBackButtonClicked);
         DrinkButtonCommand = new Command(OnDrinkButtonClicked);
         FoodButtonCommand = new Command(OnFoodButtonClicked);
         DisciplineButtonCommand = new Command(OnDisciplineButtonClicked);
         MunitionButtonCommand = new Command(OnMunitionButtonClicked);
         MemberButtonCommand = new Command(OnMemberButtonClicked);
         OthersButtonCommand = new Command(OnOthersButtonClicked);
-    }
-
-    private void OnBackButtonClicked()
-    {
-        Shell.Current.GoToAsync("..");
     }
 
     private void OnDrinkButtonClicked()

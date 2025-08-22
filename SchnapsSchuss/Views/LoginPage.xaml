@@ -3,7 +3,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
-             x:Class="SchnapsSchuss.Views.LoginPage">
+             x:Class="SchnapsSchuss.Views.LoginPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+>
 
     <ContentPage.BindingContext>
         <vm:LoginPageViewModel />
