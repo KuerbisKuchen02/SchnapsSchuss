@@ -42,7 +42,32 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
         }
     }
 
-    public Collection<Person> Persons { get; set; }
+    private Collection<Person> _alreadyThere = new Collection<Person>();
+    public Collection<Person> AlreadyThere
+    {
+        get => _alreadyThere;
+        set => SetProperty(ref _alreadyThere, value);
+    }
+
+    private Collection<Person> _persons;
+
+    public Collection<Person> Persons 
+    {
+        get => _persons;
+        set
+        {
+            Collection<Person> filteredPersonList = new Collection<Person>();
+            foreach (Person p in value)
+            {
+                if (!AlreadyThere.Any(x => x.Id == p.Id))
+                {
+                    filteredPersonList.Add(p);
+                }
+            }
+
+            SetProperty(ref _persons, filteredPersonList);
+        }
+    }
 
     private ObservableCollection<Person> _filteredPersons = new ObservableCollection<Person>();
 
@@ -107,6 +132,6 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        
+        AlreadyThere = query["alreadyThere"] as Collection<Person>;
     }
 }
