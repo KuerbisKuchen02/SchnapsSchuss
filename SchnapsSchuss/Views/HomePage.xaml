@@ -17,8 +17,8 @@
                 Direction="Row" 
                 JustifyContent="SpaceBetween" 
                 AlignItems="Center">
-                <Button Text="Verwalten" Command="{Binding ManageButtonCommand}"></Button>
-                <Button Text="Abmelden" Command="{Binding LogOffButtonCommand}"></Button>
+                <Button Text="Verwalten" Command="{Binding ManageButtonCommand}" IsEnabled="{Binding IsAdmin}" />
+                <Button Text="Abmelden" Command="{Binding LogOffButtonCommand}" />
             </FlexLayout>
             <CollectionView ItemsSource="{Binding Persons}">
                 <CollectionView.ItemsLayout>

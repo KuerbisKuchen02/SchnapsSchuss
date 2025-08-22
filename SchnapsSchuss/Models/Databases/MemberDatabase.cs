@@ -41,10 +41,29 @@ public class MemberDatabase : Database<Member>
         return await database.Table<Member>().Where(m => m.PersonId == Id).FirstOrDefaultAsync();
     }
 
-    public async Task<int> CheckIfUserExists(string Username, string Password)
+    public async Task<Member> CheckIfUserExists(string Username, string Password)
     {
         await Init();
-        return await database.Table<Member>().Where(m => m.Username == Username && m.Password == Password).CountAsync();
+
+        Member member = await database.Table<Member>().Where(m => m.Username == Username && m.Password == Password).FirstOrDefaultAsync();
+
+        if (member == null)
+        {
+            return null;
+        }
+        else
+        {
+            member.person = await database.Table<Person>().Where(p => p.Id == member.PersonId).FirstOrDefaultAsync();
+
+            if (member.person == null)
+            {
+                return null;
+            }
+            else
+            {
+                return member;
+            }
+        }
     }
 
 

@@ -26,35 +26,8 @@ public partial class CrudPage : IQueryAttributable
 
         var bindable = (BindableProperty) tableType.GetField("ItemsSourceProperty")!.GetValue(null)!; 
         
-        tableView.SetBinding(bindable, new Binding("Items"));
+        tableView.SetBinding(bindable, "FilteredItems");
         
         Table.Content = tableView;
-        
-        ((CrudViewModel<Article>) vm).Items = [
-            new Article() 
-            { 
-                Name = "New Article",
-                PriceGuest = 12.1f,
-                PriceMember = 8f,
-            },
-            new Article() 
-            { 
-                Name = "New Article",
-                PriceGuest = 12.1f,
-                PriceMember = 8f,
-            },
-            new Article() 
-            { 
-                Name = "New Article",
-                PriceGuest = 12.1f,
-                PriceMember = 8f,
-            },
-            new Article() 
-            { 
-                Name = "New Article",
-                PriceGuest = 12.1f,
-                PriceMember = 8f,
-            },
-        ];
     }
 }

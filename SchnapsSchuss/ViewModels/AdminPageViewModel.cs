@@ -34,7 +34,7 @@ public class AdminPageViewModel : BaseViewModel
     {
         var navigationParameter = new Dictionary<string, object>
         {
-            { "title", "Getr‰nke" },
+            { "title", "Getr√§nke" },
             { "modelType", typeof(Article) },
             { "articleType", ArticleType.DRINK },
             { "shownColumns", Article.Columns }
