@@ -62,7 +62,7 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         {
             { "alreadyThere", Persons }
         };
-        Shell.Current.GoToAsync("///AddPersonPage", parameters);
+        Shell.Current.GoToAsync(nameof(AddPersonPage), parameters);
     }
 
     private async void OnPersonLeaveCommand(Person person)
