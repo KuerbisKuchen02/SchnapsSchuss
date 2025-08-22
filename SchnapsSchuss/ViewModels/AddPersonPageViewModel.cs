@@ -130,7 +130,8 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 
     public void OnAddGuest()
     {
-        Shell.Current.ShowPopup(new AddGuestPopUp(new AddGuestPopUpViewModel()), new PopupOptions());
+        AddGuestPopUp PopUp = new AddGuestPopUp(new AddGuestPopUpViewModel());
+        Shell.Current.ShowPopup(PopUp, new PopupOptions());    
     }
 
     public void OnPersonSelected()

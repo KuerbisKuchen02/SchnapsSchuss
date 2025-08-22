@@ -5,6 +5,7 @@ using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui;
+using System.Diagnostics;
 
 namespace SchnapsSchuss.ViewModels;
 
@@ -58,11 +59,18 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
     private void OnAddPersonButtonClick()
     {
+        Debug.WriteLine("AddPersonButton clicked");
         var parameters = new Dictionary<string, object>
         {
             { "alreadyThere", Persons }
         };
         Shell.Current.GoToAsync("///AddPersonPage", parameters);
+    }
+
+    public async void onAppearing()
+    {
+        // Refresh the list of persons when the page appears
+        LoadPersonsFromDB();
     }
 
     private async void OnPersonLeaveCommand(Person person)
