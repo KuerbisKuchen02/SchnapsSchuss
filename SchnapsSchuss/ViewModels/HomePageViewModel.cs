@@ -69,7 +69,7 @@ public class HomePageViewModel : BaseViewModel
         }
         else
         {
-            Shell.Current.ShowPopupAsync(new LeavingPopUp(new LeavingPopUpViewModel(person)), new PopupOptions());
+            Shell.Current.ShowPopupAsync(new LeavingPopUp(new LeavingPopUpViewModel(OpenInvoice)), new PopupOptions());
         }
     }
 

@@ -22,7 +22,13 @@ namespace SchnapsSchuss.ViewModels
             get => _invoice;
             set => SetProperty(ref _invoice, value);
         }
-        
+
+        private Person _person;
+        public Person Person
+        {
+            get => _person;
+            set => SetProperty(ref _person, value);
+        }
 
         public ICommand CloseCommand { get; }
         public ICommand PayCommand { get; }
@@ -31,13 +37,6 @@ namespace SchnapsSchuss.ViewModels
         {
             get => _labelText;
             set => SetProperty(ref _labelText, value);
-        }
-
-        private Person _person;
-        public Person Person
-        {
-            get => _person;
-            set => SetProperty(ref _person, value);
         }
 
         private ObservableCollection<InvoiceItem> _invoiceItems;
@@ -49,37 +48,31 @@ namespace SchnapsSchuss.ViewModels
 
         public float InvoiceTotal => InvoiceItems.Sum(i => i.TotalPrice);
 
-        public LeavingPopUpViewModel(Person Person)
+        public LeavingPopUpViewModel(Invoice Invoice)
         {
             _invoiceDb = new InvoiceDatabase();
             CloseCommand = new Command(async () => await OnClicked());
             PayCommand = new Command(async () => await OnPayClicked());
 
-            this._person = Person;
-            LoadInvoiceAsync();
-            LabelText = $"{Person.FirstName} {Person.LastName} auschecken";
-            
+            this.Invoice = Invoice;
+
+            InitPerson();
+            InitInvoiceItems();
+            OnPropertyChanged(nameof(InvoiceTotal));
         }
 
-        private async Task LoadInvoiceAsync()
+
+        private async void InitPerson()
         {
-            if (Person == null)
-            {
-                Console.WriteLine("Person is null, cannot load invoice.");
-                return;
-            }
-
-            // Get all open Invoices for the current Person.
-            Invoice openInvoice = await _invoiceDb.GetOpenInvoiceForPerson(Person.Id);
-
-            // If there is an open Invoice, show it. If not, show the next popup.
-            if (openInvoice != null)
-            {
-                InvoiceItems = new ObservableCollection<InvoiceItem>(_invoice.InvoiceItems);
-                OnPropertyChanged(nameof(InvoiceTotal));
-            }
+            Person = await new PersonDatabase().GetOneAsync(Invoice.PersonId);
+            LabelText = $"{Person.FirstName} {Person.LastName} auschecken";
         }
 
+        private async void InitInvoiceItems()
+        {
+            List<InvoiceItem> invoiceItems = await new InvoiceItemDatabase().GetInvoiceItemsOfInvoiceAsync(Invoice);
+            InvoiceItems = new ObservableCollection<InvoiceItem>(invoiceItems);
+        }
 
         private async Task OnPayClicked()
         {
@@ -93,7 +86,7 @@ namespace SchnapsSchuss.ViewModels
                 await Shell.Current.CurrentPage.ClosePopupAsync();
             }
             
-            GunOwnershipPopUpViewModel gunOwnershipPopUpViewModel = new GunOwnershipPopUpViewModel(Person);
+            GunOwnershipPopUpViewModel gunOwnershipPopUpViewModel = new GunOwnershipPopUpViewModel(Invoice.Person);
 
             await Shell.Current.ShowPopupAsync(new GunOwnershipPopUp(gunOwnershipPopUpViewModel), new PopupOptions());
         }
