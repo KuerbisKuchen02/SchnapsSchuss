@@ -43,7 +43,7 @@ namespace SchnapsSchuss.ViewModels
             set => SetProperty(ref _guestDateOfBirth, value);
         }
 
-        private bool _hasGunownership = false;
+        private bool _hasGunownership;
         public bool HasGunownership
         {
             get => _hasGunownership;
@@ -56,10 +56,14 @@ namespace SchnapsSchuss.ViewModels
         {
             CloseCommand = new Command(async () => await OnCloseClicked());
             AddGuestCommand = new Command(async () => await OnAddGuestClicked());
+            HasGunownership = false; // Default value for the checkbox
         }
         private async Task OnCloseClicked()
         {
-            await Shell.Current.CurrentPage.ClosePopupAsync();
+            if (Shell.Current.CurrentPage is not null)
+            {
+                await Shell.Current.CurrentPage.ClosePopupAsync();
+            }
         }
 
         private async Task OnAddGuestClicked()
@@ -94,7 +98,7 @@ namespace SchnapsSchuss.ViewModels
                 int result = await personDb.SaveAsync(newGuest);
 
                 // Open Homepage with the new guest added to persons
-                Shell.Current.CurrentPage.ClosePopupAsync();
+                await OnCloseClicked();
             }
             catch (Exception ex)
             {

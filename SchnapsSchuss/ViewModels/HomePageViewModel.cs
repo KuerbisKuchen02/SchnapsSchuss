@@ -54,7 +54,7 @@ public class HomePageViewModel : BaseViewModel
         {
             { "alreadyThere", Persons }
         };
-        Shell.Current.GoToAsync(nameof(AddPersonPage), parameters);
+        Shell.Current.GoToAsync("///AddPersonPage", parameters);
     }
 
     private async void OnPersonLeaveCommand(Person person)

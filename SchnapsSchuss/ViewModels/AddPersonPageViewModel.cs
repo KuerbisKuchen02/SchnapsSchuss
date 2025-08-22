@@ -125,7 +125,7 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 
     public void OnBack()
     {
-        Shell.Current.GoToAsync("..");
+        Shell.Current.GoToAsync("///HomePage");
     }
 
     public void OnAddGuest()
