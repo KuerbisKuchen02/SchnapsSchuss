@@ -5,6 +5,7 @@ using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,9 +17,15 @@ namespace SchnapsSchuss.ViewModels
     {
         private InvoiceDatabase _invoiceDb;
         private Invoice _invoice;
+        public Invoice Invoice
+        {
+            get => _invoice;
+            set => SetProperty(ref _invoice, value);
+        }
+        
+
         public ICommand CloseCommand { get; }
         public ICommand PayCommand { get; }
-        private Person _person;
         private string _labelText;
         public string LabelText
         {
@@ -26,11 +33,21 @@ namespace SchnapsSchuss.ViewModels
             set => SetProperty(ref _labelText, value);
         }
 
+        private Person _person;
         public Person Person
         {
             get => _person;
             set => SetProperty(ref _person, value);
         }
+
+        private ObservableCollection<InvoiceItem> _invoiceItems;
+        public ObservableCollection<InvoiceItem> InvoiceItems
+        {
+            get => _invoiceItems ??= new ObservableCollection<InvoiceItem>(_invoice?.InvoiceItems ?? Enumerable.Empty<InvoiceItem>());
+            set => SetProperty(ref _invoiceItems, value);
+        }
+
+        public float InvoiceTotal => InvoiceItems.Sum(i => i.TotalPrice);
 
         public LeavingPopUpViewModel(Person Person)
         {
@@ -38,10 +55,19 @@ namespace SchnapsSchuss.ViewModels
             CloseCommand = new Command(async () => await OnClicked());
             PayCommand = new Command(async () => await OnPayClicked());
 
-            // TODO: Remove hardcoded Person:
             this._person = Person;
             LoadInvoiceAsync();
             LabelText = $"{Person.FirstName} {Person.LastName} auschecken";
+        }
+
+        public LeavingPopUpViewModel()
+        {
+            // TODO: DELETE THIS WHOLE CONSTRUCTOR !!!
+            _invoiceDb = new InvoiceDatabase();
+            CloseCommand = new Command(async () => await OnClicked());
+            PayCommand = new Command(async () => await OnPayClicked());
+
+            
         }
 
         private async Task LoadInvoiceAsync()
@@ -60,23 +86,20 @@ namespace SchnapsSchuss.ViewModels
             if (openInvoices.Count() == 1) _invoice = openInvoices[0];
             else
             {
-                _invoice = null;
+                _invoice = new Invoice
+                {
+                    Date = DateTime.Now,
+                    isPaidFor = false,
+                    InvoiceItems = []
+                };
             }
-                ShowInvoice();
+
+            InvoiceItems = new ObservableCollection<InvoiceItem>(_invoice.InvoiceItems);
+            OnPropertyChanged(nameof(InvoiceTotal));
+
+
         }
 
-        private async void ShowInvoice()
-        {
-            if (_invoice == null)
-            {
-                // TODO think of how to display empty invoice   
-            }
-            else
-            {
-                // TODO Set the content view to the invoice details
-                
-            }
-        }
 
         private async Task OnPayClicked()
         {
