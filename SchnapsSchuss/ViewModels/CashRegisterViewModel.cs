@@ -135,9 +135,17 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
                 TotalPrice = article.PriceMember
             };
             InvoiceItems.Add(newItem);
-            //OnPropertyChanged(nameof(Invoice));
         }
+
+        // Update InvoiceTotal
         OnPropertyChanged(nameof(InvoiceTotal));
+        subtractArticleAmount(article);
+    }
+
+    private async void subtractArticleAmount(Article article)
+    {
+        article.Stock--;
+        _articleDb.SaveArticleAsync(article);
     }
 
     private void FilterArticlesByType(ArticleType articleType)

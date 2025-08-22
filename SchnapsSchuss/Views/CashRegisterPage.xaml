@@ -70,7 +70,7 @@
                         </Grid>
                     </Border>
 
-                        <!-- Middle Column: Article Buttons with gaps -->
+                    <!-- Middle Column: Article Buttons with gaps -->
                     <CollectionView Grid.Column="1" ItemsSource="{Binding FilteredArticles}">
                         <CollectionView.ItemsLayout>
                             <!-- span = number of buttons per row -->
@@ -80,11 +80,12 @@
                             <DataTemplate>
                                 <!-- Button fills its cell with margin for spacing -->
                                 <Button Text="{Binding Name}" 
-                        Margin="5"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}" 
-                        CommandParameter="{Binding .}" />
+                                    Margin="5"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}"
+                                    IsEnabled="{Binding Stock}"
+                                    CommandParameter="{Binding .}" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
