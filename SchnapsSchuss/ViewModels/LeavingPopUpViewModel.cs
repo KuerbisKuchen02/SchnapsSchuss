@@ -6,6 +6,7 @@ using SchnapsSchuss.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,26 +40,43 @@ namespace SchnapsSchuss.ViewModels
             set => SetProperty(ref _labelText, value);
         }
 
+        private ObservableCollection<string> _articleNames;
+        public ObservableCollection<string> ArticleNames
+        {
+            get => _articleNames ??= new ObservableCollection<string>(
+                InvoiceItems.Select(i => i.Article?.Name ?? "Unbekannt").Distinct());
+            set => SetProperty(ref _articleNames, value);
+        }
+
         private ObservableCollection<InvoiceItem> _invoiceItems;
         public ObservableCollection<InvoiceItem> InvoiceItems
         {
-            get => _invoiceItems ??= new ObservableCollection<InvoiceItem>(_invoice?.InvoiceItems ?? Enumerable.Empty<InvoiceItem>());
-            set => SetProperty(ref _invoiceItems, value);
+            get => _invoiceItems;
+            set
+            {
+                if (SetProperty(ref _invoiceItems, value))
+                {
+                    OnPropertyChanged(nameof(InvoiceTotal));
+                    if (_invoiceItems != null)
+                        _invoiceItems.CollectionChanged += (s, e) => OnPropertyChanged(nameof(InvoiceTotal));
+                }
+            }
         }
 
-        public float InvoiceTotal => InvoiceItems.Sum(i => i.TotalPrice);
+
+        public float InvoiceTotal => InvoiceItems?.Sum(i => i.TotalPrice) ?? 0f;
 
         public LeavingPopUpViewModel(Invoice Invoice)
         {
             _invoiceDb = new InvoiceDatabase();
-            CloseCommand = new Command(async () => await OnClicked());
+            CloseCommand = new Command(async () => await OnCloseClicked());
             PayCommand = new Command(async () => await OnPayClicked());
 
             this.Invoice = Invoice;
 
             InitPerson();
             InitInvoiceItems();
-            OnPropertyChanged(nameof(InvoiceTotal));
+            Debug.WriteLine($"LeavingPopUpViewModel initialized with Invoice ID: {Invoice.Id}");
         }
 
 
@@ -71,14 +89,21 @@ namespace SchnapsSchuss.ViewModels
         private async void InitInvoiceItems()
         {
             List<InvoiceItem> invoiceItems = await new InvoiceItemDatabase().GetInvoiceItemsOfInvoiceAsync(Invoice);
+            foreach(InvoiceItem item in invoiceItems)
+            {
+                item.Article = await new ArticleDatabase().GetOneAsync(item.ArticleId);
+            }
             InvoiceItems = new ObservableCollection<InvoiceItem>(invoiceItems);
+            Invoice.InvoiceItems = InvoiceItems.ToList();
+            OnPropertyChanged(nameof(InvoiceItems));
         }
 
         private async Task OnPayClicked()
         {
-            if (_invoice != null)
+            if (Invoice != null)
             {
-                await _invoiceDb.DeleteAsync(_invoice);
+                Invoice.isPaidFor = true;
+                await _invoiceDb.SaveAsync(Invoice);
             }
 
             if (Shell.Current.CurrentPage is not null)
@@ -86,12 +111,12 @@ namespace SchnapsSchuss.ViewModels
                 await Shell.Current.CurrentPage.ClosePopupAsync();
             }
             
-            GunOwnershipPopUpViewModel gunOwnershipPopUpViewModel = new GunOwnershipPopUpViewModel(Invoice.Person);
+            GunOwnershipPopUpViewModel gunOwnershipPopUpViewModel = new GunOwnershipPopUpViewModel(Person);
 
             await Shell.Current.ShowPopupAsync(new GunOwnershipPopUp(gunOwnershipPopUpViewModel), new PopupOptions());
         }
 
-        private async Task OnClicked()
+        private async Task OnCloseClicked()
         {
             if (Shell.Current.CurrentPage is not null)
             {
