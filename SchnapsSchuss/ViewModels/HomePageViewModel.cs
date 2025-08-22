@@ -34,6 +34,7 @@ public class HomePageViewModel : BaseViewModel
 
         Persons = new ObservableCollection<Person>();
 
+
         LoadPersonsFromDB();
     }
 
