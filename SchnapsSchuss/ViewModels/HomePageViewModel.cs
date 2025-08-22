@@ -25,6 +25,8 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         set => SetProperty(ref _isAdmin, value);
     }
 
+    private string[] personIds { get; set; }
+
     private ObservableCollection<Person> _persons;
 
     public ObservableCollection<Person> Persons
@@ -100,6 +102,7 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
     private async void LoadPersonsFromDB()
     {
+
         PersonDatabase personDatabase = new PersonDatabase();
         List<Person> personsList = await personDatabase.GetAllAsync();
         Persons = new ObservableCollection<Person>(personsList);
@@ -107,8 +110,10 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        Member member = (Member)query["Member"];
+        if (query.TryGetValue("Member", out var memberObj) && memberObj is Member member)
+        {
+            IsAdmin = member.person.Role == RoleType.ADMINISTRATOR;
+        }
 
-        IsAdmin = member.person.Role == RoleType.ADMINISTRATOR;
     }
 }

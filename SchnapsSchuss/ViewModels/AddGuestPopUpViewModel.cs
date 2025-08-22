@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Extensions;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
+using SchnapsSchuss.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -99,7 +100,7 @@ namespace SchnapsSchuss.ViewModels
 
                 // Open Homepage with the new guest added to persons
                 await Shell.Current.CurrentPage.ClosePopupAsync();
-                await Shell.Current.GoToAsync("///HomePage");
+                await Shell.Current.GoToAsync(nameof(HomePage));
             }
             catch (Exception ex)
             {
