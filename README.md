@@ -1,1 +1,1 @@
-# SchnappsSchuss
+# SchnapsSchuss
