@@ -68,11 +68,4 @@ public class HomePageViewModel : BaseViewModel
         };
         Shell.Current.GoToAsync(nameof(CashRegisterPage), parameters);
     }
-
-    private async void LoadPersonsFromDB()
-    {
-        PersonDatabase personDatabase = new PersonDatabase();
-        List<Person> personsList = await personDatabase.GetPersonsAsync();
-        Persons = new ObservableCollection<Person>(personsList);
-    }
 }
