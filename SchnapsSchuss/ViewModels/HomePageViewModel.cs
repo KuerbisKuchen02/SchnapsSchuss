@@ -1,6 +1,7 @@
-using SchnapsSchuss.Models.Entities;
-using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using SchnapsSchuss.Models.Databases;
+using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui;
@@ -15,7 +16,13 @@ public class HomePageViewModel : BaseViewModel
     public ICommand PersonBookCommand { get; }
 
 
-    public ObservableCollection<Person> Persons { get; set; }
+    private ObservableCollection<Person> _persons;
+
+    public ObservableCollection<Person> Persons
+    {
+        get => _persons;
+        set => SetProperty(ref _persons, value);
+    }
 
     public HomePageViewModel()
     {
@@ -25,11 +32,7 @@ public class HomePageViewModel : BaseViewModel
         PersonLeaveCommand = new Command<Person>(OnPersonLeaveCommand);
         PersonBookCommand = new Command<Person>(OnPersonBookCommand);
 
-        Persons = new ObservableCollection<Person>
-        {
-            new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth=new DateTime(0) },
-            new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth=new DateTime(0) }
-        };
+        Persons = new ObservableCollection<Person>();
     }
 
     private void OnManageButtonClicked()
@@ -44,7 +47,11 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnAddPersonButtonClick()
     {
-        Shell.Current.GoToAsync(nameof(AddPersonPage));
+        var parameters = new Dictionary<string, object>
+        {
+            { "alreadyThere", Persons.ToList() }
+        };
+        Shell.Current.GoToAsync(nameof(AddPersonPage), parameters);
     }
 
     private void OnPersonLeaveCommand(Person person)
@@ -60,5 +67,12 @@ public class HomePageViewModel : BaseViewModel
             { "Person", person},
         };
         Shell.Current.GoToAsync(nameof(CashRegisterPage), parameters);
+    }
+
+    private async void LoadPersonsFromDB()
+    {
+        PersonDatabase personDatabase = new PersonDatabase();
+        List<Person> personsList = await personDatabase.GetPersonsAsync();
+        Persons = new ObservableCollection<Person>(personsList);
     }
 }

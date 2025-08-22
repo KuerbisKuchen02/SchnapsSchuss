@@ -21,9 +21,11 @@ public class InvoiceItemDatabase
             CREATE TABLE IF NOT EXISTS InvoiceItem (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 InvoiceId INTEGER NOT NULL,
+                ArticleId INTEGER NOT NULL,
                 TotalPrice REAL NOT NULL,
                 Amount INTEGER NOT NULL,
-                FOREIGN KEY (InvoiceId) REFERENCES Invoice(Id) ON DELETE CASCADE
+                FOREIGN KEY (InvoiceId) REFERENCES Invoice(Id) ON DELETE CASCADE,
+                FOREIGN KEY (ArticleId) REFERENCES Article(Id) ON DELETE RESTRICT
             );
         ");
 
@@ -52,6 +54,29 @@ public class InvoiceItemDatabase
             return await database.UpdateAsync(invoiceItem);
         else
             return await database.InsertAsync(invoiceItem);
+    }
+
+    public async Task<int> SaveInvoiceItemsAsync(List<InvoiceItem> invoiceItems)
+    {
+        if (invoiceItems is null) throw new ArgumentNullException(nameof(invoiceItems));
+        if (invoiceItems.Count == 0) return 0;
+
+        await Init();
+
+        int affectedRows = 0;
+
+        await database.RunInTransactionAsync(tran =>
+        {
+            foreach (var item in invoiceItems)
+            {
+                if (item.Id != 0)
+                    affectedRows += tran.Update(item);
+                else
+                    affectedRows += tran.Insert(item);
+            }
+        });
+
+        return affectedRows;
     }
 
     public async Task<int> DeleteItemAsync(InvoiceItem invoiceItem)
