@@ -10,7 +10,6 @@
     </ContentPage.BindingContext>
 
     <VerticalStackLayout Margin="10">
-        <Button Text="Zurück zum Hauptmenü" Command="{Binding BackCommand}" />
         <FlexLayout JustifyContent="SpaceBetween">
             <Label Text="Mitglieder" FontSize="24"></Label>
             <HorizontalStackLayout Spacing="10">

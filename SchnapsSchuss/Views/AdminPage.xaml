@@ -11,8 +11,7 @@
     
     <ContentPage.Content>
         <ScrollView>
-            <VerticalStackLayout>
-                <Button Margin="20" HorizontalOptions="Start" WidthRequest="100" Command="{Binding BackButtonCommand}" Text="Zurück" />
+            <VerticalStackLayout VerticalOptions="Center">
                 <Grid
                     Padding="80,0"
                     VerticalOptions="Center"
