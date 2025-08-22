@@ -34,6 +34,7 @@ public class HomePageViewModel : BaseViewModel
 
         Persons = new ObservableCollection<Person>();
 
+
         LoadPersonsFromDB();
     }
 
@@ -69,5 +70,12 @@ public class HomePageViewModel : BaseViewModel
             { "Person", person},
         };
         Shell.Current.GoToAsync(nameof(CashRegisterPage), parameters);
+    }
+
+    private async void LoadPersonsFromDB()
+    {
+        PersonDatabase personDatabase = new PersonDatabase();
+        List<Person> personsList = await personDatabase.GetAllAsync();
+        Persons = new ObservableCollection<Person>(personsList);
     }
 }
