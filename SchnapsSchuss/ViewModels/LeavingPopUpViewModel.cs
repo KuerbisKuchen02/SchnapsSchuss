@@ -79,7 +79,7 @@ namespace SchnapsSchuss.ViewModels
             }
 
             // Get all open Invoices for the current Person.
-            List<Invoice> openInvoices = await _invoiceDb.GetInvoicesAsync();
+            List<Invoice> openInvoices = await _invoiceDb.GetAllAsync();
             openInvoices = openInvoices.Where(i => i.isPaidFor == false && i.PersonId == Person.Id).ToList();
 
             // If there is an open Invoice, show it. If not, create a new Invoice.
@@ -105,7 +105,7 @@ namespace SchnapsSchuss.ViewModels
         {
             if (_invoice != null)
             {
-                await _invoiceDb.DeleteInvoiceAsync(_invoice);
+                await _invoiceDb.DeleteAsync(_invoice);
             }
 
             if (Shell.Current.CurrentPage is not null)

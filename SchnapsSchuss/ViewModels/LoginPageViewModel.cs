@@ -62,7 +62,11 @@ public class LoginPageViewModel : BaseViewModel
             // Check if the credentials are valid
             if (await ValidatePassword(Username, Password))
             {
-                Shell.Current.GoToAsync(nameof(HomePage));
+                // Clear credentials after login
+                Username = "";
+                Password = "";
+
+                await Shell.Current.GoToAsync(nameof(HomePage));
             }
             else
             {

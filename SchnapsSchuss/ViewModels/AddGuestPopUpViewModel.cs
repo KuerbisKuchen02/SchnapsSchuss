@@ -91,7 +91,7 @@ namespace SchnapsSchuss.ViewModels
             try
             {
                 var personDb = new PersonDatabase();
-                int result = await personDb.SavePersonAsync(newGuest);
+                int result = await personDb.SaveAsync(newGuest);
 
                 // Open Homepage with the new guest added to persons
                 Shell.Current.CurrentPage.ClosePopupAsync();

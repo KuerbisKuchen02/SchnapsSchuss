@@ -86,14 +86,14 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 
     private async Task LoadArticlesAsync()
     {
-        List<Article> articles = await _articleDb.GetArticlesAsync();
+        List<Article> articles = await _articleDb.GetAllAsync();
         foreach (var article in articles)
             AllArticles.Add(article);
     }
 
     private async Task LoadInvoiceAsync(Person person)
     {
-        List<Invoice> openInvoices = await _invoiceDb.GetInvoicesAsync();
+        List<Invoice> openInvoices = await _invoiceDb.GetAllAsync();
         openInvoices = openInvoices.Where(i => i.isPaidFor == false && i.PersonId == person.Id).ToList();
 
         // If there is an open Invoice, show it. If not, create a new Invoice.
@@ -149,7 +149,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     private async void subtractArticleAmount(Article article)
     {
         article.Stock--;
-        _articleDb.SaveArticleAsync(article);
+        _articleDb.SaveAsync(article);
     }
 
     private void FilterArticlesByType(ArticleType articleType)
@@ -176,7 +176,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     {
         Invoice.InvoiceItems = [.. InvoiceItems];
 
-        await _invoiceDb.SaveInvoiceAsync(Invoice);
+        await _invoiceDb.SaveAsync(Invoice);
         await _invoiceItemDb.SaveInvoiceItemsAsync([.. InvoiceItems]);
 
         await Shell.Current.GoToAsync("..");

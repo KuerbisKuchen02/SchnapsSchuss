@@ -4,7 +4,7 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class InvoiceDatabase
+public class InvoiceDatabase : Database<Invoice>
 {
     SQLiteAsyncConnection database;
 
@@ -32,19 +32,33 @@ public class InvoiceDatabase
         ");
     }
 
-    public async Task<List<Invoice>> GetInvoicesAsync()
+    public async Task<List<Invoice>> GetAllAsync()
     {
         await Init();
-        return await database.GetAllWithChildrenAsync<Invoice>(recursive: true);
+
+        var invoices = await database.GetAllWithChildrenAsync<Invoice>(recursive: true);
+
+        var allItems = invoices.SelectMany(i => i.InvoiceItems).ToList();
+        var ids = allItems.Select(it => it.ArticleId).Distinct().ToList();
+
+        var articles = await database.Table<Article>()
+                                     .Where(a => ids.Contains(a.Id))
+                                     .ToListAsync();
+        var map = articles.ToDictionary(a => a.Id);
+
+        foreach (var it in allItems)
+            if (map.TryGetValue(it.ArticleId, out var a)) it.Article = a;
+
+        return invoices;
     }
 
-    public async Task<Invoice> GetInvoiceAsync(int id)
+    public async Task<Invoice> GetOneAsync(int id)
     {
         await Init();
         return await database.Table<Invoice>().Where(i => i.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<int> SaveInvoiceAsync(Invoice invoice)
+    public async Task<int> SaveAsync(Invoice invoice)
     {
         int returnValue = 0;
 
@@ -68,7 +82,7 @@ public class InvoiceDatabase
         return returnValue;
     }
 
-    public async Task<int> DeleteInvoiceAsync(Invoice invoice)
+    public async Task<int> DeleteAsync(Invoice invoice)
     {
         await Init();
         return await database.DeleteAsync(invoice);
