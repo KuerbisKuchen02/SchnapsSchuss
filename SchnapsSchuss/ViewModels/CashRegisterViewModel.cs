@@ -15,8 +15,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 
     public ObservableCollection<Article> AllArticles { get; } = [
         ];
-    public ObservableCollection<Article> FilteredArticles { get; set; } = [
-        ];
+    public ObservableCollection<ArticleViewModel> FilteredArticles { get; set; } = new();
 
     public string PersonLabel =>
     Invoice?.Person != null
@@ -121,11 +120,18 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         InvoiceItem ExistingInvoiceItem = InvoiceItems
             .FirstOrDefault(i => i.Article.Id == article.Id);
 
+        // Check if the article has stock left
+        if (article.Stock <= 0)
+            return;
+
+        // Determine the correct price accroding to the role
+        float articlePrice = Invoice.Person.Role == RoleType.GUEST ? article.PriceGuest : article.PriceMember;
+
         // Article already exists. Just increase the amount and re-calculate the price.
         if (ExistingInvoiceItem != null)
         {
             ExistingInvoiceItem.Amount++;
-            ExistingInvoiceItem.TotalPrice = ExistingInvoiceItem.Amount * article.PriceMember;
+            ExistingInvoiceItem.TotalPrice = ExistingInvoiceItem.Amount * articlePrice;
             OnPropertyChanged(nameof(ExistingInvoiceItem.Amount));
         }
         else
@@ -136,7 +142,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
                 Article = article,
                 ArticleId = article.Id,
                 Amount = 1,
-                TotalPrice = article.PriceMember
+                TotalPrice = articlePrice
             };
             InvoiceItems.Add(newItem);
         }
@@ -155,13 +161,18 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     private void FilterArticlesByType(ArticleType articleType)
     {
         CurArticleType = articleType;
-        var filtered = AllArticles.Where(a => a.Type == articleType).ToList();
 
-        // Reset the FilteredArticles and repopulate it according to the ArticleType
+        // Wrap articles in ArticleViewModel to show the price according to the current invoice
+        var filtered = AllArticles
+            .Where(a => a.Type == articleType)
+            .Select(a => new ArticleViewModel(a, Invoice))
+            .ToList();
+
+        // Clear and repopulate FilteredArticles
         FilteredArticles.Clear();
-        foreach (var article in filtered)
+        foreach (var articleVm in filtered)
         {
-            FilteredArticles.Add(article);
+            FilteredArticles.Add(articleVm);
         }
     }
 

@@ -79,13 +79,14 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <!-- Button fills its cell with margin for spacing -->
-                                <Button Text="{Binding Name}" 
+                                <Button 
+                                    Text="{Binding DisplayNameWithPrice}" 
+                                    IsEnabled="{Binding IsInStock}"
+                                    Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}"
+                                    CommandParameter="{Binding Article}"
                                     Margin="5"
                                     HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}"
-                                    IsEnabled="{Binding Stock}"
-                                    CommandParameter="{Binding .}" />
+                                    VerticalOptions="Fill" />       
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
