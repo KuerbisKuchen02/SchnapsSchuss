@@ -27,7 +27,7 @@ public class AdminPageViewModel : BaseViewModel
 
     private void OnBackButtonClicked()
     {
-        Shell.Current.GoToAsync("///HomePage");
+        Shell.Current.GoToAsync("..");
     }
 
     private void OnDrinkButtonClicked()
