@@ -5,9 +5,10 @@ using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui;
+
 namespace SchnapsSchuss.ViewModels;
 
-public class HomePageViewModel : BaseViewModel
+public class HomePageViewModel : BaseViewModel, IQueryAttributable
 {
     public ICommand ManageButtonCommand { get; }
     public ICommand LogOffButtonCommand { get; }
@@ -15,6 +16,13 @@ public class HomePageViewModel : BaseViewModel
     public ICommand PersonLeaveCommand { get; }
     public ICommand PersonBookCommand { get; }
 
+    private bool _isAdmin;
+
+    public bool IsAdmin
+    {
+        get => _isAdmin;
+        set => SetProperty(ref _isAdmin, value);
+    }
 
     private ObservableCollection<Person> _persons;
 
@@ -45,7 +53,7 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnLogOffButtonClicked()
     {
-        Shell.Current.GoToAsync("..");
+        Shell.Current.GoToAsync("///LoginPage");
     }
 
     private void OnAddPersonButtonClick()
@@ -87,5 +95,12 @@ public class HomePageViewModel : BaseViewModel
         PersonDatabase personDatabase = new PersonDatabase();
         List<Person> personsList = await personDatabase.GetAllAsync();
         Persons = new ObservableCollection<Person>(personsList);
+    }
+
+    public async void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        Member member = (Member)query["Member"];
+
+        IsAdmin = member.person.Role == RoleType.ADMINISTRATOR;
     }
 }

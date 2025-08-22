@@ -59,14 +59,21 @@ public class LoginPageViewModel : BaseViewModel
                 return;
             }
 
+            Member member = await ValidatePassword(Username, Password);
+
             // Check if the credentials are valid
-            if (await ValidatePassword(Username, Password))
+            if (member != null)
             {
                 // Clear credentials after login
                 Username = "";
                 Password = "";
 
-                await Shell.Current.GoToAsync(nameof(HomePage));
+                var parameters = new Dictionary<string, object>
+                    {
+                        { "Member", member},
+                    };
+
+                await Shell.Current.GoToAsync(nameof(HomePage), parameters);
             }
             else
             {
@@ -80,11 +87,8 @@ public class LoginPageViewModel : BaseViewModel
         }
     }
 
-    private async Task<bool> ValidatePassword(string Username, string Password)
+        private async Task<Member> ValidatePassword(string Username, string Password)
     {
-        // TODO: Hash the password here?
-
-        int memberCount = await _MemberDatabase.CheckIfUserExists(Username, Password);
-        return memberCount == 1;
+        return await _MemberDatabase.CheckIfUserExists(Username, Password);
     }
 }
