@@ -1,4 +1,5 @@
 using SchnapsSchuss.Models.Entities;
+using SQLiteNetExtensionsAsync.Extensions;
 using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
@@ -22,9 +23,11 @@ public class InvoiceDatabase
             CREATE TABLE IF NOT EXISTS InvoiceItem (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 InvoiceId INTEGER NOT NULL,
+                ArticleId INTEGER NOT NULL,
                 TotalPrice REAL NOT NULL,
                 Amount INTEGER NOT NULL,
-                FOREIGN KEY (InvoiceId) REFERENCES Invoice(Id) ON DELETE CASCADE
+                FOREIGN KEY (InvoiceId) REFERENCES Invoice(Id) ON DELETE CASCADE,
+                FOREIGN KEY (ArticleId) REFERENCES Article(Id) ON DELETE RESTRICT
             );
         ");
     }
@@ -32,7 +35,7 @@ public class InvoiceDatabase
     public async Task<List<Invoice>> GetInvoicesAsync()
     {
         await Init();
-        return await database.Table<Invoice>().ToListAsync();
+        return await database.GetAllWithChildrenAsync<Invoice>(recursive: true);
     }
 
     public async Task<Invoice> GetInvoiceAsync(int id)
@@ -43,11 +46,26 @@ public class InvoiceDatabase
 
     public async Task<int> SaveInvoiceAsync(Invoice invoice)
     {
+        int returnValue = 0;
+
         await Init();
         if (invoice.Id != 0)
-            return await database.UpdateAsync(invoice);
+        {
+            returnValue = await database.UpdateAsync(invoice);
+        }
         else
-            return await database.InsertAsync(invoice);
+        {
+            returnValue = await database.InsertAsync(invoice);
+        }
+
+        InvoiceItemDatabase invoiceItemDatabase = new();
+
+        foreach (var it in invoice.InvoiceItems)
+            it.InvoiceId = invoice.Id;
+
+        await invoiceItemDatabase.SaveInvoiceItemsAsync(invoice.InvoiceItems);
+
+        return returnValue;
     }
 
     public async Task<int> DeleteInvoiceAsync(Invoice invoice)

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using SchnapsSchuss.Views;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui;
+using SchnapsSchuss.Models.Databases;
 namespace SchnapsSchuss.ViewModels;
 
 public class HomePageViewModel : BaseViewModel
@@ -15,7 +16,13 @@ public class HomePageViewModel : BaseViewModel
     public ICommand PersonBookCommand { get; }
 
 
-    public ObservableCollection<Person> Persons { get; set; }
+    private ObservableCollection<Person> _persons;
+
+    public ObservableCollection<Person> Persons
+    {
+        get => _persons;
+        set => SetProperty(ref _persons, value);
+    }
 
     public HomePageViewModel()
     {
@@ -25,11 +32,7 @@ public class HomePageViewModel : BaseViewModel
         PersonLeaveCommand = new Command<Person>(OnPersonLeaveCommand);
         PersonBookCommand = new Command<Person>(OnPersonBookCommand);
 
-        Persons = new ObservableCollection<Person>
-        {
-            new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth=new DateTime(0) },
-            new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth=new DateTime(0) }
-        };
+        LoadPersonsFromDB();
     }
 
     private void OnManageButtonClicked()
@@ -60,5 +63,12 @@ public class HomePageViewModel : BaseViewModel
             { "Person", person},
         };
         Shell.Current.GoToAsync(nameof(CashRegisterPage), parameters);
+    }
+
+    private async void LoadPersonsFromDB()
+    {
+        PersonDatabase personDatabase = new PersonDatabase();
+        List<Person> personsList = await personDatabase.GetPersonsAsync();
+        Persons = new ObservableCollection<Person>(personsList);
     }
 }

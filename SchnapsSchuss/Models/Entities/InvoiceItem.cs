@@ -11,6 +11,9 @@ public partial class InvoiceItem : ObservableObject
     [ForeignKey(typeof(Invoice))]
     public int InvoiceId { get; set; }
 
+    [ForeignKey(typeof(Article))]
+    public int ArticleId { get; set; }
+
     [ObservableProperty]
     private float totalPrice;
 
