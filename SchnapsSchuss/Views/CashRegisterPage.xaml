@@ -17,7 +17,7 @@
                 
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
                     <!-- Back Button -->
-                    <Button Grid.Column="0" Text="Zurück" />
+                    <Button Command="{Binding CloseViewCommand}" Grid.Column="0" Text="Zurück" />
                     
                     <!-- Customer Name Label -->
                     <Label
@@ -32,14 +32,15 @@
 
                 <!-- Main Part -->
                 <Grid ColumnDefinitions="2*,6*,2*">
+
                     <!-- Left Column: Purchased Articles with border -->
                     <Border Grid.Column="0" Stroke="Gray" StrokeThickness="2" Padding="10" Margin="0,0,10,0">
                         <Grid RowDefinitions="Auto,*,Auto">
                             <!-- Header Row -->
-                            <Grid ColumnDefinitions="*,Auto,Auto" Grid.Row="0">
+                            <Grid ColumnDefinitions="*,50,40" ColumnSpacing="12" Grid.Row="0">
                                 <Label Text="Name"  Grid.Column="0" FontAttributes="Bold" />
-                                <Label Text="Menge" Grid.Column="1" FontAttributes="Bold" />
-                                <Label Text="Preis" Grid.Column="2" FontAttributes="Bold" />
+                                <Label Text="Menge" Grid.Column="1" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                                <Label Text="Preis" Grid.Column="2" FontAttributes="Bold" HorizontalTextAlignment="Center" />
                                 <!-- Bottom border for header -->
                                 <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="3" VerticalOptions="End"/>
                             </Grid>
@@ -51,10 +52,10 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
-                                            <Label Text="{Binding Article.Name}" Grid.Column="0" />
-                                            <Label Text="{Binding Amount}" Grid.Column="1" />
-                                            <Label Text="{Binding TotalPrice}" Grid.Column="2" />
+                                        <Grid ColumnDefinitions="*,40,40" ColumnSpacing="12">
+                                            <Label Text="{Binding Article.Name}" Grid.Column="0"/>
+                                            <Label Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="End" />
+                                            <Label Text="{Binding TotalPrice}" Grid.Column="2" HorizontalTextAlignment="End" />
                                         </Grid>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
@@ -68,7 +69,7 @@
                             </Grid>
                         </Grid>
                     </Border>
-                    
+
                     <!-- Middle Column: Article Buttons with gaps -->
                     <CollectionView Grid.Column="1" ItemsSource="{Binding FilteredArticles}">
                         <CollectionView.ItemsLayout>
@@ -79,11 +80,12 @@
                             <DataTemplate>
                                 <!-- Button fills its cell with margin for spacing -->
                                 <Button Text="{Binding Name}" 
-                        Margin="5"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}" 
-                        CommandParameter="{Binding .}" />
+                                    Margin="5"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}"
+                                    IsEnabled="{Binding Stock}"
+                                    CommandParameter="{Binding .}" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>

@@ -12,6 +12,11 @@
     <Color x:Key="Secondary">#DFD8F7</Color>
     <Color x:Key="SecondaryDarkText">#9880e5</Color>
     <Color x:Key="Tertiary">#2B0B98</Color>
+    
+    <Color x:Key="Cancel">#ffc9c9</Color>
+    <Color x:Key="Accept">#b2f2bb</Color>
+    <Color x:Key="AcceptDark">#44a651</Color>
+    <Color x:Key="CancelDark">#FF5449</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>

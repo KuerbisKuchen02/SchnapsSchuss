@@ -1,16 +1,19 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
 namespace SchnapsSchuss.Models.Entities;
 
-public class Article
+public partial class Article : ObservableObject
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     public string Name { get; set; }
     public float PriceMember { get; set; }
     public float PriceGuest { get; set; }
-    public int Stock { get; set; }
+
+    [ObservableProperty]
+    private int stock;
     public ArticleType Type { get; set; }
     
     [OneToMany(CascadeOperations = CascadeOperation.All)]

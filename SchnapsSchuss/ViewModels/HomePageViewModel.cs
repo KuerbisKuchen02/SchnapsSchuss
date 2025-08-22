@@ -3,6 +3,9 @@ using System.Windows.Input;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
+using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui;
+using SchnapsSchuss.Models.Databases;
 using static SQLite.TableMapping;
 namespace SchnapsSchuss.ViewModels;
 
@@ -14,7 +17,15 @@ public class HomePageViewModel : BaseViewModel
     public ICommand PersonLeaveCommand { get; }
     public ICommand PersonBookCommand { get; }
 
+
+    private ObservableCollection<Person> _persons;
     public ObservableCollection<Person> Persons { get; set; }
+
+    public ObservableCollection<Person> Persons
+    {
+        get => _persons;
+        set => SetProperty(ref _persons, value);
+    }
 
     public HomePageViewModel()
     {
@@ -34,7 +45,7 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnLogOffButtonClicked()
     {
-        Shell.Current.GoToAsync(nameof(LoginPage));
+        Shell.Current.GoToAsync("..");
     }
 
     private void OnAddPersonButtonClick()
@@ -48,7 +59,7 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnPersonLeaveCommand(Person person)
     {
-        // TODO call leave Pop Up
+        Shell.Current.ShowPopupAsync(new LeavingPopUp(new LeavingPopUpViewModel(person)), new PopupOptions());
         Console.WriteLine($"Person {person.FirstName} {person.LastName} is leaving.");
     }
 
@@ -59,5 +70,12 @@ public class HomePageViewModel : BaseViewModel
             { "Person", person},
         };
         Shell.Current.GoToAsync(nameof(CashRegisterPage), parameters);
+    }
+
+    private async void LoadPersonsFromDB()
+    {
+        PersonDatabase personDatabase = new PersonDatabase();
+        List<Person> personsList = await personDatabase.GetPersonsAsync();
+        Persons = new ObservableCollection<Person>(personsList);
     }
 }

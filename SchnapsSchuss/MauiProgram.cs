@@ -10,7 +10,14 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkit(options =>
+            {
+                options.SetPopupDefaults(new DefaultPopupSettings
+                {
+                    CanBeDismissedByTappingOutsideOfPopup = true,
+                    BackgroundColor = Color.FromArgb("1f1f1f"), 
+                });
+            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
