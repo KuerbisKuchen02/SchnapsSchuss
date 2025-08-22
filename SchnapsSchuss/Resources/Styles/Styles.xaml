@@ -337,8 +337,8 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
     </Style>
 
-    <Style TargetType="Switch">
-        <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+    <Style TargetType="Switch" x:Key="JustASwitch">
+        <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource Accept}, Dark={StaticResource AcceptDark}}" />
         <Setter Property="ThumbColor" Value="{StaticResource White}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -352,7 +352,7 @@
                     </VisualState>
                     <VisualState x:Name="On">
                         <VisualState.Setters>
-                            <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray200}}" />
+                            <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource Accept}, Dark={StaticResource AcceptDark}}" />
                             <Setter Property="ThumbColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
                         </VisualState.Setters>
                     </VisualState>
@@ -453,5 +453,6 @@
     <Style TargetType="Button" x:Key="CancelButton">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Cancel}, Dark={StaticResource CancelDark}}"></Setter>
     </Style>
+    
 
 </ResourceDictionary>

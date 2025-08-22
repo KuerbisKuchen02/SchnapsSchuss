@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+           xmlns:system="clr-namespace:System;assembly=System.Runtime"
+           xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
+           xmlns:views="clr-namespace:SchnapsSchuss.Views"
+           x:Class="SchnapsSchuss.Views.AddGuestPopUp"
+           x:TypeArguments="system:String">
+
+    <mct:Popup.Resources>
+        <Style TargetType="{x:Type views:AddGuestPopUp}">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="MaximumWidthRequest" Value="600" />
+        </Style>
+    </mct:Popup.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+
+        <Label Grid.Row="0" Text="Gast hinzufügen" HorizontalTextAlignment="Center" Margin="0,0,0,10" FontSize="Large" />
+
+        <Grid Grid.Row="1" ColumnDefinitions="3*,5*" RowDefinitions="*,*,*,*" >
+
+            <Label Grid.Column="0" Grid.Row="0" Text="Vorname" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" />
+            <Entry Grid.Column="1" Grid.Row="0" Text="{Binding GuestFirstName}" Placeholder="Vorname eingeben" />
+
+            <Label Grid.Column="0" Grid.Row="1" Text="Nachname" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" />
+            <Entry Grid.Column="1" Grid.Row="1" Text="{Binding GuestLastName}" Placeholder="Nachname eingeben" />
+
+            <Label Grid.Column="0" Grid.Row="2" Text="Geburtsdatum" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" />
+            <DatePicker Grid.Column="1" Grid.Row="2" Date="{Binding GuestDateOfBirth}" />
+
+            <Label Grid.Column="0" Grid.Row="3" Text="Waffenbesitzkarte?" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" />
+            <Switch Grid.Column="1" Grid.Row="3" IsToggled="{Binding HasGunOwnership}" Style="{StaticResource JustASwitch}" />
+
+
+        </Grid>
+
+        <Label Text="{Binding ErrorMessage}" 
+               TextColor="Red" 
+               Grid.Row="2"
+               Margin="0,0,0,10"
+               IsVisible="{Binding ErrorMessage}" />
+
+        <FlexLayout JustifyContent="Center" Grid.Row="3">
+            
+            <Button Text="Abbrechen"
+                Style="{StaticResource CancelButton}"
+                Margin="0, 0, 40, 0"
+                Command="{Binding CloseCommand}" />
+            
+            <Button Text="Speichern" 
+                Style="{StaticResource SubmitButton}" 
+                Command="{Binding AddGuestCommand}"/>
+            
+        </FlexLayout>
+
+    </Grid>
+
+
+</mct:Popup>
