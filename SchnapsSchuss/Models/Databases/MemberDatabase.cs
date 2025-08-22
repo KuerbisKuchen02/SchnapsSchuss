@@ -3,7 +3,7 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class MemberDatabase
+public class MemberDatabase : Database<Member>
 {
     SQLiteAsyncConnection database;
 
@@ -29,13 +29,13 @@ public class MemberDatabase
         ");
     }
 
-    public async Task<List<Member>> GetMembersAsync()
+    public async Task<List<Member>> GetAllAsync()
     {
         await Init();
         return await database.Table<Member>().ToListAsync();
     }
 
-    public async Task<Member> GetMemberAsync(int Id)
+    public async Task<Member> GetOneAsync(int Id)
     {
         await Init();
         return await database.Table<Member>().Where(m => m.PersonId == Id).FirstOrDefaultAsync();
@@ -48,7 +48,7 @@ public class MemberDatabase
     }
 
 
-    public async Task<int> SaveMemberAsync(Member member)
+    public async Task<int> SaveAsync(Member member)
     {
         await Init();
         if (member.PersonId != 0)
@@ -57,7 +57,7 @@ public class MemberDatabase
             return await database.InsertAsync(member);
     }
 
-    public async Task<int> DeleteMemberAsync(Member member)
+    public async Task<int> DeleteAsync(Member member)
     {
         await Init();
         return await database.DeleteAsync(member);

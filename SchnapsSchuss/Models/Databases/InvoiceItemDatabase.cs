@@ -3,7 +3,7 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class InvoiceItemDatabase
+public class InvoiceItemDatabase : Database<InvoiceItem>
 {
     SQLiteAsyncConnection database;
 
@@ -41,25 +41,31 @@ public class InvoiceItemDatabase
             .ToListAsync();
     }
 
-    public async Task<InvoiceItem> GetInvoiceItemAsync(int id)
+    public async Task<InvoiceItem> GetOneAsync(int id)
     {
         await Init();
         return await database.Table<InvoiceItem>().Where(i => i.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<int> SaveInvoiceItemAsync(InvoiceItem invoiceItem)
+    public async Task<List<InvoiceItem>> GetAllAsync()
     {
         await Init();
-        if (invoiceItem.Id != 0)
-            return await database.UpdateAsync(invoiceItem);
-        else
-            return await database.InsertAsync(invoiceItem);
+        return await database.Table<InvoiceItem>().ToListAsync();
     }
 
-    public async Task<int> SaveInvoiceItemsAsync(List<InvoiceItem> invoiceItems)
+    public async Task<int> SaveAsync(InvoiceItem entity)
     {
-        if (invoiceItems is null) throw new ArgumentNullException(nameof(invoiceItems));
-        if (invoiceItems.Count == 0) return 0;
+        await Init();
+        if (entity.Id != 0)
+            return await database.UpdateAsync(entity);
+        else
+            return await database.InsertAsync(entity);
+    }
+
+    public async Task<int> SaveInvoiceItemsAsync(List<InvoiceItem> entity)
+    {
+        if (entity is null) throw new ArgumentNullException(nameof(entity));
+        if (entity.Count == 0) return 0;
 
         await Init();
 
@@ -67,7 +73,7 @@ public class InvoiceItemDatabase
 
         await database.RunInTransactionAsync(tran =>
         {
-            foreach (var item in invoiceItems)
+            foreach (var item in entity)
             {
                 if (item.Id != 0)
                     affectedRows += tran.Update(item);
@@ -79,9 +85,9 @@ public class InvoiceItemDatabase
         return affectedRows;
     }
 
-    public async Task<int> DeleteItemAsync(InvoiceItem invoiceItem)
+    public async Task<int> DeleteAsync(InvoiceItem entity)
     {
         await Init();
-        return await database.DeleteAsync(invoiceItem);
+        return await database.DeleteAsync(entity);
     }
 }

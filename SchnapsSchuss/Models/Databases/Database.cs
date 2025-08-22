@@ -8,14 +8,12 @@ namespace SchnapsSchuss.Models.Databases
 {
     interface Database<T>
     {
-        T getOne(int id);
+        Task<T> GetOneAsync(int id);
 
-        IEnumerable<T> getAll();
+        Task<List<T>> GetAllAsync();
 
-        void Add(T entity);
+        Task<int> SaveAsync(T entity);
 
-        void Update(T entity);
-
-        void Delete(T entity);
+        Task<int> DeleteAsync(T entity);
     }
 }

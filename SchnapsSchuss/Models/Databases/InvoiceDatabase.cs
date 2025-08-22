@@ -4,7 +4,7 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class InvoiceDatabase
+public class InvoiceDatabase : Database<Invoice>
 {
     SQLiteAsyncConnection database;
 
@@ -32,7 +32,7 @@ public class InvoiceDatabase
         ");
     }
 
-    public async Task<List<Invoice>> GetInvoicesAsync()
+    public async Task<List<Invoice>> GetAllAsync()
     {
         await Init();
 
@@ -52,13 +52,13 @@ public class InvoiceDatabase
         return invoices;
     }
 
-    public async Task<Invoice> GetInvoiceAsync(int id)
+    public async Task<Invoice> GetOneAsync(int id)
     {
         await Init();
         return await database.Table<Invoice>().Where(i => i.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<int> SaveInvoiceAsync(Invoice invoice)
+    public async Task<int> SaveAsync(Invoice invoice)
     {
         int returnValue = 0;
 
@@ -82,7 +82,7 @@ public class InvoiceDatabase
         return returnValue;
     }
 
-    public async Task<int> DeleteInvoiceAsync(Invoice invoice)
+    public async Task<int> DeleteAsync(Invoice invoice)
     {
         await Init();
         return await database.DeleteAsync(invoice);

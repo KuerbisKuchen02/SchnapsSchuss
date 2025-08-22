@@ -74,7 +74,7 @@ public class HomePageViewModel : BaseViewModel
     private async void LoadPersonsFromDB()
     {
         PersonDatabase personDatabase = new PersonDatabase();
-        List<Person> personsList = await personDatabase.GetPersonsAsync();
+        List<Person> personsList = await personDatabase.GetAllAsync();
         Persons = new ObservableCollection<Person>(personsList);
     }
 }
