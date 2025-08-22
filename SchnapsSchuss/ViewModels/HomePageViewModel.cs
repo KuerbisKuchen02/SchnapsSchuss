@@ -33,6 +33,8 @@ public class HomePageViewModel : BaseViewModel
         PersonBookCommand = new Command<Person>(OnPersonBookCommand);
 
         Persons = new ObservableCollection<Person>();
+
+        LoadPersonsFromDB();
     }
 
     private void OnManageButtonClicked()

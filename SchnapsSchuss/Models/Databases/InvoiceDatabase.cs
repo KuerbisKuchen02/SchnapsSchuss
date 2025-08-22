@@ -35,7 +35,21 @@ public class InvoiceDatabase
     public async Task<List<Invoice>> GetInvoicesAsync()
     {
         await Init();
-        return await database.GetAllWithChildrenAsync<Invoice>(recursive: true);
+
+        var invoices = await database.GetAllWithChildrenAsync<Invoice>(recursive: true);
+
+        var allItems = invoices.SelectMany(i => i.InvoiceItems).ToList();
+        var ids = allItems.Select(it => it.ArticleId).Distinct().ToList();
+
+        var articles = await database.Table<Article>()
+                                     .Where(a => ids.Contains(a.Id))
+                                     .ToListAsync();
+        var map = articles.ToDictionary(a => a.Id);
+
+        foreach (var it in allItems)
+            if (map.TryGetValue(it.ArticleId, out var a)) it.Article = a;
+
+        return invoices;
     }
 
     public async Task<Invoice> GetInvoiceAsync(int id)
