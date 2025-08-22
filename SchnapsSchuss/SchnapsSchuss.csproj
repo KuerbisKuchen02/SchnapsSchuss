@@ -68,6 +68,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <MauiXaml Update="Views\AddGuestPopUp.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
       <MauiXaml Update="Views\GunOwnershipPopUp.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
