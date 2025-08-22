@@ -1,7 +1,9 @@
-using SchnapsSchuss.Models.Entities;
-using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using SchnapsSchuss.Models.Databases;
+using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
+using static SQLite.TableMapping;
 namespace SchnapsSchuss.ViewModels;
 
 public class HomePageViewModel : BaseViewModel
@@ -11,7 +13,6 @@ public class HomePageViewModel : BaseViewModel
     public ICommand AddPersonCommand { get; }
     public ICommand PersonLeaveCommand { get; }
     public ICommand PersonBookCommand { get; }
-
 
     public ObservableCollection<Person> Persons { get; set; }
 
@@ -23,11 +24,7 @@ public class HomePageViewModel : BaseViewModel
         PersonLeaveCommand = new Command<Person>(OnPersonLeaveCommand);
         PersonBookCommand = new Command<Person>(OnPersonBookCommand);
 
-        Persons = new ObservableCollection<Person>
-        {
-            new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth=new DateTime(0) },
-            new Person { FirstName = "Max", LastName = "Mustermann", DateOfBirth=new DateTime(0) }
-        };
+        Persons = new ObservableCollection<Person>();
     }
 
     private void OnManageButtonClicked()
@@ -42,7 +39,11 @@ public class HomePageViewModel : BaseViewModel
 
     private void OnAddPersonButtonClick()
     {
-        Shell.Current.GoToAsync(nameof(AddPersonPage));
+        var parameters = new Dictionary<string, object>
+        {
+            { "alreadyThere", Persons.ToList() }
+        };
+        Shell.Current.GoToAsync(nameof(AddPersonPage), parameters);
     }
 
     private void OnPersonLeaveCommand(Person person)
