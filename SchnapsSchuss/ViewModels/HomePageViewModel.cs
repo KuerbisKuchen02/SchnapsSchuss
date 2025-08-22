@@ -52,7 +52,7 @@ public class HomePageViewModel : BaseViewModel
     {
         var parameters = new Dictionary<string, object>
         {
-            { "alreadyThere", Persons.ToList() }
+            { "alreadyThere", Persons }
         };
         Shell.Current.GoToAsync(nameof(AddPersonPage), parameters);
     }

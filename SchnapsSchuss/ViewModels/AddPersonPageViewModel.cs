@@ -1,8 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Extensions;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
+using SchnapsSchuss.Views;
 
 namespace SchnapsSchuss.ViewModels;
 
@@ -56,17 +59,10 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
         get => _persons;
         set
         {
-            Collection<Person> filteredPersonList = new Collection<Person>();
-            foreach (Person p in value)
-            {
-                if (!AlreadyThere.Any(x => x.Id == p.Id))
-                {
-                    filteredPersonList.Add(p);
-                }
-            }
-
-            SetProperty(ref _persons, filteredPersonList);
+            SetProperty(ref _persons, value);
+            FilterTable(_searchText);
         }
+        
     }
 
     private ObservableCollection<Person> _filteredPersons = new ObservableCollection<Person>();
@@ -91,28 +87,40 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
     public async void LoadPersons()
     {
         List<Person> dbData = await _personDB.GetAllAsync();
+        Collection<Person> temp = new Collection<Person>();
         foreach (Person person in dbData)
         {
-            Persons.Add(person);
+            temp.Add(person);
         }
-
-        FilteredPersons = Persons.ToObservableCollection();
+        Persons = temp;
     }
 
     public void FilterTable(string searchText)
     {
-        ObservableCollection<Person> filtered = new ObservableCollection<Person>();
-        foreach (Person p in Persons) {
-            if (p.FirstName.ToLower().Contains(searchText.ToLower())) {
-                filtered.Add(p);
-            } else if (p.LastName.ToLower().Contains(searchText.ToLower())) {
-                filtered.Add(p);
-            } else if (p.DateOfBirth.ToString().ToLower().Contains(searchText.ToLower())) {
-                filtered.Add(p);
+        // Filter out persons that are already in the "AlreadyThere" collection
+        Collection<Person> collection_filter_already_there = new Collection<Person>();
+        ObservableCollection<Person> collection_filtered = new ObservableCollection<Person>();
+
+        foreach (Person p in Persons)
+        {
+            if (!AlreadyThere.Any(x => x.Id == p.Id))
+            {
+                collection_filter_already_there.Add(p);
             }
         }
 
-        FilteredPersons = filtered;
+        // Filter the rest of the persons based on the search text
+        foreach (Person p in collection_filter_already_there) {
+            if (p.FirstName.ToLower().Contains(searchText.ToLower())) {
+                collection_filtered.Add(p);
+            } else if (p.LastName.ToLower().Contains(searchText.ToLower())) {
+                collection_filtered.Add(p);
+            } else if (p.DateOfBirth.ToString().ToLower().Contains(searchText.ToLower())) {
+                collection_filtered.Add(p);
+            }
+        }
+
+        FilteredPersons = collection_filtered;
     } 
 
     public void OnBack()
@@ -122,16 +130,16 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 
     public void OnAddGuest()
     {
-        // TODO Add Pop Up Call here
+        Shell.Current.ShowPopup(new AddGuestPopUp(new AddGuestPopUpViewModel()), new PopupOptions());
     }
 
     public void OnPersonSelected()
     {
-        Console.WriteLine("AAAAAAAAA");
+        
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        AlreadyThere = query["alreadyThere"] as Collection<Person>;
+        AlreadyThere = (Collection<Person>) query["alreadyThere"];
     }
 }
