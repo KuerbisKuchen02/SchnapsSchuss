@@ -82,6 +82,12 @@ public class InvoiceDatabase : Database<Invoice>
         return returnValue;
     }
 
+    public async Task<Invoice> GetOpenInvoiceForPerson(int Id)
+    {
+        await Init();
+        return await database.Table<Invoice>().Where(i => i.isPaidFor == false && i.PersonId == Id).FirstOrDefaultAsync();
+    }
+
     public async Task<int> DeleteAsync(Invoice invoice)
     {
         await Init();
