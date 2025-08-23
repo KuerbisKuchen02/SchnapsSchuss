@@ -184,6 +184,8 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         Invoice.isPaidFor = true;
 
         await BackAsync();
+
+        await Shell.Current.GoToAsync("..");
     }
 
     private async Task BackAsync()
@@ -191,8 +193,6 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         Invoice.InvoiceItems = [.. InvoiceItems];
         await _invoiceDb.SaveAsync(Invoice);
         await _invoiceItemDb.SaveInvoiceItemsAsync([.. InvoiceItems]);
-
-        await Shell.Current.GoToAsync("..");
 
         return;
     }
