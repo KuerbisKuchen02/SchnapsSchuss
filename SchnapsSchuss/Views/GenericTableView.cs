@@ -1,6 +1,4 @@
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Reflection;
 using SchnapsSchuss.ViewModels;
 
 namespace SchnapsSchuss.Views;
@@ -35,10 +33,10 @@ public class GenericTableView<T> : ContentView
         var control = (GenericTableView<T>)bindable;
 
         if (oldValue is INotifyCollectionChanged oldObs)
-            oldObs.CollectionChanged -= control.OnCollectionChanged;
+            oldObs.CollectionChanged -= control.OnCollectionChanged!;
 
         if (newValue is INotifyCollectionChanged newObs)
-            newObs.CollectionChanged += control.OnCollectionChanged;
+            newObs.CollectionChanged += control.OnCollectionChanged!;
 
         control.BuildTable();
     }
@@ -65,7 +63,7 @@ public class GenericTableView<T> : ContentView
         {
             header.Add(new Label
             {
-                Text = properties[i].Name, 
+                Text = _viewModel.ShownColumnNames[properties[i].Name], 
                 FontAttributes = FontAttributes.Bold,
                 FontSize = 18,
             }, i);

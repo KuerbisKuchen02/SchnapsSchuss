@@ -13,6 +13,9 @@ public class Person
     public bool OwnsGunOwnershipCard { get; set; }
     public RoleType Role { get; set; }
     
+    [OneToOne(CascadeOperations = CascadeOperation.All)]
+    public Member? member { get; set; } 
+    
     [OneToMany(CascadeOperations = CascadeOperation.All)]
     public List<Invoice> invoices { get; set; }
 
