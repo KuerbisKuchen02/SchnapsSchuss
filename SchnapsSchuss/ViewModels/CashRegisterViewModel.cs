@@ -192,6 +192,8 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         await _invoiceDb.SaveAsync(Invoice);
         await _invoiceItemDb.SaveInvoiceItemsAsync([.. InvoiceItems]);
 
+        await Shell.Current.GoToAsync("..");
+
         return;
     }
 
