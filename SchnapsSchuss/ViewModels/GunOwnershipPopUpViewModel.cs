@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using SchnapsSchuss.Models.Entities;
+using SchnapsSchuss.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -65,12 +67,12 @@ namespace SchnapsSchuss.ViewModels
             }
         }
 
+
         private async Task OnOkayClicked()
         {
             if (Shell.Current.CurrentPage is not null)
             {
-                await Shell.Current.CurrentPage.ClosePopupAsync();
-
+                await Shell.Current.CurrentPage.ClosePopupAsync();               
             }
         }
     }

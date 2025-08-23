@@ -28,6 +28,13 @@ public class PersonDatabase : Database<Person>
         return await database.Table<Person>().Where(p => p.Id == id).FirstOrDefaultAsync();
     }
 
+    public async Task<List<Person>> GetPersonToIdsAsync(List<int> Ids)
+    {
+        await Init();
+        return await database.Table<Person>().Where(p => Ids.Contains(p.Id)).ToListAsync();
+    }
+
+
     public async Task<List<Person>> GetPersonsOfRoleAsync(RoleType roleType)
     {
         await Init();
@@ -38,9 +45,16 @@ public class PersonDatabase : Database<Person>
     {
         await Init();
         if (person.Id != 0)
-            return await database.UpdateAsync(person);
+        {
+            await database.UpdateAsync(person);
+            return person.Id;
+        }
         else
-            return await database.InsertAsync(person);
+        {
+            await database.InsertAsync(person);
+            return person.Id;
+        }
+        
     }
 
     public async Task<int> DeleteAsync(Person person)

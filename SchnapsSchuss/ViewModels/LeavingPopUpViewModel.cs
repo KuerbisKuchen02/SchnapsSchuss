@@ -108,19 +108,15 @@ namespace SchnapsSchuss.ViewModels
 
             if (Shell.Current.CurrentPage is not null)
             {
-                await Shell.Current.CurrentPage.ClosePopupAsync();
+                await Shell.Current.CurrentPage.ClosePopupAsync(true);
             }
-            
-            GunOwnershipPopUpViewModel gunOwnershipPopUpViewModel = new GunOwnershipPopUpViewModel(Person);
-
-            await Shell.Current.ShowPopupAsync(new GunOwnershipPopUp(gunOwnershipPopUpViewModel), new PopupOptions());
         }
 
         private async Task OnCloseClicked()
         {
             if (Shell.Current.CurrentPage is not null)
             {
-                await Shell.Current.CurrentPage.ClosePopupAsync();
+                await Shell.Current.CurrentPage.ClosePopupAsync(false);
 
             }
         }

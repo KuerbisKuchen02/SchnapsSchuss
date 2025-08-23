@@ -85,7 +85,6 @@ namespace SchnapsSchuss.ViewModels
 
             Person newGuest = new Person
             {
-                Id = 0,
                 FirstName = GuestFirstName,
                 LastName = GuestLastName,
                 DateOfBirth = GuestDateOfBirth,
@@ -100,7 +99,12 @@ namespace SchnapsSchuss.ViewModels
 
                 // Open Homepage with the new guest added to persons
                 await Shell.Current.CurrentPage.ClosePopupAsync();
-                await Shell.Current.GoToAsync(nameof(HomePage));
+                var parameters = new Dictionary<string, object>
+                    {
+                        { "NewPerson", result},
+                    };
+
+                await Shell.Current.GoToAsync(nameof(HomePage), parameters);
             }
             catch (Exception ex)
             {

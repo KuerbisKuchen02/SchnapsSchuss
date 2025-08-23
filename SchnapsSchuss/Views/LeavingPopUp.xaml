@@ -7,7 +7,7 @@
            xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
            xmlns:views="clr-namespace:SchnapsSchuss.Views"
            x:Class="SchnapsSchuss.Views.LeavingPopUp"
-           x:TypeArguments="system:String">
+           x:TypeArguments="system:Boolean" >
 
     <mct:Popup.Resources>
         <Style TargetType="{x:Type views:LeavingPopUp}">
