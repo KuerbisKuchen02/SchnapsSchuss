@@ -41,8 +41,6 @@ namespace SchnapsSchuss.ViewModels
         public GunOwnershipPopUpViewModel(Person Person)
         {
             CloseCommand = new Command(async () => await OnOkayClicked());
-
-            // TODO: Remove hardcoded Person:
             this._person = Person;
             setLabelTextAndColor();
         }

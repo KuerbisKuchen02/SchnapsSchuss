@@ -28,6 +28,7 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
     }
 
     private List<int> _personIds { get; set; }
+    private bool _isFromPopUp = false;
 
     private ObservableCollection<Person> _persons;
 
@@ -74,13 +75,21 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
     public async void onAppearing()
     {
-        // Refresh the list of persons when the page appears
-        LoadPersonList();
+        Debug.WriteLine("HomePage onAppearing is called");
+        if (_isFromPopUp)
+        {
+            _isFromPopUp = false;
+            return;
+        }
+        else
+        {
+            LoadPersonList();
+        }
     }
 
     public async void onDisappearing()
     {
-        // Handle any necessary cleanup when the page disappears
+        Debug.WriteLine("HomePage onDisAppearing is called");
         StoreIdsToPreferences();
     }
 
@@ -106,6 +115,7 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
         if (showGunOwnershipPopup)
         {
+            _isFromPopUp = true;
             IPopupResult result = await Shell.Current.ShowPopupAsync(new GunOwnershipPopUp(new GunOwnershipPopUpViewModel(person)), new PopupOptions());
             if (!result.WasDismissedByTappingOutsideOfPopup)
             {
