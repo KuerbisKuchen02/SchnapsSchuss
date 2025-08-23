@@ -6,5 +6,6 @@ public enum RoleType
     BOARD_OF_DIRECTORS_MEMBER,
     TREASURER,
     MEMBER,
-    GUEST
+    GUEST,
+    EXITED_MEMBER
 }
