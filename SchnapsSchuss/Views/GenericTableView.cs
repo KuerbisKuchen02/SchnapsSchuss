@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Reflection;
 using SchnapsSchuss.ViewModels;
 
@@ -52,28 +53,34 @@ public class GenericTableView<T> : ContentView
     {
         var properties = _viewModel.GetProperties();
 
-        var grid = new Grid
+        var root = new VerticalStackLayout();
+        
+        var header = new Grid() 
         {
             ColumnDefinitions = new ColumnDefinitionCollection(
                 properties.Select(_ => new ColumnDefinition { Width = GridLength.Star }).ToArray()
             )
         };
-
-        // Header Row
         for (var i = 0; i < properties.Length; i++)
         {
-            grid.Add(new Label
+            header.Add(new Label
             {
                 Text = properties[i].Name, 
                 FontAttributes = FontAttributes.Bold,
                 FontSize = 18,
-            }, i, 0);
+            }, i);
         }
+        root.Children.Add(header);
 
-        // Data Rows
         var row = 1;
         foreach (var item in ItemsSource)
         {
+            var grid = new Grid()
+            {
+                ColumnDefinitions = new ColumnDefinitionCollection(
+                    properties.Select(_ => new ColumnDefinition { Width = GridLength.Star }).ToArray()
+                )
+            };
             grid.RowDefinitions.Add(new RowDefinition
             {
                 Height = GridLength.Auto
@@ -90,14 +97,23 @@ public class GenericTableView<T> : ContentView
                     Margin = new Thickness(1, 5),
                     HorizontalOptions = LayoutOptions.Fill,
                     HorizontalTextAlignment = TextAlignment.Center,
-                    BackgroundColor = (Color) (row % 2 == 0 ? Application.Current?.Resources["OffBlack"] :  Application.Current?.Resources["Gray500"])!,
-                }, col, row);
+                    BackgroundColor = (Color) (row % 2 == 0 
+                        ? Application.Current?.Resources["OffBlack"] 
+                        : Application.Current?.Resources["Gray500"])!,
+                }, col);
             }
+            var tapGestureRecognizer = new TapGestureRecognizer();
+            tapGestureRecognizer.Tapped += (_, _) =>
+            {
+                _viewModel.OnRowClicked(item);
+            };
+            grid.GestureRecognizers.Add(tapGestureRecognizer);
+            root.Children.Add(grid);
             row++;
         }
         Content = new ScrollView
         {
-            Content = grid,
+            Content = root,
         };
     }
 }

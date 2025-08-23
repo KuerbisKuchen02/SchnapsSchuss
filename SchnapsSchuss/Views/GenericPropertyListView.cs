@@ -40,22 +40,26 @@ public class GenericPropertyListView<T> : ContentView
             
             var pType = property.PropertyType;
 
-            View? view = null;
+            View? view;
+            var binding = new Binding(
+                path: $"SelectedItem.{property.Name}",
+                mode: BindingMode.TwoWay
+            );
             if (pType == typeof(bool))
             {
                 view = new Switch();
-                view.SetBinding(Switch.IsToggledProperty, new Binding(nameof(property.Name), BindingMode.TwoWay));
+                view.SetBinding(Switch.IsToggledProperty, binding);
             } else if (pType == typeof(DateTime))
             {
                 view = new DatePicker();
-                view.SetBinding(DatePicker.DateProperty, new Binding(nameof(property.Name), BindingMode.TwoWay));
+                view.SetBinding(DatePicker.DateProperty, binding);
             } else if (pType == typeof(Enum))
             {
                 view = new Picker
                 {
                     ItemsSource = Enum.GetNames(pType)
                 };
-                view.SetBinding(Picker.SelectedIndexProperty, new Binding(nameof(property.Name), BindingMode.TwoWay));
+                view.SetBinding(Picker.SelectedIndexProperty, binding);
             }
             else
             {
@@ -70,7 +74,7 @@ public class GenericPropertyListView<T> : ContentView
                     entry.Keyboard = Keyboard.Numeric;
                 }
 
-                entry.SetBinding(Entry.TextProperty, new Binding(nameof(property.Name), BindingMode.TwoWay));
+                entry.SetBinding(Entry.TextProperty, binding);
                 view = entry;
             }
             view.Margin = new Thickness(0, 10, 0, 0);
