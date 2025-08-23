@@ -29,12 +29,11 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Stroke="Gray" StrokeThickness="2" Padding="20,10,10,10" Margin="0,0,0,0" StrokeShape="RoundRectangle 8,8,8,8">
-                            
-                        
-                            <Grid ColumnDefinitions="*,*,*,150,150">
+
+                            <Grid ColumnDefinitions="2*,3*,*,150,150">
                                 <Label Grid.Column="0" Text="{Binding FirstName}" VerticalOptions="Center" FontSize="20" />
                                 <Label Grid.Column="1" Text="{Binding LastName}" VerticalOptions="Center" FontSize="20" />
-                                <Label Grid.Column="2" Text="Total:" VerticalOptions="Center" FontSize="20" />
+                                <Label Grid.Column="2" Text="{Binding OpenInvoice.TotalPrice, StringFormat='Total: {0}€'}" VerticalOptions="Center" FontSize="20"/>
                                 <Button Grid.Column="3" Text="Gehen"
                                         Command="{Binding Path=BindingContext.PersonLeaveCommand,
                                                 Source={RelativeSource AncestorType={x:Type ContentPage}}}"
