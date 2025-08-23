@@ -10,16 +10,21 @@
            MaximumWidthRequest="700">
     
     <VerticalStackLayout>
-        <Label Text="{Binding PopupTitle}" HorizontalTextAlignment="Center" FontSize="30"/>
-        <Button Text="Löschen" />
+        <FlexLayout JustifyContent="SpaceBetween">
+            <Label Text="{Binding PopupTitle}" HorizontalTextAlignment="Center" FontSize="30"/>
+            <Button Text="Löschen" 
+                    IsVisible="{Binding IsDeletable}"
+                    Command="{Binding DeleteSelected}"/>
+        </FlexLayout>
         <ContentView x:Name="Properties" Margin="0, 20"/>
         <FlexLayout JustifyContent="End">
             <Button Text="Abbrechen"
                     Style="{StaticResource CancelButton}"
                     Margin="0, 0, 10, 0"
-                    Command="{Binding ClosePopUp}"/>
+                    Command="{Binding CancelEdit}"/>
             <Button Text="Speichern" 
-                    Style="{StaticResource SubmitButton}"/>
+                    Style="{StaticResource SubmitButton}"
+                    Command="{Binding SaveEdit}"/>
         </FlexLayout>
     </VerticalStackLayout>
 </mct:Popup>

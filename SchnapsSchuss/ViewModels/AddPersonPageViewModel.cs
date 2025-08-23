@@ -1,11 +1,12 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows.Input;
 
 namespace SchnapsSchuss.ViewModels;
 
@@ -127,9 +128,14 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
         Shell.Current.ShowPopup(PopUp, new PopupOptions());    
     }
 
-    public void OnPersonSelected()
+    public async void OnPersonSelected()
     {
-        
+        // Open Homepage with the new guest added to persons
+        var parameters = new Dictionary<string, object>
+                {
+                    { "NewPerson", SelectedPerson.Id},
+                };
+        await Shell.Current.GoToAsync(nameof(HomePage), parameters);   
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)

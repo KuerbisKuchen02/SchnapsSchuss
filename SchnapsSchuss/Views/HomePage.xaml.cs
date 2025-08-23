@@ -18,4 +18,15 @@ public partial class HomePage : ContentPage
             viewModel.onAppearing();
         }
     }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        // Handle any necessary cleanup when the page disappears
+        if (BindingContext is HomePageViewModel viewModel)
+        {
+            // Add any necessary cleanup code here
+            viewModel.onDisappearing();
+        }
+    }
 }

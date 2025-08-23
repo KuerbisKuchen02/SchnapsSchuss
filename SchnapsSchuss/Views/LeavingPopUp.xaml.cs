@@ -3,7 +3,7 @@ using SchnapsSchuss.ViewModels;
 
 namespace SchnapsSchuss.Views;
 
-public partial class LeavingPopUp : Popup<string>
+public partial class LeavingPopUp : Popup<bool>
 {
     public LeavingPopUp(LeavingPopUpViewModel viewModel)
     {

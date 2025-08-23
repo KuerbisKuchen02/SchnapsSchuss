@@ -7,7 +7,7 @@
            xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
            xmlns:views="clr-namespace:SchnapsSchuss.Views"
            x:Class="SchnapsSchuss.Views.LeavingPopUp"
-           x:TypeArguments="system:String">
+           x:TypeArguments="system:Boolean" >
 
     <mct:Popup.Resources>
         <Style TargetType="{x:Type views:LeavingPopUp}">
@@ -52,8 +52,8 @@
                                 <DataTemplate>
                                     <Grid ColumnDefinitions="*,40,40" ColumnSpacing="12">
                                         <Label Text="{Binding Article.Name}" Grid.Column="0"/>
-                                        <Label Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="End" />
-                                        <Label Text="{Binding TotalPrice}" Grid.Column="2" HorizontalTextAlignment="End" />
+                                        <Label Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="Center" />
+                                        <Label Text="{Binding TotalPrice, StringFormat='{0}€'}" Grid.Column="2" HorizontalTextAlignment="Center" />
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -63,7 +63,7 @@
                         <Grid ColumnDefinitions="*,Auto" Grid.Row="2" Padding="0,10,0,0">
                             <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="2" VerticalOptions="Start"/>
                             <Label Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" Margin="0,5,0,0"/>
-                            <Label Text="{Binding InvoiceTotal}" FontAttributes="Bold" Grid.Column="1" Margin="0,5,0,0"/>
+                            <Label Text="{Binding InvoiceTotal, StringFormat='{0}€'}" FontAttributes="Bold" Grid.Column="1" Margin="0,5,0,0"/>
                         </Grid>
                     </Grid>
                 </Border>

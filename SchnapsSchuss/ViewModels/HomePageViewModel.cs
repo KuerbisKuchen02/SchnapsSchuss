@@ -6,6 +6,8 @@ using SchnapsSchuss.Views;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui;
 using System.Diagnostics;
+using System.Text.Json;
+using CommunityToolkit.Maui.Core;
 
 namespace SchnapsSchuss.ViewModels;
 
@@ -25,7 +27,8 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         set => SetProperty(ref _isAdmin, value);
     }
 
-    private string[] personIds { get; set; }
+    private List<int> _personIds { get; set; }
+    private bool _isFromPopUp = false;
 
     private ObservableCollection<Person> _persons;
 
@@ -45,8 +48,9 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
         Persons = new ObservableCollection<Person>();
 
+        _personIds = new List<int>();
 
-        LoadPersonsFromDB();
+        LoadPersonList();
     }
 
     private void OnManageButtonClicked()
@@ -71,24 +75,57 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
     public async void onAppearing()
     {
-        // Refresh the list of persons when the page appears
-        LoadPersonsFromDB();
+        Debug.WriteLine("HomePage onAppearing is called");
+        if (_isFromPopUp)
+        {
+            _isFromPopUp = false;
+            return;
+        }
+        else
+        {
+            LoadPersonList();
+        }
+    }
+
+    public async void onDisappearing()
+    {
+        Debug.WriteLine("HomePage onDisAppearing is called");
+        StoreIdsToPreferences();
     }
 
     private async void OnPersonLeaveCommand(Person person)
     {
         Console.WriteLine($"Person {person.FirstName} {person.LastName} is leaving.");
 
+        bool showGunOwnershipPopup = false;
         Invoice OpenInvoice = await new InvoiceDatabase().GetOpenInvoiceForPerson(person.Id);
-        if (OpenInvoice == null)
+        if (OpenInvoice is not null)
         {
-            Console.WriteLine($"No open invoice found for {person.FirstName} {person.LastName}.");
-            Shell.Current.ShowPopupAsync(new GunOwnershipPopUp(new GunOwnershipPopUpViewModel(person)), new PopupOptions());
+            IPopupResult<bool> resultLeavingPopUp = await Shell.Current.ShowPopupAsync<bool>(new LeavingPopUp(new LeavingPopUpViewModel(OpenInvoice)), new PopupOptions());
+            if (!resultLeavingPopUp.WasDismissedByTappingOutsideOfPopup && resultLeavingPopUp.Result )
+            {
+                showGunOwnershipPopup = true;
+            }
+            
         }
         else
         {
-            Shell.Current.ShowPopupAsync(new LeavingPopUp(new LeavingPopUpViewModel(OpenInvoice)), new PopupOptions());
+            showGunOwnershipPopup = true;
         }
+
+        if (showGunOwnershipPopup)
+        {
+            _isFromPopUp = true;
+            IPopupResult result = await Shell.Current.ShowPopupAsync(new GunOwnershipPopUp(new GunOwnershipPopUpViewModel(person)), new PopupOptions());
+            if (!result.WasDismissedByTappingOutsideOfPopup)
+            {
+                _personIds.Remove(person.Id);
+                StoreIdsToPreferences();
+                LoadPersonList();
+            }
+        }
+        
+
     }
 
     private void OnPersonBookCommand(Person person)
@@ -100,13 +137,50 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         Shell.Current.GoToAsync(nameof(CashRegisterPage), parameters);
     }
 
-    private async void LoadPersonsFromDB()
+    private async void LoadPersonList()
     {
+        LoadIdsFromPreferences();
 
         PersonDatabase personDatabase = new PersonDatabase();
-        List<Person> personsList = await personDatabase.GetAllAsync();
+        List<Person> personsList = await personDatabase.GetPersonToIdsAsync(_personIds);
+        foreach (Person person in personsList)
+        {
+            person.OpenInvoice = await new InvoiceDatabase().GetOpenInvoiceForPerson(person.Id);
+            if (person.OpenInvoice is null)
+            {
+                person.OpenInvoice = new Invoice
+                {
+                    PersonId = person.Id,
+                    Date = DateTime.Now,
+                    isPaidFor = true,
+                    InvoiceItems = null,
+                };
+            }
+            else
+            {
+                List<InvoiceItem> items = await new InvoiceItemDatabase().GetInvoiceItemsOfInvoiceAsync(person.OpenInvoice);
+                person.OpenInvoice.InvoiceItems = items;
+            }
+        }
         Persons = new ObservableCollection<Person>(personsList);
     }
+
+
+    private void StoreIdsToPreferences()
+    {
+        _personIds = _personIds.Distinct().ToList(); 
+        string serialized = JsonSerializer.Serialize(_personIds);
+        Preferences.Set("PersonIds", serialized);
+    }
+
+    private void LoadIdsFromPreferences()
+    {
+        string stored = Preferences.Get("PersonIds", string.Empty);
+        _personIds = string.IsNullOrEmpty(stored)
+            ? new List<int>()
+            : JsonSerializer.Deserialize<List<int>>(stored) ?? new List<int>();
+    }
+
 
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
@@ -114,6 +188,10 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         {
             IsAdmin = member.person.Role == RoleType.ADMINISTRATOR;
         }
-
+        if (query.TryGetValue("NewPerson", out var newPerson) && newPerson is int newPersonId)
+        {
+            _personIds.Add(newPersonId);
+            StoreIdsToPreferences();
+        }
     }
 }

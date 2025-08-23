@@ -29,6 +29,7 @@ public class CrudViewModel<T> : BaseViewModel
     
     private string _title;
     
+    // ReSharper disable once UnusedMember.Global
     public string Title
     {
         get => _title;
@@ -43,6 +44,7 @@ public class CrudViewModel<T> : BaseViewModel
     
     private T? _selectedItem;
 
+    // ReSharper disable once UnusedMember.Global
     public T SelectedItem
     {
         get => _selectedItem ?? Activator.CreateInstance<T>();
@@ -51,6 +53,15 @@ public class CrudViewModel<T> : BaseViewModel
 
     private List<string> _shownColumnNames;
 
+    private bool _isDeletable;
+
+    public bool IsDeletable
+    {
+        get => _isDeletable;
+        set => SetProperty(ref _isDeletable, value);
+    }
+
+    // ReSharper disable once UnusedMember.Global
     public List<string> ShownColumnNames
     {
         get => _shownColumnNames;
@@ -59,6 +70,7 @@ public class CrudViewModel<T> : BaseViewModel
     
     private string _searchText;
 
+    // ReSharper disable once UnusedMember.Global
     public string SearchText
     {
         get => _searchText;
@@ -68,10 +80,15 @@ public class CrudViewModel<T> : BaseViewModel
         }
     }
 
+    // ReSharper disable once UnusedMember.Global
     public ICommand AddItem => new Command(OnAddButtonClicked);
-    public ICommand EditItem => new Command(OnRowClicked);
-    public ICommand ClosePopUp => new Command(OnPopupCancel);
-
+    // ReSharper disable once UnusedMember.Global
+    public ICommand CancelEdit => new Command(OnPopupCancel);
+    // ReSharper disable once UnusedMember.Global
+    public ICommand SaveEdit => new Command(OnPopupSubmit);
+    // ReSharper disable once UnusedMember.Global
+    public ICommand DeleteSelected => new Command(OnDelete);
+    
     public PropertyInfo[] GetProperties()
     {
         return typeof(T).GetProperties()
@@ -83,16 +100,18 @@ public class CrudViewModel<T> : BaseViewModel
         _title = title;
         _shownColumnNames = shownColumn;
         _database = DatabaseFactory<T>.GetDatabase();
-        Init();
+        LoadItems();
     }
 
-    public void OnRowClicked()
+    public void OnRowClicked(T entity)
     {
+        SelectedItem = entity;
+        IsDeletable = true;
         PopupTitle = _title + " bearbeiten";
         ShowPopup();
     }
     
-    private async void Init()
+    private async void LoadItems()
     {
         var items = await _database.GetAllAsync();
         Items = new ObservableCollection<T>(items);
@@ -119,6 +138,8 @@ public class CrudViewModel<T> : BaseViewModel
 
     private void OnAddButtonClicked()
     {
+        SelectedItem = Activator.CreateInstance<T>();
+        IsDeletable = false;
         PopupTitle = _title + " hinzufügen";
         ShowPopup();
     }
@@ -135,5 +156,19 @@ public class CrudViewModel<T> : BaseViewModel
     private void OnPopupCancel()
     {
         Shell.Current.CurrentPage.ClosePopupAsync();
+    }
+    
+    private void OnPopupSubmit()
+    {
+        _database.SaveAsync(SelectedItem);
+        Shell.Current.CurrentPage.ClosePopupAsync();
+        LoadItems();
+    }
+
+    private void OnDelete()
+    {
+        _database.DeleteAsync(SelectedItem);
+        Shell.Current.CurrentPage.ClosePopupAsync();
+        LoadItems();
     }
 }

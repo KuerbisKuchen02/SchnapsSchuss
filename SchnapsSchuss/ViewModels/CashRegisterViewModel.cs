@@ -114,6 +114,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
                 PersonId = person.Id
             };
         }
+        OnPropertyChanged(nameof(InvoiceTotal));
     }
 
     private void AddArticleToInvoice(Article article)
