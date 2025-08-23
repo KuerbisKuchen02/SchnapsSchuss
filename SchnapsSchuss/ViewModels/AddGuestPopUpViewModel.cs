@@ -52,7 +52,6 @@ namespace SchnapsSchuss.ViewModels
         }
 
 
-
         public AddGuestPopUpViewModel()
         {
             CloseCommand = new Command(async () => await OnCloseClicked());
