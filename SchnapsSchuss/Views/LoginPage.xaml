@@ -37,7 +37,7 @@
                 <Label Text="Password" />
                 <Entry Placeholder="Password" Text="{Binding Password}" IsPassword="True"/>
 
-                <Button Text="{Binding LoginButtonText}" Command="{Binding LoginCommand}" />
+                <Button Text="{Binding LoginButtonText}" Command="{Binding LoginCommand}" Style="{StaticResource SubmitButton}" />
 
                 <Label Text="{Binding ErrorMessage}" TextColor="Red" 
                IsVisible="{Binding ErrorMessage}" />
