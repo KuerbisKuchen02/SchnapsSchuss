@@ -27,6 +27,17 @@ public class MemberDatabase : Database<Member>
                 FOREIGN KEY (PersonId) REFERENCES Person(Id) ON DELETE CASCADE
             );
         ");
+
+        // Check if the default member already exists
+        var count = await database.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Member;");
+        if (count == 0)
+        {
+            // Insert default member
+            await database.ExecuteAsync(@"
+            INSERT INTO Member (PersonId, Username, Password, IsRangeSupervisor)
+            VALUES (1, 'Admin', 'password', 1);
+        ");
+        }
     }
 
     public async Task<List<Member>> GetAllAsync()
