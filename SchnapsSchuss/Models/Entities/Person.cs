@@ -15,4 +15,7 @@ public class Person
     
     [OneToMany(CascadeOperations = CascadeOperation.All)]
     public List<Invoice> invoices { get; set; }
+
+    [Ignore]
+    public Invoice OpenInvoice { get; set; }
 }

@@ -18,4 +18,6 @@ public class Invoice
     
     [OneToMany(CascadeOperations = CascadeOperation.All)]
     public List<InvoiceItem> InvoiceItems { get; set; }
+
+    public float TotalPrice { get => InvoiceItems?.Sum(i => i.TotalPrice) ?? 0;}
 }

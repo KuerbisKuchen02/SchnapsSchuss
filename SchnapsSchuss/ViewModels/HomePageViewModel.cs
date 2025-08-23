@@ -133,6 +133,25 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
         PersonDatabase personDatabase = new PersonDatabase();
         List<Person> personsList = await personDatabase.GetPersonToIdsAsync(_personIds);
+        foreach (Person person in personsList)
+        {
+            person.OpenInvoice = await new InvoiceDatabase().GetOpenInvoiceForPerson(person.Id);
+            if (person.OpenInvoice is null)
+            {
+                person.OpenInvoice = new Invoice
+                {
+                    PersonId = person.Id,
+                    Date = DateTime.Now,
+                    isPaidFor = true,
+                    InvoiceItems = null,
+                };
+            }
+            else
+            {
+                List<InvoiceItem> items = await new InvoiceItemDatabase().GetInvoiceItemsOfInvoiceAsync(person.OpenInvoice);
+                person.OpenInvoice.InvoiceItems = items;
+            }
+        }
         Persons = new ObservableCollection<Person>(personsList);
     }
 
