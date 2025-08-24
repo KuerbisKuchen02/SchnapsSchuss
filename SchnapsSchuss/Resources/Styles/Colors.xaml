@@ -17,6 +17,7 @@
     <Color x:Key="Brown">#3b3b1a</Color>
     <Color x:Key="Beige">#bebea1</Color>
 
+    <Color x:Key="DarkGreenBackground">#8ba083</Color>
     <Color x:Key="DarkGreen">#3a5a40</Color>
     <Color x:Key="DarkGreenDark">#94af99</Color>
     

@@ -14,7 +14,7 @@
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0" />
             <Setter Property="MaximumWidthRequest" Value="600" />
-            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
         </Style>
     </mct:Popup.Resources>
 
@@ -48,13 +48,14 @@
         <FlexLayout JustifyContent="Center" Grid.Row="3">
             
             <Button Text="Abbrechen"
-                Style="{StaticResource CancelButton}"
-                Margin="0, 0, 20, 0"
-                Command="{Binding CloseCommand}" />
+                    BackgroundColor="{StaticResource Tertiary}" 
+                    TextColor="Black"
+                    Margin="0, 0, 20, 0"
+                    Command="{Binding CloseCommand}" />
             
             <Button Text="Speichern" 
-                Style="{StaticResource SubmitButton}" 
-                Command="{Binding AddGuestCommand}"/>
+                    Style="{StaticResource SubmitButton}" 
+                    Command="{Binding AddGuestCommand}"/>
             
         </FlexLayout>
 
