@@ -29,6 +29,8 @@ public class MemberDatabase : IDatabase<Member>
             {
                 Username = "admin",
                 Password = "admin",
+                FirstName = "Admin",
+                LastName = "Default",
                 Role = RoleType.ADMINISTRATOR
             });
         }
