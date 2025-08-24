@@ -11,12 +11,6 @@
         <vm:CashRegisterViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Resources>
-        <Style TargetType="Label">
-            <Setter Property="FontSize" Value="20" />
-        </Style>
-    </ContentPage.Resources>
-
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Margin="20" Spacing="20">
@@ -25,6 +19,7 @@
                     <Border Grid.Column="1" Style="{StaticResource RowEntry}">
                         <!-- Customer Name Label -->
                         <Label
+                            FontSize="20"
                             Text="{Binding PersonLabel}"
                             HorizontalTextAlignment="Center"
                             Style="{StaticResource Headline}"
@@ -44,22 +39,22 @@
                         <Grid RowDefinitions="Auto,2,*,2,Auto">
                             <!-- Header Row -->
                             <Grid Grid.Row="0" ColumnDefinitions="*,70,50" ColumnSpacing="12" BackgroundColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource TertiaryDark}}" Padding="10" >
-                                <Label Text="Name" Grid.Column="0" FontAttributes="Bold" VerticalTextAlignment="Center" />
-                                <Label Text="Menge" Grid.Column="1" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
-                                <Label Text="Preis" Grid.Column="2" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                <Label FontSize="20" Text="Name" Grid.Column="0" FontAttributes="Bold" VerticalTextAlignment="Center" />
+                                <Label FontSize="20" Text="Menge" Grid.Column="1" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                <Label FontSize="20" Text="Preis" Grid.Column="2" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                             </Grid>
                             <BoxView Grid.Row="1" HeightRequest="2" BackgroundColor="{StaticResource Black}" Grid.ColumnSpan="3" VerticalOptions="End"/>
                             <!-- Invoice Items Collection -->
                             <CollectionView ItemsSource="{Binding InvoiceItems}" Grid.Row="2">
                                 <CollectionView.ItemsLayout>
-                                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
+                                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid ColumnDefinitions="*,70,50" ColumnSpacing="12" Padding="10">
-                                            <Label Text="{Binding Article.Name}" Grid.Column="0" />
-                                            <Label Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="Center" />
-                                            <Label Text="{Binding TotalPrice, StringFormat='{0}€'}" Grid.Column="2" HorizontalTextAlignment="Center" />
+                                            <Label FontSize="20" Text="{Binding Article.Name}" Grid.Column="0" />
+                                            <Label FontSize="20" Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="Center" />
+                                            <Label FontSize="20" Text="{Binding TotalPrice, StringFormat='{0}€'}" Grid.Column="2" HorizontalTextAlignment="Center" />
                                         </Grid>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
@@ -67,8 +62,8 @@
                             <BoxView Grid.Row="3" HeightRequest="2" BackgroundColor="{StaticResource Black}" Grid.ColumnSpan="3" VerticalOptions="End"/>
                             <!-- Total Row pinned at bottom with top border -->
                             <Grid ColumnDefinitions="*,Auto" Grid.Row="4" Padding="10">
-                                <Label Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" VerticalTextAlignment="Center" />
-                                <Label Text="{Binding InvoiceTotal, StringFormat='{0}€'}" FontAttributes="Bold" Grid.Column="1" VerticalTextAlignment="Center"/>
+                                <Label FontSize="20" Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" VerticalTextAlignment="Center" />
+                                <Label FontSize="20" Text="{Binding InvoiceTotal, StringFormat='{0}€'}" FontAttributes="Bold" Grid.Column="1" VerticalTextAlignment="Center"/>
                             </Grid>
                         </Grid>
                     </Border>
