@@ -11,16 +11,11 @@ namespace SchnapsSchuss.ViewModels;
 
 public class CrudViewModel<T> : BaseViewModel
 {
-    private readonly Database<T> _database;
+    private readonly IDatabase<T> _database;
     private readonly ArticleType? _articleType;
 
     // Backing field is required to also notify when set to new object references  
-    private ObservableCollection<T> _items = [];
-    public ObservableCollection<T> Items
-    {
-        get => _items;
-        set => SetProperty(ref _items, value);
-    }
+    private List<T> _items = [];
 
     private ObservableCollection<T> _filteredItems = [];
     public ObservableCollection<T> FilteredItems
@@ -111,7 +106,7 @@ public class CrudViewModel<T> : BaseViewModel
         LoadItems();
     }
 
-    public async void OnRowClicked(T entity)
+    public void OnRowClicked(T entity)
     {
         SelectedItem = entity;
         IsDeletable = true;
@@ -130,20 +125,20 @@ public class CrudViewModel<T> : BaseViewModel
             }
             return false;
         });
-        Items = new ObservableCollection<T>(items);
-        FilteredItems = new ObservableCollection<T>(Items);
+        _items = items;
+        FilteredItems = new ObservableCollection<T>(_items);
     }
 
     private void FilterTable(string query)
     {
         if (string.IsNullOrEmpty(query))
         {
-            FilteredItems = new ObservableCollection<T>(Items);
+            FilteredItems = new ObservableCollection<T>(_items);
             return;
         }
         List<T> filteredItems = [];
         filteredItems.AddRange(
-            from item in Items 
+            from item in _items 
             from prop in GetProperties() 
             where (prop.GetValue(item)?.ToString()?.ToLower() ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase)
             select item);
@@ -168,7 +163,7 @@ public class CrudViewModel<T> : BaseViewModel
         });
     }
 
-    private void OnPopupCancel()
+    private static void OnPopupCancel()
     {
         Shell.Current.CurrentPage.ClosePopupAsync();
     }

@@ -8,18 +8,18 @@ namespace SchnapsSchuss.ViewModels;
 
 public class LoginPageViewModel : BaseViewModel
 {
-    private MemberDatabase _MemberDatabase;
-    private string _LoginButtonText = "Login";
+    private readonly MemberDatabase _memberDatabase;
+    private string _loginButtonText = "Login";
 
     public ICommand LoginCommand { get; }
 
     public string LoginButtonText
     {
-        get => this._LoginButtonText;
-        set => this.SetProperty(ref this._LoginButtonText, value);
+        get => _loginButtonText;
+        set => SetProperty(ref _loginButtonText, value);
     }
 
-    private string _username;
+    private string _username = string.Empty;
 
     public string Username
     {
@@ -27,7 +27,7 @@ public class LoginPageViewModel : BaseViewModel
         set => SetProperty(ref _username, value);
     }
 
-    private string _password;
+    private string _password = string.Empty;
 
     public string Password
     {
@@ -35,7 +35,7 @@ public class LoginPageViewModel : BaseViewModel
         set => SetProperty(ref _password, value);
     }
 
-    private string _errorMessage;
+    private string _errorMessage = string.Empty;
     public string ErrorMessage
     {
         get => _errorMessage;
@@ -44,8 +44,8 @@ public class LoginPageViewModel : BaseViewModel
 
     public LoginPageViewModel()
     {
-        _ = new PersonDatabase();
-        _MemberDatabase = new MemberDatabase();
+        _ = new PersonDatabase(); 
+        _memberDatabase = new MemberDatabase();
         _ = new InvoiceDatabase();
         _ = new InvoiceItemDatabase();
         _ = new ArticleDatabase();
@@ -63,7 +63,7 @@ public class LoginPageViewModel : BaseViewModel
                 return;
             }
 
-            Member member = await ValidatePassword(Username, Password);
+            var member = await ValidatePassword(Username, Password);
 
             // Check if the credentials are valid
             if (member != null)
@@ -91,8 +91,8 @@ public class LoginPageViewModel : BaseViewModel
         }
     }
 
-        private async Task<Member> ValidatePassword(string Username, string Password)
+        private async Task<Member?> ValidatePassword(string username, string password)
     {
-        return await _MemberDatabase.CheckIfUserExists(Username, Password);
+        return await _memberDatabase.CheckIfUserExists(username, password);
     }
 }

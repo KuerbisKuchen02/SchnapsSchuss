@@ -20,7 +20,7 @@ public partial class InvoiceItem : ObservableObject
     [ObservableProperty]
     private int amount;
 
-    [ManyToOne]
+    [ManyToOne(CascadeOperations = CascadeOperation.All)]
     public Invoice Invoice { get; set; }
     
     [ManyToOne]
