@@ -7,6 +7,7 @@
   <img src="SchnapsSchuss/Resources/Images/schnaps_schuss_logo.png" width="256" style="margin-right: 20px; float: left;">
 </p>
 
+Management software for shooting clubs that streamlines member and guest administration, bookings for food, drinks, ammunition, and disciplines, and participant recording on training days.
 
 ## 🚀 Features
 
