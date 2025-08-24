@@ -96,7 +96,7 @@ namespace SchnapsSchuss.ViewModels
                         { "NewPerson", result},
                     };
 
-                await Shell.Current.GoToAsync(nameof(HomePage), parameters);
+                await Shell.Current.GoToAsync("..", parameters);
             }
             catch (Exception ex)
             {

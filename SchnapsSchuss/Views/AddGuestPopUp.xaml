@@ -34,7 +34,7 @@
             <DatePicker Grid.Column="1" Grid.Row="2" Date="{Binding GuestDateOfBirth}" />
 
             <Label Grid.Column="0" Grid.Row="3" Text="Waffenbesitzkarte?" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" />
-            <Switch Grid.Column="1" Grid.Row="3" IsToggled="{Binding HasGunOwnership}" Style="{StaticResource JustASwitch}" />
+            <Switch Grid.Column="1" Grid.Row="3" IsToggled="{Binding HasGunownership}" Style="{StaticResource JustASwitch}" />
 
 
         </Grid>
