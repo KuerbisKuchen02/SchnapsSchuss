@@ -49,10 +49,25 @@ public class InvoiceDatabase : IDatabase<Invoice>
 
     public async Task<int> SaveAsync(Invoice invoice)
     {
-        if (invoice.Id != 0) await _database.UpdateWithChildrenAsync(invoice);
-        else await _database.InsertWithChildrenAsync(invoice, recursive: true);
-        
-        return invoice.Id;
+        int returnValue;
+
+        if (invoice.Id != 0)
+        {
+            returnValue = await _database.UpdateAsync(invoice);
+        }
+        else
+        {
+            returnValue = await _database.InsertAsync(invoice);
+        }
+
+        InvoiceItemDatabase invoiceItemDatabase = new();
+
+        foreach (var it in invoice.InvoiceItems)
+            it.InvoiceId = invoice.Id;
+
+        await invoiceItemDatabase.SaveInvoiceItemsAsync(invoice.InvoiceItems);
+
+        return returnValue;
     }
 
     public async Task<int> DeleteAsync(Invoice invoice)
