@@ -46,15 +46,14 @@ public class PersonDatabase : Database<Person>
         await Init();
         if (person.Id != 0)
         {
-            await database.UpdateAsync(person);
-            return person.Id;
+            await _database.UpdateAsync(person);
         }
         else
         {
-            await database.InsertAsync(person);
-            return person.Id;
+            await _database.InsertAsync(person);
         }
-        
+
+        return person.Id;
     }
 
     public async Task<int> DeleteAsync(Person person)

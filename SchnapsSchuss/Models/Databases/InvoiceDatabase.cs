@@ -57,7 +57,8 @@ public class InvoiceDatabase : Database<Invoice>
         await Init();
         return await database.Table<Invoice>().Where(i => i.Id == id).FirstOrDefaultAsync();
     }
-    public async Task<Invoice> GetOpenInvoiceForPerson(int Id)
+    
+    public async Task<Invoice> GetOpenInvoiceForPerson(int id)
     {
         await Init();
         return await database.Table<Invoice>().Where(i => i.isPaidFor == false && i.PersonId == Id).FirstOrDefaultAsync();
