@@ -181,7 +181,15 @@ public class CrudViewModel<T> : BaseViewModel
 
     private void OnDelete()
     {
-        _database.DeleteAsync(SelectedItem);
+        if (SelectedItem is Member member)
+        {
+            member.Role = RoleType.EXITED_MEMBER;
+            _database.SaveAsync(SelectedItem);
+        }
+        else
+        {
+            _database.DeleteAsync(SelectedItem);
+        }
         Shell.Current.CurrentPage.ClosePopupAsync();
         LoadItems();
     }
