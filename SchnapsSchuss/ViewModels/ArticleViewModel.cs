@@ -38,6 +38,6 @@ namespace SchnapsSchuss.ViewModels
         /*
          * Returns a boolean representing if the Aarticle is currently in stock.
          */
-        public bool IsInStock => Article.Stock > 0;
+        public bool IsInStock => Article.Stock > 0 || Article.Stock == -1;
     }
 }

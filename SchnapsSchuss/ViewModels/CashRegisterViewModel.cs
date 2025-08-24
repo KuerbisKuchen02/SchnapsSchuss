@@ -4,6 +4,7 @@ using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace SchnapsSchuss.ViewModels;
@@ -88,7 +89,11 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     public async void OnDisappearing()
     {
         if(Invoice.InvoiceItems.Count == 0)
+        {
+            Debug.WriteLine("No items in invoice, deleting invoice");
             await _invoiceDb.DeleteAsync(Invoice);
+        }
+
     }
 
     private async Task LoadArticlesAsync()
@@ -105,7 +110,10 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         // If there is an open Invoice, show it. If not, create a new Invoice.
         if (openInvoice is not null)
         {
+            List<InvoiceItem> openInvoiceItems = await _invoiceItemDb.GetInvoiceItemsOfInvoiceAsync(openInvoice);
+            openInvoice.InvoiceItems = openInvoiceItems;
             Invoice = openInvoice;
+            Invoice.Person = person; 
             InvoiceItems = new ObservableCollection<InvoiceItem>(openInvoice.InvoiceItems);
         }
         else 
@@ -126,10 +134,10 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
     {
         // To add articles to an invoice, first check if the article is alreay contained in the invoice.
         InvoiceItem ExistingInvoiceItem = InvoiceItems
-            .FirstOrDefault(i => i.Article.Id == article.Id);
+            .FirstOrDefault(i => i.ArticleId == article.Id);
 
         // Check if the article has stock left
-        if (article.Stock <= 0)
+        if (article.Stock == 0 || article.Stock < -1)
             return;
 
         // Determine the correct price accroding to the role
@@ -162,8 +170,11 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 
     private async void subtractArticleAmount(Article article)
     {
-        article.Stock--;
-        _articleDb.SaveAsync(article);
+        if(article.Stock > 0)
+        {
+            article.Stock--;
+            _articleDb.SaveAsync(article);
+        }
     }
 
     private void FilterArticlesByType(ArticleType articleType)
