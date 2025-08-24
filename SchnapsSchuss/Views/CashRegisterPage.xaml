@@ -57,7 +57,7 @@
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid ColumnDefinitions="*,70,50" ColumnSpacing="12" Padding="10">
-                                            <Label Text="{Binding Article.Name}" Grid.Column="0" TextColor="Red" />
+                                            <Label Text="{Binding Article.Name}" Grid.Column="0" />
                                             <Label Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="Center" />
                                             <Label Text="{Binding TotalPrice, StringFormat='{0}€'}" Grid.Column="2" HorizontalTextAlignment="Center" />
                                         </Grid>
@@ -93,6 +93,7 @@
                                     HorizontalOptions="Fill"
                                     Padding="5"
                                     BorderColor="{StaticResource Black}"
+                                    HeightRequest="70"
                                     BorderWidth="1"
                                     VerticalOptions="Fill" />
 
