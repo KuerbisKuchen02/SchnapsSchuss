@@ -51,10 +51,12 @@ public class InvoiceDatabase : IDatabase<Invoice>
     {
         int returnValue;
 
+        // If the invoice exists update it
         if (invoice.Id != 0)
         {
             returnValue = await _database.UpdateAsync(invoice);
         }
+        // Else create a new one
         else
         {
             returnValue = await _database.InsertAsync(invoice);
@@ -65,6 +67,7 @@ public class InvoiceDatabase : IDatabase<Invoice>
         foreach (var it in invoice.InvoiceItems)
             it.InvoiceId = invoice.Id;
 
+        // Save invoice items
         await invoiceItemDatabase.SaveInvoiceItemsAsync(invoice.InvoiceItems);
 
         return returnValue;

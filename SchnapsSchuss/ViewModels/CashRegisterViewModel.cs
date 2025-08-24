@@ -9,6 +9,7 @@ namespace SchnapsSchuss.ViewModels;
 
 public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 {
+    // Databases
     private readonly InvoiceDatabase _invoiceDb;
     private readonly InvoiceItemDatabase _invoiceItemDb;
     private readonly ArticleDatabase _articleDb;
@@ -71,11 +72,13 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         BackCommand = new AsyncRelayCommand(BackAsync);
     }
 
+    // get person selected in home page
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         await InitAsync((Person)query["Person"]);
     }
 
+    // open invoice, load and filter articles
     private async Task InitAsync(Person person)
     {
         await LoadArticlesAsync();
@@ -83,6 +86,7 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         FilterArticlesByType(ArticleType.DRINK);
     }
 
+    // delete empty invoice
     public async void OnDisappearing()
     {
         if (Invoice.InvoiceItems.Count != 0) return;
@@ -197,11 +201,13 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 
         await BackAsync();
 
+        // Go back to home page
         await Shell.Current.GoToAsync("..");
     }
 
     private async Task BackAsync()
     {
+        // Save invoice when navigating back
         Invoice.InvoiceItems = [.. InvoiceItems];
         await _invoiceDb.SaveAsync(Invoice);
         await _invoiceItemDb.SaveInvoiceItemsAsync([.. InvoiceItems]);

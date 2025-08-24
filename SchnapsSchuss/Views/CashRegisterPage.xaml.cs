@@ -11,6 +11,7 @@ public partial class CashRegisterPage : ContentPage
 
     protected override bool OnBackButtonPressed()
     {
+        // Save invoice on back button
         if (BindingContext is CashRegisterViewModel vm && vm.BackCommand.CanExecute(null))
         {
             vm.BackCommand.Execute(null);

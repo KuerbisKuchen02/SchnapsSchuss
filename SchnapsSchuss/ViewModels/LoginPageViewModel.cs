@@ -9,7 +9,7 @@ namespace SchnapsSchuss.ViewModels;
 public class LoginPageViewModel : BaseViewModel
 {
     private readonly MemberDatabase _memberDatabase;
-    private string _loginButtonText = "Login";
+    private string _loginButtonText = "Anmelden";
 
     public ICommand LoginCommand { get; }
 
@@ -59,7 +59,7 @@ public class LoginPageViewModel : BaseViewModel
             // Catch empty text fields
             if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
             {
-                ErrorMessage = "Please enter both username and password.";
+                ErrorMessage = "Bitte gib ein Benutzername und ein Passwort ein.";
                 return;
             }
 
@@ -81,13 +81,13 @@ public class LoginPageViewModel : BaseViewModel
             }
             else
             {
-                ErrorMessage = "You entered the wrong credentials";
+                ErrorMessage = "Passwort oder Benutzername ist falsch.";
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Login failed: {ex.Message}");
-            ErrorMessage = "An error occurred during login.";
+            ErrorMessage = "Ein Fehler ist aufgetreten.";
         }
     }
 
