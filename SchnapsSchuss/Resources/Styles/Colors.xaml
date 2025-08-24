@@ -16,8 +16,10 @@
 
     <Color x:Key="Brown">#3b3b1a</Color>
     <Color x:Key="Beige">#bebea1</Color>
-    
 
+    <Color x:Key="DarkGreen">#3a5a40</Color>
+    <Color x:Key="DarkGreenDark">#94af99</Color>
+    
     <Color x:Key="Cancel">#ffc9c9</Color>
     <Color x:Key="Accept">#588157</Color>
     <Color x:Key="AcceptDark">#6f926e</Color>
@@ -29,6 +31,14 @@
     <Color x:Key="MidnightBlue">#190649</Color>
     <Color x:Key="OffBlack">#1f1f1f</Color>
 
+    <Color x:Key="DisabledGrey">#e9ecef</Color>
+    <Color x:Key="DisabledGreyText">#868e96</Color>
+    <Color x:Key="DisabledGreyDark">#202325</Color>
+    <Color x:Key="DisabledGreyDarkText">#60666c</Color>
+    
+    <Color x:Key="DarkGrey">#9d9d8d</Color>
+    <Color x:Key="DarkGreyDark">#68685a</Color>
+    
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>
     <Color x:Key="Gray300">#ACACAC</Color>

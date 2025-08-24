@@ -28,11 +28,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="0" Text="Getränke" Command="{Binding DrinkButtonCommand}" />
-                    <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="1" Text="Gerichte" Command="{Binding FoodButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="1" Text="Gerichte" Command="{Binding FoodButtonCommand}" Style="{StaticResource SecondaryMenuButton}" />
                     <Button HeightRequest="200" FontSize="40" Grid.Row="0" Grid.Column="2" Text="Disziplinen" Command="{Binding DisciplineButtonCommand}" />
-                    <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="0" Text="Munition" Command="{Binding MunitionButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="0" Text="Munition" Command="{Binding MunitionButtonCommand}" Style="{StaticResource SecondaryMenuButton}" />
                     <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="1" Text="Mitglieder" Command="{Binding MemberButtonCommand}" />
-                    <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="2" Text="Sonstiges" Command="{Binding OthersButtonCommand}" />
+                    <Button HeightRequest="200" FontSize="40" Grid.Row="1" Grid.Column="2" Text="Sonstiges" Command="{Binding OthersButtonCommand}" Style="{StaticResource SecondaryMenuButton}" />
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>  

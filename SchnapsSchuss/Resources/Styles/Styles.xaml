@@ -41,7 +41,7 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource DisabledGrey}, Dark={StaticResource DisabledGreyDark}}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="PointerOver" />
@@ -458,12 +458,65 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Brown}, Dark={StaticResource Beige}}" />
     </Style>
 
+    <Style TargetType="Button" x:Key="MenuButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource DarkGrey}, Dark={StaticResource DarkGreyDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+
+    <Style TargetType="Button" x:Key="SecondaryMenuButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource DarkGreen}, Dark={StaticResource DarkGreenDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+
+    <Style TargetType="Button" x:Key="CashRegistryButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDarkText}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource DisabledGrey}, Dark={StaticResource DisabledGreyDark}}" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DisabledGreyText}, Dark={StaticResource DisabledGreyDarkText}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CRUDLabelCellOne">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="CRUDLabelCellTwo">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource TertiaryDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="LabelTableHeader">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDarkText}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
     <Style TargetType="Border" x:Key="RowEntry">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource TertiaryDark}}" />
         <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
         <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="Padding" Value="20,10,10,10" />
+        <Setter Property="Padding" Value="18" />
         <Setter Property="StrokeShape" Value="RoundRectangle 8,8,8,8" />
     </Style>
 

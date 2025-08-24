@@ -1,5 +1,6 @@
-using System.Collections.Specialized;
+using CommunityToolkit.Maui;
 using SchnapsSchuss.ViewModels;
+using System.Collections.Specialized;
 
 namespace SchnapsSchuss.Views;
 
@@ -64,8 +65,7 @@ public class GenericTableView<T> : ContentView
             header.Add(new Label
             {
                 Text = _viewModel.ShownColumnNames[properties[i].Name], 
-                FontAttributes = FontAttributes.Bold,
-                FontSize = 18,
+                Style = (Style) Application.Current.Resources["LabelTableHeader"]
             }, i);
         }
         root.Children.Add(header);
@@ -87,18 +87,19 @@ public class GenericTableView<T> : ContentView
             for (var col = 0; col < properties.Length; col++)
             {
                 var value = properties[col].GetValue(item)?.ToString() ?? string.Empty;
-                grid.Add(new Label
+                Label Label = new Label
                 {
                     Text = value,
-                    FontAttributes = FontAttributes.Bold,
-                    FontSize = 18,
+                    FontSize = 20,
                     Margin = new Thickness(1, 5),
                     HorizontalOptions = LayoutOptions.Fill,
                     HorizontalTextAlignment = TextAlignment.Center,
-                    BackgroundColor = (Color) (row % 2 == 0 
-                        ? Application.Current?.Resources["OffBlack"] 
-                        : Application.Current?.Resources["Gray500"])!,
-                }, col);
+                    Padding = 5,
+                    Style = row % 2 == 0
+                        ? (Style) Application.Current.Resources["CRUDLabelCellOne"]
+                        : (Style) Application.Current.Resources["CRUDLabelCellTwo"]!,
+                };
+                grid.Add(Label, col);
             }
             var tapGestureRecognizer = new TapGestureRecognizer();
             tapGestureRecognizer.Tapped += (_, _) =>

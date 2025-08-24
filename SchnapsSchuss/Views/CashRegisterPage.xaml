@@ -10,58 +10,65 @@
     <ContentPage.BindingContext>
         <vm:CashRegisterViewModel />
     </ContentPage.BindingContext>
-    
+
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Margin="20" Spacing="20">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
-                    <!-- Customer Name Label -->
-                    <Label
-                        Grid.Column="1"
-                        Text="{Binding PersonLabel}"
-                        HorizontalTextAlignment="Center"
-                        Style="{StaticResource Headline}"
-                        MaxLines="1"
-                        LineBreakMode="TailTruncation" 
-                    />
+                <Grid ColumnDefinitions="*,Auto,*">
+                    <BoxView Grid.Column="0" Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"/>
+                    <Border Grid.Column="1" Style="{StaticResource RowEntry}">
+                        <!-- Customer Name Label -->
+                        <Label
+                            Text="{Binding PersonLabel}"
+                            HorizontalTextAlignment="Center"
+                            Style="{StaticResource Headline}"
+                            MaxLines="1"
+                            LineBreakMode="TailTruncation" 
+                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                        />
+                    </Border>
+                    <BoxView Grid.Column="2" Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"/>
                 </Grid>
 
                 <!-- Main Part -->
-                <Grid ColumnDefinitions="2*,6*,2*">
+                <Grid ColumnDefinitions="2*,6*,*" RowDefinitions="*,Auto" RowSpacing="10" ColumnSpacing="20">
 
                     <!-- Left Column: Purchased Articles with border -->
-                    <Border Grid.Column="0" Stroke="Gray" StrokeThickness="2" Padding="10" Margin="0,0,10,0">
-                        <Grid RowDefinitions="Auto,*,Auto">
+                    <Border Grid.Column="0" Stroke="{StaticResource Black}" StrokeThickness="2" Margin="0,0,10,0">
+                        <Grid RowDefinitions="Auto,2,*,2,Auto">
                             <!-- Header Row -->
-                            <Grid ColumnDefinitions="*,50,40" ColumnSpacing="12" Grid.Row="0">
-                                <Label Text="Name" Grid.Column="0" FontAttributes="Bold" />
-                                <Label Text="Menge" Grid.Column="1" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                                <Label Text="Preis" Grid.Column="2" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                                <!-- Bottom border for header -->
-                                <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="3" VerticalOptions="End"/>
+                            <Grid Grid.Row="0" ColumnDefinitions="*,70,50" ColumnSpacing="12" BackgroundColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource TertiaryDark}}" Padding="10" >
+                                <Label Text="Name" Grid.Column="0" FontAttributes="Bold" VerticalTextAlignment="Center" />
+                                <Label Text="Menge" Grid.Column="1" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                <Label Text="Preis" Grid.Column="2" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                             </Grid>
-
+                            <BoxView Grid.Row="1" HeightRequest="2" BackgroundColor="{StaticResource Black}" Grid.ColumnSpan="3" VerticalOptions="End"/>
                             <!-- Invoice Items Collection -->
-                            <CollectionView ItemsSource="{Binding InvoiceItems}" Grid.Row="1">
+                            <CollectionView ItemsSource="{Binding InvoiceItems}" Grid.Row="2">
                                 <CollectionView.ItemsLayout>
                                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid ColumnDefinitions="*,40,40" ColumnSpacing="12">
-                                            <Label Text="{Binding Article.Name}" Grid.Column="0"/>
+                                        <Grid ColumnDefinitions="*,70,50" ColumnSpacing="12" Padding="10">
+                                            <Label Text="{Binding Article.Name}" Grid.Column="0" TextColor="Red" />
                                             <Label Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="Center" />
                                             <Label Text="{Binding TotalPrice, StringFormat='{0}€'}" Grid.Column="2" HorizontalTextAlignment="Center" />
                                         </Grid>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
-
+                            <BoxView Grid.Row="3" HeightRequest="2" BackgroundColor="{StaticResource Black}" Grid.ColumnSpan="3" VerticalOptions="End"/>
                             <!-- Total Row pinned at bottom with top border -->
-                            <Grid ColumnDefinitions="*,Auto" Grid.Row="2" Padding="0,10,0,0">
-                                <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="2" VerticalOptions="Start"/>
-                                <Label Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" Margin="0,5,0,0"/>
-                                <Label Text="{Binding InvoiceTotal, StringFormat='{0}€'}" FontAttributes="Bold" Grid.Column="1" Margin="0,5,0,0"/>
+                            <Grid ColumnDefinitions="*,Auto" Grid.Row="4" Padding="10">
+                                <Label Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" VerticalTextAlignment="Center" />
+                                <Label Text="{Binding InvoiceTotal, StringFormat='{0}€'}" FontAttributes="Bold" Grid.Column="1" VerticalTextAlignment="Center"/>
                             </Grid>
                         </Grid>
                     </Border>
@@ -70,43 +77,49 @@
                     <CollectionView Grid.Column="1" ItemsSource="{Binding FilteredArticles}">
                         <CollectionView.ItemsLayout>
                             <!-- span = number of buttons per row -->
-                            <GridItemsLayout Orientation="Vertical" Span="3" />
+                            <GridItemsLayout Orientation="Vertical" Span="4" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
                         </CollectionView.ItemsLayout>
+                        <CollectionView.EmptyView>
+                            <Label Text="No articles to show" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" FontSize="20"/>
+                        </CollectionView.EmptyView>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <!-- Button fills its cell with margin for spacing -->
                                 <Button 
                                     Text="{Binding DisplayNameWithPrice}" 
                                     IsEnabled="{Binding IsInStock}"
                                     Command="{Binding BindingContext.AddArticleCommand, Source={x:Reference Root}}"
                                     CommandParameter="{Binding Article}"
-                                    Margin="5"
+                                    Style="{StaticResource CashRegistryButton}"
                                     HorizontalOptions="Fill"
-                                    VerticalOptions="Fill" />       
+                                    Padding="5"
+                                    BorderColor="{StaticResource Black}"
+                                    BorderWidth="1"
+                                    VerticalOptions="Fill" />
+
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
                     <!-- Right Column: Categories -->
-                    <VerticalStackLayout Grid.Column="2" Spacing="10" HorizontalOptions="End" VerticalOptions="Start">
-                        <Button Text="Getränke" HeightRequest="100" WidthRequest="120"
-                Command="{Binding FilterArticlesCommand}" 
-                CommandParameter="{x:Static entities:ArticleType.DRINK}" />
-                        <Button Text="Gerichte" HeightRequest="100" WidthRequest="120"
-                Command="{Binding FilterArticlesCommand}" 
-                CommandParameter="{x:Static entities:ArticleType.FOOD}" />
-                        <Button Text="Munition" HeightRequest="100" WidthRequest="120"
-                Command="{Binding FilterArticlesCommand}" 
-                CommandParameter="{x:Static entities:ArticleType.MUNITION}" />
-                        <Button Text="Disziplin" HeightRequest="100" WidthRequest="120"
-                Command="{Binding FilterArticlesCommand}" 
-                CommandParameter="{x:Static entities:ArticleType.DISCIPLINE}" />
-                        <Button Text="Sonstiges" HeightRequest="100" WidthRequest="120"
-                Command="{Binding FilterArticlesCommand}" 
-                CommandParameter="{x:Static entities:ArticleType.OTHER}" />
+                    <VerticalStackLayout Grid.Column="2" Spacing="10" HorizontalOptions="Fill" VerticalOptions="Start" >
+                        <Button Text="Getränke" Style="{StaticResource MenuButton}" HorizontalOptions="Fill" HeightRequest="80"
+                                Command="{Binding FilterArticlesCommand}" 
+                                CommandParameter="{x:Static entities:ArticleType.DRINK}" />
+                        <Button Text="Gerichte" Style="{StaticResource MenuButton}" HorizontalOptions="Fill" HeightRequest="80"
+                                Command="{Binding FilterArticlesCommand}" 
+                                CommandParameter="{x:Static entities:ArticleType.FOOD}" />
+                        <Button Text="Munition" Style="{StaticResource MenuButton}" HorizontalOptions="Fill" HeightRequest="80"
+                                Command="{Binding FilterArticlesCommand}" 
+                                CommandParameter="{x:Static entities:ArticleType.MUNITION}" />
+                        <Button Text="Disziplin" Style="{StaticResource MenuButton}" HorizontalOptions="Fill" HeightRequest="80"
+                                Command="{Binding FilterArticlesCommand}" 
+                                CommandParameter="{x:Static entities:ArticleType.DISCIPLINE}" />
+                        <Button Text="Sonstiges" Style="{StaticResource MenuButton}" HorizontalOptions="Fill" HeightRequest="80"
+                                Command="{Binding FilterArticlesCommand}" 
+                                CommandParameter="{x:Static entities:ArticleType.OTHER}" />
                     </VerticalStackLayout>
+                    <Button Grid.Column="0" Grid.Row="1" Text="Bezahlen" Command="{Binding PayInvoiceCommand}" Margin="0,0,10,0"/>
                 </Grid>
-                <Button Text="Bezahlen" Command="{Binding PayInvoiceCommand}" />
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>

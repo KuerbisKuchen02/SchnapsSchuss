@@ -10,13 +10,13 @@
     </ContentPage.BindingContext>
 
     <VerticalStackLayout Margin="10">
-        <FlexLayout JustifyContent="SpaceBetween" Margin="5,10,5,10">
-            <Label Text="Person auswählen" FontSize="24" VerticalOptions="Center"/>
+        <FlexLayout JustifyContent="SpaceBetween" Margin="5,20,5,20">
+            <Label Text="Person auswählen" FontSize="Large" VerticalOptions="Center"/>
             <HorizontalStackLayout Spacing="10">
-                <Label Text="Search" VerticalTextAlignment="Center"></Label>
+                <Label Text="Suchen" VerticalTextAlignment="Center" FontSize="20"/>
                 <Entry x:Name="SearchInput" Placeholder="Suche nach Mitgliedern" MinimumWidthRequest="500" Text="{Binding SearchText}" />
             </HorizontalStackLayout>
-            <Button Text="Gast Hinzufügen" Command="{Binding AddGuestCommand}"></Button>
+            <Button Text="Gast Hinzufügen" Command="{Binding AddGuestCommand}" />
         </FlexLayout>
         
         <!-- Header Row --> 
@@ -40,7 +40,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource RowEntry}" Padding="10">
+                        <Border Style="{StaticResource RowEntry}">
                             <Grid ColumnDefinitions="2*,2*,2*,1*"  >
                                 <Label Grid.Column="0" 
                                        Text="{Binding LastName}" 
