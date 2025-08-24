@@ -6,6 +6,7 @@ using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows.Input;
 
 namespace SchnapsSchuss.ViewModels;
@@ -14,12 +15,11 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 {
     public ICommand AddGuestCommand { get; }
 
-    private PersonDatabase _personDB;
-    public PersonDatabase PersonDB { get; set; }
+    private readonly PersonDatabase _personDatabase;
 
-    private String _searchText = string.Empty;
+    private string _searchText = string.Empty;
 
-    public String SearchText
+    public string SearchText
     {
         get => _searchText;
         set
@@ -31,9 +31,9 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
         }
     }
 
-    private Person _selectedPerson;
+    private Person? _selectedPerson;
 
-    public Person SelectedPerson
+    public Person? SelectedPerson
     {
         get => _selectedPerson;
         set
@@ -45,14 +45,9 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
         }
     }
 
-    private Collection<Person> _alreadyThere = new Collection<Person>();
-    public Collection<Person> AlreadyThere
-    {
-        get => _alreadyThere;
-        set => SetProperty(ref _alreadyThere, value);
-    }
+    private Collection<Person> _alreadyThere = [];
 
-    private Collection<Person> _persons;
+    private Collection<Person> _persons = [];
 
     public Collection<Person> Persons 
     {
@@ -65,7 +60,7 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
         
     }
 
-    private ObservableCollection<Person> _filteredPersons = new ObservableCollection<Person>();
+    private ObservableCollection<Person> _filteredPersons = [];
 
     public ObservableCollection<Person> FilteredPersons
     {
@@ -76,65 +71,58 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
     public AddPersonPageViewModel()
     {
         AddGuestCommand = new Command(OnAddGuest);
-        Persons = new Collection<Person>();
         FilteredPersons = Persons.ToObservableCollection();
-
-        _personDB = new PersonDatabase();
+        _personDatabase = new PersonDatabase();
         LoadPersons();
     }
-
-    public async void LoadPersons()
+    
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        var dbData = await _personDB.GetAllAsync();
+        _alreadyThere = (Collection<Person>) query["alreadyThere"];
+    }
+
+    private async void LoadPersons()
+    {
+        var dbData = await _personDatabase.GetAllAsync();
         Persons = new Collection<Person>(dbData);
     }
 
-    public void FilterTable(string searchText)
+    private void FilterTable(string searchText)
     {
         // Filter out persons that are already in the "AlreadyThere" collection
-        Collection<Person> collection_filter_already_there = new Collection<Person>();
-        ObservableCollection<Person> collection_filtered = new ObservableCollection<Person>();
+        var collectionFilterAlreadyThere = new Collection<Person>();
+        var collectionFiltered = new ObservableCollection<Person>();
 
-        foreach (Person p in Persons)
+        foreach (var p in Persons)
         {
-            if (!AlreadyThere.Any(x => x.Id == p.Id))
-            {
-                collection_filter_already_there.Add(p);
-            }
+            if (_alreadyThere.All(x => x.Id != p.Id)) collectionFilterAlreadyThere.Add(p);
         }
 
         // Filter the rest of the persons based on the search text
-        foreach (Person p in collection_filter_already_there) {
-            if (p.FirstName.ToLower().Contains(searchText.ToLower())) {
-                collection_filtered.Add(p);
-            } else if (p.LastName.ToLower().Contains(searchText.ToLower())) {
-                collection_filtered.Add(p);
-            } else if (p.DateOfBirth.ToString().ToLower().Contains(searchText.ToLower())) {
-                collection_filtered.Add(p);
+        foreach (var p in collectionFilterAlreadyThere) {
+            if (p.FirstName.Contains(searchText, StringComparison.CurrentCultureIgnoreCase) 
+                || p.LastName.Contains(searchText, StringComparison.CurrentCultureIgnoreCase) 
+                || p.DateOfBirth.ToString(CultureInfo.CurrentCulture).Contains(searchText, StringComparison.CurrentCultureIgnoreCase)) {
+                collectionFiltered.Add(p);
             }
         }
 
-        FilteredPersons = collection_filtered;
+        FilteredPersons = collectionFiltered;
     } 
 
-    public void OnAddGuest()
+    private static void OnAddGuest()
     {
-        AddGuestPopUp PopUp = new AddGuestPopUp(new AddGuestPopUpViewModel());
-        Shell.Current.ShowPopup(PopUp, new PopupOptions());    
+        var popUp = new AddGuestPopUp(new AddGuestPopUpViewModel());
+        Shell.Current.ShowPopup(popUp, new PopupOptions());    
     }
 
-    public async void OnPersonSelected()
+    private async void OnPersonSelected()
     {
         // Open Homepage with the new guest added to persons
         var parameters = new Dictionary<string, object>
                 {
-                    { "NewPerson", SelectedPerson.Id},
+                    { "NewPerson", SelectedPerson!.Id},
                 };
         await Shell.Current.GoToAsync("..", parameters);   
-    }
-
-    public void ApplyQueryAttributes(IDictionary<string, object> query)
-    {
-        AlreadyThere = (Collection<Person>) query["alreadyThere"];
     }
 }

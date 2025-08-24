@@ -2,12 +2,7 @@
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace SchnapsSchuss.ViewModels
@@ -16,21 +11,21 @@ namespace SchnapsSchuss.ViewModels
     {
         public ICommand CloseCommand { get; }
         public ICommand AddGuestCommand { get; }
-        private string _guestFirstName;
+        private string _guestFirstName = string.Empty;
         public string GuestFirstName
         {
             get => _guestFirstName;
             set => SetProperty(ref _guestFirstName, value);
         }
 
-        private string _guestLastName;
+        private string _guestLastName = string.Empty;
         public string GuestLastName
         {
             get => _guestLastName;
             set => SetProperty(ref _guestLastName, value);
         }
 
-        private string _errorMessage;
+        private string _errorMessage = string.Empty;
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -50,15 +45,14 @@ namespace SchnapsSchuss.ViewModels
             get => _hasGunownership;
             set => SetProperty(ref _hasGunownership, value);
         }
-
-
+        
         public AddGuestPopUpViewModel()
         {
             CloseCommand = new Command(async () => await OnCloseClicked());
             AddGuestCommand = new Command(async () => await OnAddGuestClicked());
             HasGunownership = false; // Default value for the checkbox
         }
-        private async Task OnCloseClicked()
+        private static async Task OnCloseClicked()
         {
             if (Shell.Current.CurrentPage is not null)
             {
@@ -81,8 +75,7 @@ namespace SchnapsSchuss.ViewModels
             }
 
             // If both fields are filled, proceed with adding the guest
-
-            Person newGuest = new Person
+            var newGuest = new Person
             {
                 FirstName = GuestFirstName,
                 LastName = GuestLastName,
@@ -94,7 +87,7 @@ namespace SchnapsSchuss.ViewModels
             try
             {
                 var personDb = new PersonDatabase();
-                int result = await personDb.SaveAsync(newGuest);
+                var result = await personDb.SaveAsync(newGuest);
 
                 // Open Homepage with the new guest added to persons
                 await Shell.Current.CurrentPage.ClosePopupAsync();

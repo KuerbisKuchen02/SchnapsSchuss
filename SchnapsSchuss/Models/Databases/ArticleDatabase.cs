@@ -3,7 +3,7 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class ArticleDatabase : Database<Article>
+public class ArticleDatabase : IDatabase<Article>
 {
     private readonly SQLiteAsyncConnection _database;
 
@@ -31,7 +31,8 @@ public class ArticleDatabase : Database<Article>
     public async Task<int> SaveAsync(Article article)
     {
         if (article.Id != 0) return await _database.UpdateAsync(article);
-        return await _database.InsertAsync(article);
+        await _database.InsertAsync(article);
+        return article.Id;
     }
 
     public async Task<int> DeleteAsync(Article article)

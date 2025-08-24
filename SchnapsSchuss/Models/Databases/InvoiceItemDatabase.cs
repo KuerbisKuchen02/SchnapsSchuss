@@ -3,28 +3,13 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class InvoiceItemDatabase : Database<InvoiceItem>
+public class InvoiceItemDatabase : IDatabase<InvoiceItem>
 {
     private readonly SQLiteAsyncConnection _database;
 
     public InvoiceItemDatabase()
     {
         _database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-        
-        // You need to manually create the table because CreateTableAsync does not include the foreign key constraint.
-        _database.ExecuteAsync("""
-               PRAGMA foreign_keys = ON;
-               CREATE TABLE IF NOT EXISTS InvoiceItem (
-                   Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                   InvoiceId INTEGER NOT NULL,
-                   ArticleId INTEGER NOT NULL,
-                   TotalPrice REAL NOT NULL,
-                   Amount INTEGER NOT NULL,
-                   FOREIGN KEY (InvoiceId) REFERENCES Invoice(Id) ON DELETE CASCADE,
-                   FOREIGN KEY (ArticleId) REFERENCES Article(Id) ON DELETE RESTRICT
-               );
-        """);
-
         _database.CreateTableAsync<InvoiceItem>();
     }
 
@@ -60,7 +45,7 @@ public class InvoiceItemDatabase : Database<InvoiceItem>
         if (entity.Count == 0) return 0;
         
         var affectedRows = 0;
-
+        
         await _database.RunInTransactionAsync(tran =>
         {
             foreach (var item in entity)

@@ -4,22 +4,21 @@ using SQLiteNetExtensionsAsync.Extensions;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class MemberDatabase : Database<Member>
+public class MemberDatabase : IDatabase<Member>
 {
     private SQLiteAsyncConnection _database = null!;
-    private PersonDatabase _personDatabase = null!;
+    private PersonDatabase _personDatabase;
 
     public MemberDatabase()
     {
+        _personDatabase = new PersonDatabase();
         _ = Init();
     }
 
     private async Task Init()
     {
         _database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-        _personDatabase = new PersonDatabase();
 
-        await _database.ExecuteAsync("PRAGMA foreign_keys = ON;");
         await _database.CreateTableAsync<Member>();
         
         // Check if the default member already exists
@@ -59,7 +58,11 @@ public class MemberDatabase : Database<Member>
     public async Task<int> SaveAsync(Member member)
     {
         if (member.Id == 0) await _database.InsertWithChildrenAsync(member, recursive: true);
-        else await _database.UpdateWithChildrenAsync(member);
+        else
+        {
+            await _personDatabase.SaveAsync(member.Person);
+            await _database.UpdateWithChildrenAsync(member);
+        }
         return member.Id;
     }
 

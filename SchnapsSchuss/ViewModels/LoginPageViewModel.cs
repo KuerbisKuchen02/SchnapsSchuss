@@ -19,7 +19,7 @@ public class LoginPageViewModel : BaseViewModel
         set => this.SetProperty(ref this._LoginButtonText, value);
     }
 
-    private string _username;
+    private string _username = string.Empty;
 
     public string Username
     {
@@ -27,7 +27,7 @@ public class LoginPageViewModel : BaseViewModel
         set => SetProperty(ref _username, value);
     }
 
-    private string _password;
+    private string _password = string.Empty;
 
     public string Password
     {
@@ -35,7 +35,7 @@ public class LoginPageViewModel : BaseViewModel
         set => SetProperty(ref _password, value);
     }
 
-    private string _errorMessage;
+    private string _errorMessage = string.Empty;
     public string ErrorMessage
     {
         get => _errorMessage;
@@ -63,7 +63,7 @@ public class LoginPageViewModel : BaseViewModel
                 return;
             }
 
-            Member member = await ValidatePassword(Username, Password);
+            var member = await ValidatePassword(Username, Password);
 
             // Check if the credentials are valid
             if (member != null)
@@ -91,7 +91,7 @@ public class LoginPageViewModel : BaseViewModel
         }
     }
 
-        private async Task<Member> ValidatePassword(string Username, string Password)
+        private async Task<Member?> ValidatePassword(string username, string password)
     {
         return await _MemberDatabase.CheckIfUserExists(Username, Password);
     }

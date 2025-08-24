@@ -4,7 +4,7 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class InvoiceDatabase : Database<Invoice>
+public class InvoiceDatabase : IDatabase<Invoice>
 {
     private readonly SQLiteAsyncConnection _database;
     private readonly InvoiceItemDatabase _invoiceItemDatabase;
@@ -42,30 +42,17 @@ public class InvoiceDatabase : Database<Invoice>
         return await _database.Table<Invoice>().Where(i => i.Id == id).FirstOrDefaultAsync();
     }
     
-    public async Task<Invoice> GetOpenInvoiceForPerson(int id)
+    public async Task<Invoice?> GetOpenInvoiceForPerson(int id)
     {
         return await _database.Table<Invoice>().Where(i => i.isPaidFor == false && i.PersonId == id).FirstOrDefaultAsync();
     }
 
     public async Task<int> SaveAsync(Invoice invoice)
     {
-        int returnValue;
+        if (invoice.Id != 0) await _database.UpdateWithChildrenAsync(invoice);
+        else await _database.InsertWithChildrenAsync(invoice, recursive: true);
         
-        if (invoice.Id != 0)
-        {
-            returnValue = await _database.UpdateAsync(invoice);
-        }
-        else
-        {
-            returnValue = await _database.InsertAsync(invoice);
-        }
-
-        foreach (var it in invoice.InvoiceItems)
-            it.InvoiceId = invoice.Id;
-
-        await _invoiceItemDatabase.SaveInvoiceItemsAsync(invoice.InvoiceItems);
-
-        return returnValue;
+        return invoice.Id;
     }
 
     public async Task<int> DeleteAsync(Invoice invoice)

@@ -3,7 +3,7 @@ using SQLite;
 
 namespace SchnapsSchuss.Models.Databases;
 
-public class PersonDatabase : Database<Person>
+public class PersonDatabase : IDatabase<Person>
 {
     private readonly SQLiteAsyncConnection _database;
 

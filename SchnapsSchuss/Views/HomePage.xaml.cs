@@ -15,7 +15,7 @@ public partial class HomePage : ContentPage
         // Refresh the page when it appears
         if (BindingContext is HomePageViewModel viewModel)
         {
-            viewModel.onAppearing();
+            viewModel.OnAppearing();
         }
     }
 
@@ -26,7 +26,7 @@ public partial class HomePage : ContentPage
         if (BindingContext is HomePageViewModel viewModel)
         {
             // Add any necessary cleanup code here
-            viewModel.onDisappearing();
+            viewModel.OnDisappearing();
         }
     }
 }

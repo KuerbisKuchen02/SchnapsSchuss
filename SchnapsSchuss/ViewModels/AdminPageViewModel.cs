@@ -6,24 +6,14 @@ namespace SchnapsSchuss.ViewModels;
 
 public class AdminPageViewModel : BaseViewModel
 {
-    public ICommand DrinkButtonCommand { get; }
-    public ICommand FoodButtonCommand { get; }
-    public ICommand DisciplineButtonCommand { get; }
-    public ICommand MunitionButtonCommand { get; }
-    public ICommand MemberButtonCommand { get; }
-    public ICommand OthersButtonCommand { get; }
+    public ICommand DrinkButtonCommand { get; } = new Command(OnDrinkButtonClicked);
+    public ICommand FoodButtonCommand { get; } = new Command(OnFoodButtonClicked);
+    public ICommand DisciplineButtonCommand { get; } = new Command(OnDisciplineButtonClicked);
+    public ICommand MunitionButtonCommand { get; } = new Command(OnMunitionButtonClicked);
+    public ICommand MemberButtonCommand { get; } = new Command(OnMemberButtonClicked);
+    public ICommand OthersButtonCommand { get; } = new Command(OnOthersButtonClicked);
 
-    public AdminPageViewModel()
-    {
-        DrinkButtonCommand = new Command(OnDrinkButtonClicked);
-        FoodButtonCommand = new Command(OnFoodButtonClicked);
-        DisciplineButtonCommand = new Command(OnDisciplineButtonClicked);
-        MunitionButtonCommand = new Command(OnMunitionButtonClicked);
-        MemberButtonCommand = new Command(OnMemberButtonClicked);
-        OthersButtonCommand = new Command(OnOthersButtonClicked);
-    }
-
-    private void OnDrinkButtonClicked()
+    private static void OnDrinkButtonClicked()
     {
         var navigationParameter = new Dictionary<string, object>
         {
@@ -36,7 +26,7 @@ public class AdminPageViewModel : BaseViewModel
         Shell.Current.GoToAsync(nameof(CrudPage), navigationParameter);
     }
 
-    private void OnFoodButtonClicked()
+    private static void OnFoodButtonClicked()
     {
         var navigationParameter = new Dictionary<string, object>
         {
@@ -49,7 +39,7 @@ public class AdminPageViewModel : BaseViewModel
         Shell.Current.GoToAsync(nameof(CrudPage), navigationParameter);
     }
 
-    private void OnDisciplineButtonClicked()
+    private static void OnDisciplineButtonClicked()
     {
         var navigationParameter = new Dictionary<string, object>
         {
@@ -62,7 +52,7 @@ public class AdminPageViewModel : BaseViewModel
         Shell.Current.GoToAsync(nameof(CrudPage), navigationParameter);
     }
 
-    private void OnMunitionButtonClicked()
+    private static void OnMunitionButtonClicked()
     {
         var navigationParameter = new Dictionary<string, object>
         {
@@ -75,7 +65,7 @@ public class AdminPageViewModel : BaseViewModel
         Shell.Current.GoToAsync(nameof(CrudPage), navigationParameter);
     }
 
-    private void OnMemberButtonClicked()
+    private static void OnMemberButtonClicked()
     {
         
 
@@ -89,7 +79,7 @@ public class AdminPageViewModel : BaseViewModel
         Shell.Current.GoToAsync(nameof(CrudPage), navigationParameter);
     }
 
-    private void OnOthersButtonClicked()
+    private static void OnOthersButtonClicked()
     {
         var navigationParameter = new Dictionary<string, object>
         {
