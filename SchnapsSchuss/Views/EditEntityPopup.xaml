@@ -7,19 +7,23 @@
            x:Class="SchnapsSchuss.Views.EditEntityPopup"
            x:TypeArguments="system:String"
            Style="{StaticResource Popup}"
-           MaximumWidthRequest="700">
+           MaximumWidthRequest="450"
+           MaximumHeightRequest="650">
     
     <VerticalStackLayout>
         <FlexLayout JustifyContent="SpaceBetween">
-            <Label Text="{Binding PopupTitle}" HorizontalTextAlignment="Center" FontSize="30"/>
+            <Label Text="{Binding PopupTitle}" HorizontalTextAlignment="Center" FontSize="25"/>
             <Button Text="Löschen" 
                     IsVisible="{Binding IsDeletable}"
-                    Command="{Binding DeleteSelected}"/>
+                    Command="{Binding DeleteSelected}"
+                    Style="{StaticResource CancelButton}"
+                    TextColor="{StaticResource Black}" />
         </FlexLayout>
         <ContentView x:Name="Properties" Margin="0, 20"/>
         <FlexLayout JustifyContent="End">
             <Button Text="Abbrechen"
-                    Style="{StaticResource CancelButton}"
+                    BackgroundColor="{StaticResource Tertiary}"
+                    TextColor="Black"
                     Margin="0, 0, 10, 0"
                     Command="{Binding CancelEdit}"/>
             <Button Text="Speichern" 
