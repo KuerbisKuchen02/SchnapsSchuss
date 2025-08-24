@@ -95,12 +95,13 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         var openInvoice = await new InvoiceDatabase().GetOpenInvoiceForPerson(person.Id);
         if (openInvoice is not null)
         {
+            _isFromPopUp = true;
             var resultLeavingPopUp = await Shell.Current.ShowPopupAsync<bool>(new LeavingPopUp(new LeavingPopUpViewModel(openInvoice)), new PopupOptions());
             if (resultLeavingPopUp is { WasDismissedByTappingOutsideOfPopup: false, Result: true } )
             {
                 showGunOwnershipPopup = true;
             }
-            
+
         }
         else
         {
