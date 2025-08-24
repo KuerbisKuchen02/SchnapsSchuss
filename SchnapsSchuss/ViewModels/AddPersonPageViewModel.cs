@@ -135,7 +135,7 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
                 {
                     { "NewPerson", SelectedPerson.Id},
                 };
-        await Shell.Current.GoToAsync(nameof(HomePage), parameters);   
+        await Shell.Current.GoToAsync("..", parameters);   
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)

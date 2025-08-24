@@ -33,7 +33,7 @@ public class GenericPropertyListView<T> : ContentView
             
             grid.Add(new Label
             {
-                Text = property.Name, 
+                Text = _viewModel.ShownColumnNames[property.Name], 
                 FontSize = 18,
                 VerticalTextAlignment = TextAlignment.Center
             }, 0, row);
@@ -53,15 +53,14 @@ public class GenericPropertyListView<T> : ContentView
             {
                 view = new DatePicker();
                 view.SetBinding(DatePicker.DateProperty, binding);
-            } else if (pType == typeof(Enum))
+            } else if (pType.IsEnum)
             {
                 view = new Picker
                 {
                     ItemsSource = Enum.GetNames(pType)
                 };
                 view.SetBinding(Picker.SelectedIndexProperty, binding);
-            }
-            else
+            } else
             {
                 var entry = new Entry();
                 if (pType == typeof(int))

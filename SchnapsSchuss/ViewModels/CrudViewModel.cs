@@ -4,6 +4,7 @@ using System.Windows.Input;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Extensions;
 using SchnapsSchuss.Models.Databases;
+using SchnapsSchuss.Models.Entities;
 using SchnapsSchuss.Views;
 
 namespace SchnapsSchuss.ViewModels;
@@ -11,6 +12,7 @@ namespace SchnapsSchuss.ViewModels;
 public class CrudViewModel<T> : BaseViewModel
 {
     private readonly Database<T> _database;
+    private readonly ArticleType? _articleType;
 
     // Backing field is required to also notify when set to new object references  
     private ObservableCollection<T> _items = [];
@@ -43,7 +45,6 @@ public class CrudViewModel<T> : BaseViewModel
     }
     
     private T? _selectedItem;
-
     // ReSharper disable once UnusedMember.Global
     public T SelectedItem
     {
@@ -51,18 +52,17 @@ public class CrudViewModel<T> : BaseViewModel
         set => SetProperty(ref _selectedItem, value);
     }
 
-    private List<string> _shownColumnNames;
 
     private bool _isDeletable;
-
     public bool IsDeletable
     {
         get => _isDeletable;
         set => SetProperty(ref _isDeletable, value);
     }
 
+    private IDictionary<string, string> _shownColumnNames;
     // ReSharper disable once UnusedMember.Global
-    public List<string> ShownColumnNames
+    public IDictionary<string, string> ShownColumnNames
     {
         get => _shownColumnNames;
         set => SetProperty(ref _shownColumnNames, value);
@@ -91,19 +91,27 @@ public class CrudViewModel<T> : BaseViewModel
     
     public PropertyInfo[] GetProperties()
     {
+        if (_shownColumnNames.Count == 0) return typeof(T).GetProperties();
+        
         return typeof(T).GetProperties()
-            .Where(property => _shownColumnNames.Contains(property.Name)).ToArray();
+            .Where(property => _shownColumnNames.ContainsKey(property.Name)).ToArray();
     }
 
-    public CrudViewModel(string title, List<string> shownColumn)
+    public CrudViewModel(IDictionary<string, object> query)
     {
-        _title = title;
-        _shownColumnNames = shownColumn;
+        query.TryGetValue("title", out var t);
+        _title = t?.ToString() ?? "unknown";
+        query.TryGetValue("shownColumns", out var c);
+        _shownColumnNames = c != null ? (IDictionary<string, string>) c : new Dictionary<string, string>();
+        query.TryGetValue("articleType", out var aType);
+        _articleType = (ArticleType?) aType;
+        
+        _searchText = string.Empty;
         _database = DatabaseFactory<T>.GetDatabase();
         LoadItems();
     }
 
-    public void OnRowClicked(T entity)
+    public async void OnRowClicked(T entity)
     {
         SelectedItem = entity;
         IsDeletable = true;
@@ -114,9 +122,16 @@ public class CrudViewModel<T> : BaseViewModel
     private async void LoadItems()
     {
         var items = await _database.GetAllAsync();
+        items.RemoveAll((item) =>
+        {
+            if (item is Article article)
+            {
+                return article.Type != _articleType;
+            }
+            return false;
+        });
         Items = new ObservableCollection<T>(items);
         FilteredItems = new ObservableCollection<T>(Items);
-        Console.Write("Hello");
     }
 
     private void FilterTable(string query)
@@ -160,6 +175,10 @@ public class CrudViewModel<T> : BaseViewModel
     
     private void OnPopupSubmit()
     {
+        if (SelectedItem is Article article && _articleType != null)
+        {
+            article.Type = (ArticleType)_articleType;
+        }
         _database.SaveAsync(SelectedItem);
         Shell.Current.CurrentPage.ClosePopupAsync();
         LoadItems();

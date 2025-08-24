@@ -13,12 +13,10 @@ public partial class CrudPage : IQueryAttributable
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        var title = query["title"].ToString() ?? "unknown";
         var modelType = (Type) query["modelType"];
-        var columns = (List<string>) query["shownColumns"];
         
         var vmType = typeof(CrudViewModel<>).MakeGenericType(modelType);
-        var vm = Activator.CreateInstance(vmType, title, columns);
+        var vm = Activator.CreateInstance(vmType, query);
         BindingContext = vm;
 
         var tableType = typeof(GenericTableView<>).MakeGenericType(modelType);
