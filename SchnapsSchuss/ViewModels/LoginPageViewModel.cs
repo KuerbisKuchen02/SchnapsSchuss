@@ -44,8 +44,12 @@ public class LoginPageViewModel : BaseViewModel
 
     public LoginPageViewModel()
     {
+        _ = new PersonDatabase();
         _MemberDatabase = new MemberDatabase();
-        LoginCommand = new Command(async () => await LoginAsync());
+        _ = new InvoiceDatabase();
+        _ = new InvoiceItemDatabase();
+        _ = new ArticleDatabase();
+        LoginCommand = new Command(async void () => await LoginAsync());
     }
 
     private async Task LoginAsync()

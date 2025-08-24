@@ -85,13 +85,8 @@ public class AddPersonPageViewModel : BaseViewModel, IQueryAttributable
 
     public async void LoadPersons()
     {
-        List<Person> dbData = await _personDB.GetAllAsync();
-        Collection<Person> temp = new Collection<Person>();
-        foreach (Person person in dbData)
-        {
-            temp.Add(person);
-        }
-        Persons = temp;
+        var dbData = await _personDB.GetAllAsync();
+        Persons = new Collection<Person>(dbData);
     }
 
     public void FilterTable(string searchText)

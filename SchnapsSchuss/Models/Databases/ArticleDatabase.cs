@@ -5,48 +5,38 @@ namespace SchnapsSchuss.Models.Databases;
 
 public class ArticleDatabase : Database<Article>
 {
-    SQLiteAsyncConnection database;
+    private readonly SQLiteAsyncConnection _database;
 
-    async Task Init()
+    public ArticleDatabase()
     {
-        if (database is not null)
-            return;
-
-        database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-        await database.CreateTableAsync<Article>();
+        _database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
+        _database.CreateTableAsync<Article>();
     }
-    
+
     public async Task<List<Article>> GetAllAsync()
     {
-        await Init();
-        return await database.Table<Article>().ToListAsync();
+        return await _database.Table<Article>().ToListAsync();
     }
 
     public async Task<Article> GetOneAsync(int id)
     {
-        await Init();
-        return await database.Table<Article>().Where(a => a.Id == id).FirstOrDefaultAsync();
+        return await _database.Table<Article>().Where(a => a.Id == id).FirstOrDefaultAsync();
     }
 
     public async Task<List<Article>> GetArticlesOfTypeAsync(ArticleType articleType)
     {
-        await Init();
-        return await database.Table<Article>().Where(a => a.Type == articleType).ToListAsync();
+        return await _database.Table<Article>().Where(a => a.Type == articleType).ToListAsync();
     }
 
     public async Task<int> SaveAsync(Article article)
     {
-        await Init();
-        if (article.Id != 0)
-            return await database.UpdateAsync(article);
-        else
-            return await database.InsertAsync(article);
+        if (article.Id != 0) return await _database.UpdateAsync(article);
+        return await _database.InsertAsync(article);
     }
 
     public async Task<int> DeleteAsync(Article article)
-    {
-        await Init();
-        return await database.DeleteAsync(article);
+    { 
+        return await _database.DeleteAsync(article);
     }
     
 }

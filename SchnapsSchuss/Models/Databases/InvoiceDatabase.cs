@@ -6,47 +6,32 @@ namespace SchnapsSchuss.Models.Databases;
 
 public class InvoiceDatabase : Database<Invoice>
 {
-    SQLiteAsyncConnection database;
+    private readonly SQLiteAsyncConnection _database;
+    private readonly InvoiceItemDatabase _invoiceItemDatabase;
 
-    async Task Init()
+    public InvoiceDatabase()
     {
-        if (database is not null)
-            return;
+        _database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
+        _invoiceItemDatabase = new InvoiceItemDatabase();
 
-        database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-
-        await database.ExecuteAsync("PRAGMA foreign_keys = ON;");
-        await database.CreateTableAsync<Invoice>();
-
-        // You need to manually create the table because CreateTableAsync does not include the foreign key constraint.
-        await database.ExecuteAsync(@"
-            CREATE TABLE IF NOT EXISTS InvoiceItem (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                InvoiceId INTEGER NOT NULL,
-                ArticleId INTEGER NOT NULL,
-                TotalPrice REAL NOT NULL,
-                Amount INTEGER NOT NULL,
-                FOREIGN KEY (InvoiceId) REFERENCES Invoice(Id) ON DELETE CASCADE,
-                FOREIGN KEY (ArticleId) REFERENCES Article(Id) ON DELETE RESTRICT
-            );
-        ");
+        _database.ExecuteAsync("PRAGMA foreign_keys = ON;");
+        _database.CreateTableAsync<Invoice>();
     }
 
     public async Task<List<Invoice>> GetAllAsync()
     {
-        await Init();
+        var invoices = await _database.GetAllWithChildrenAsync<Invoice>(recursive: true);
 
-        var invoices = await database.GetAllWithChildrenAsync<Invoice>(recursive: true);
+        var invoiceItems = invoices.SelectMany(i => i.InvoiceItems).ToList();
+        var articleIds = invoiceItems.Select(it => it.ArticleId).Distinct().ToList();
 
-        var allItems = invoices.SelectMany(i => i.InvoiceItems).ToList();
-        var ids = allItems.Select(it => it.ArticleId).Distinct().ToList();
-
-        var articles = await database.Table<Article>()
-                                     .Where(a => ids.Contains(a.Id))
+        var articles = await _database.Table<Article>()
+                                     .Where(a => articleIds.Contains(a.Id))
                                      .ToListAsync();
+        
         var map = articles.ToDictionary(a => a.Id);
 
-        foreach (var it in allItems)
+        foreach (var it in invoiceItems)
             if (map.TryGetValue(it.ArticleId, out var a)) it.Article = a;
 
         return invoices;
@@ -54,42 +39,37 @@ public class InvoiceDatabase : Database<Invoice>
 
     public async Task<Invoice> GetOneAsync(int id)
     {
-        await Init();
-        return await database.Table<Invoice>().Where(i => i.Id == id).FirstOrDefaultAsync();
+        return await _database.Table<Invoice>().Where(i => i.Id == id).FirstOrDefaultAsync();
     }
-    public async Task<Invoice> GetOpenInvoiceForPerson(int Id)
+    
+    public async Task<Invoice> GetOpenInvoiceForPerson(int id)
     {
-        await Init();
-        return await database.Table<Invoice>().Where(i => i.isPaidFor == false && i.PersonId == Id).FirstOrDefaultAsync();
+        return await _database.Table<Invoice>().Where(i => i.isPaidFor == false && i.PersonId == id).FirstOrDefaultAsync();
     }
 
     public async Task<int> SaveAsync(Invoice invoice)
     {
-        int returnValue = 0;
-
-        await Init();
+        int returnValue;
+        
         if (invoice.Id != 0)
         {
-            returnValue = await database.UpdateAsync(invoice);
+            returnValue = await _database.UpdateAsync(invoice);
         }
         else
         {
-            returnValue = await database.InsertAsync(invoice);
+            returnValue = await _database.InsertAsync(invoice);
         }
-
-        InvoiceItemDatabase invoiceItemDatabase = new();
 
         foreach (var it in invoice.InvoiceItems)
             it.InvoiceId = invoice.Id;
 
-        await invoiceItemDatabase.SaveInvoiceItemsAsync(invoice.InvoiceItems);
+        await _invoiceItemDatabase.SaveInvoiceItemsAsync(invoice.InvoiceItems);
 
         return returnValue;
     }
 
     public async Task<int> DeleteAsync(Invoice invoice)
     {
-        await Init();
-        return await database.DeleteAsync(invoice);
+        return await _database.DeleteAsync(invoice);
     }
 }
