@@ -13,7 +13,7 @@
             <Setter Property="HeightRequest" Value="200" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0" />
-
+            <Setter Property="BackgroundColor" Value="{StaticResource White}" />
         </Style>
     </mct:Popup.Resources>
 
@@ -41,7 +41,8 @@
             Grid.Row="2"
             Text="Okay"
             FontSize="Medium"
-            Style="{StaticResource SubmitButton}"
+            TextColor="White"
+            BackgroundColor="{StaticResource Primary}"
             Command="{Binding CloseCommand}"
             />
 

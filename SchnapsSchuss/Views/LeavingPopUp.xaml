@@ -15,7 +15,7 @@
             <Setter Property="HeightRequest" Value="600" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+            <Setter Property="BackgroundColor" Value="{StaticResource White}" />
         </Style>
     </mct:Popup.Resources>
 
