@@ -10,10 +10,13 @@ namespace SchnapsSchuss.Tests.ViewModels
 {
     public class CashRegisterViewModelTests
     {
+        /*
+         * Tests if adding an article which does not exist in an invoice adds it correctly.
+         */
         [Fact]
         public void AddArticleToInvoice_ShouldAddInvoiceItem()
         {
-            // Arrange
+            // ARRANGE
             Article Article = new Article { Id = 1, Stock = 5, PriceGuest = 10, PriceMember = 8 };
             Person Person = new Person { Id = 1, Role = RoleType.GUEST };
             Invoice Invoice = new Invoice { Person = Person, PersonId = Person.Id, InvoiceItems = new List<InvoiceItem>() };
@@ -22,19 +25,22 @@ namespace SchnapsSchuss.Tests.ViewModels
 
             viewModel.Invoice = Invoice;
 
-            // Act
+            // ACT
             viewModel.AddArticleToInvoice(Article);
 
-            // Assert
+            // ASSERT
             Assert.Single(viewModel.InvoiceItems);
             Assert.Equal(Article.Id, viewModel.InvoiceItems.First().Article.Id);
             Assert.Equal(10, viewModel.InvoiceItems.First().TotalPrice);
         }
 
+        /*
+         * Tests if adding an article which already exists in the invoice inreases the amount.
+         */
         [Fact]
         public void AddArticleToInvoice_ShouldIncreaseInvoiceItem()
         {
-            // Arrange
+            // ARRANGE
             Article article = new Article { Id = 1, Stock = 5, PriceGuest = 10, PriceMember = 8 };
             Person person = new Person { Id = 1, Role = RoleType.GUEST };
 
@@ -52,19 +58,22 @@ namespace SchnapsSchuss.Tests.ViewModels
                 InvoiceItems = new List<InvoiceItem>() { invoiceItem }
             };
 
-            // Act: add the same article again
+            // ACT
             viewModel.AddArticleToInvoice(article);
 
-            // Assert
+            // ASSERT
             Assert.Single(viewModel.InvoiceItems); // Still only one invoice item
             Assert.Equal(2, viewModel.InvoiceItems[0].Amount); // Amount increased by 1
             Assert.Equal(20, invoiceItem.TotalPrice); // TotalPrice updated correctly (Amount * PriceGuest)
         }
 
+        /*
+         * Tests if trying to add an article to the invoice which has a stock = 0, does not add the article.
+         */
         [Fact]
         public void AddArticleToInvoice_StockZero()
         {
-            // Arrange
+            // ARRANGE
             Article article = new Article { Id = 1, Stock = 0, PriceGuest = 10, PriceMember = 8 };
             Person person = new Person { Id = 1, Role = RoleType.GUEST };
             Invoice invoice = new Invoice { Person = person, PersonId = person.Id, InvoiceItems = new List<InvoiceItem>() };
@@ -74,10 +83,10 @@ namespace SchnapsSchuss.Tests.ViewModels
                 Invoice = invoice,
             };
 
-            // Act
+            // ACT
             viewModel.AddArticleToInvoice(article);
 
-            // Assert
+            // ASSERT
             Assert.Empty(viewModel.InvoiceItems); // Article has not been added.
         }
     }

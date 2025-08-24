@@ -9,5 +9,6 @@ namespace SchnapsSchuss.Tests.Models.Entities
         public bool OwnsGunOwnershipCard { get; set; }
         public RoleType Role { get; set; }
         public List<Invoice> invoices { get; set; }
+        public Invoice OpenInvoice { get; set; }
     }
 }
