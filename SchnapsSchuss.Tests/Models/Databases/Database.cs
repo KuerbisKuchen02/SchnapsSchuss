@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchnapsSchuss.Models.Databases
+namespace SchnapsSchuss.Tests.Models.Databases
 {
     public interface Database<T>
     {

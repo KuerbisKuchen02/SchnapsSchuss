@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SchnapsSchuss.Models.Databases;
+using SchnapsSchuss.Tests.Models.Databases;
 using SchnapsSchuss.Tests.Models.Entities;
 
 namespace SchnapsSchuss.Tests.Models.Databases
