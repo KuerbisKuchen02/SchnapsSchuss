@@ -14,7 +14,7 @@
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Margin="20" Spacing="20">
-                <Grid ColumnDefinitions="*,Auto,*">
+                <Grid ColumnDefinitions="0,*,0">
                     <BoxView Grid.Column="0" Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"/>
                     <Border Grid.Column="1" Style="{StaticResource RowEntry}">
                         <!-- Customer Name Label -->
