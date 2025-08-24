@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SchnapsSchuss.ViewModels"
@@ -9,62 +8,57 @@
         <vm:AddPersonPageViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout Margin="10">
-        <FlexLayout JustifyContent="SpaceBetween" Margin="5,20,5,20">
-            <Label Text="Person auswählen" FontSize="Large" VerticalOptions="Center"/>
+    <Grid Padding="10"
+          RowDefinitions="Auto,Auto,*"
+          ColumnDefinitions="*">
+        <FlexLayout Grid.Row="0" JustifyContent="SpaceBetween" Margin="5,10">
+            <Label Text="Person auswählen" FontSize="24" VerticalOptions="Center"/>
             <HorizontalStackLayout Spacing="10">
-                <Label Text="Suchen" VerticalTextAlignment="Center" FontSize="20"/>
+                <Label Text="Search" VerticalTextAlignment="Center"/>
                 <Entry x:Name="SearchInput" Placeholder="Suche nach Mitgliedern" MinimumWidthRequest="500" Text="{Binding SearchText}" />
             </HorizontalStackLayout>
-            <Button Text="Gast Hinzufügen" Command="{Binding AddGuestCommand}" />
+            <Button Text="Gast Hinzufügen" Command="{Binding AddGuestCommand}"/>
         </FlexLayout>
-        
-        <!-- Header Row --> 
-        <Border Style="{StaticResource RowHeader}" Margin="0,0,0,5" >
-            <Grid ColumnDefinitions="2*,2*,2*,1*" Padding="10" >
+
+        <!-- Header row -->
+        <Border Grid.Row="1" Style="{StaticResource RowHeader}" Margin="0,0,0,5">
+            <Grid ColumnDefinitions="2*,2*,2*,1*" Padding="10">
                 <Label Grid.Column="0" Text="Nachname" FontAttributes="Bold" FontSize="20" />
                 <Label Grid.Column="1" Text="Vorname" FontAttributes="Bold" FontSize="20" />
                 <Label Grid.Column="2" Text="Geburtsdatum" FontAttributes="Bold" FontSize="20" />
                 <Label Grid.Column="3" Text="Hat Waffenbesitzkarte" FontAttributes="Bold" FontSize="20" />
             </Grid>
         </Border>
-        <ScrollView VerticalOptions="Fill" HorizontalOptions="Fill">
-            <!-- Personenliste -->
-            <CollectionView ItemsSource="{Binding FilteredPersons}"
+
+        <!-- Personenliste -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding FilteredPersons}"
                         SelectionMode="Single"
                         SelectedItem="{Binding SelectedPerson, Mode=TwoWay}">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout
-                        Orientation="Vertical"
-                        ItemSpacing="5"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.EmptyView>
-                    <Label Text="Keine Person zum Hinzufügen gefunden. Gäste können über den Button oben rechts hinzugefügt werden." TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" FontSize="20"/>
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Style="{StaticResource RowEntry}">
-                            <Grid ColumnDefinitions="2*,2*,2*,1*"  >
-                                <Label Grid.Column="0" 
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource RowEntry}" Padding="10">
+                        <Grid ColumnDefinitions="2*,2*,2*,1*"  >
+                            <Label Grid.Column="0" 
                                        Text="{Binding LastName}" 
                                        VerticalTextAlignment="Center" 
                                        FontSize="20" />
-                                <Label Grid.Column="1" 
+                            <Label Grid.Column="1" 
                                        Text="{Binding FirstName}" 
                                        FontSize="20" />
-                                <Label Grid.Column="2"
+                            <Label Grid.Column="2"
                                        Text="{Binding DateOfBirth}"
                                        FontSize="20" />
-                                <Label Grid.Column="3"
+                            <Label Grid.Column="3"
                                        Text="{Binding OwnsGunOwnershipCard}"
                                        FontSize="20" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
-    </VerticalStackLayout>
-    
-
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>
