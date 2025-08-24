@@ -14,9 +14,10 @@ namespace SchnapsSchuss.Tests.ViewModels
     {
         /*
          * Tests if persons can be added to the training.
+         * The Person has no open Invoices and is therefore new to the training.
          */
         [Fact]
-        public void AddPersonToTraining_PersonHasNoOpenInvoices()
+        public void LoadPersonInTrainingWithNewPerson_ShouldAddPerson()
         {
             // ARRANGE
             // Create all necessary entities
@@ -50,7 +51,7 @@ namespace SchnapsSchuss.Tests.ViewModels
          * Tests if loading persons which are already present works correctly.
          */
         [Fact]
-        public void AddPersonToTraining_PersonHasOpenInvoices()
+        public void LoadPersonInTrainingNoNewPewrson_ShouldLoadPresentPersons()
         {
             // ARRANGE
             // Create all necessary entities
