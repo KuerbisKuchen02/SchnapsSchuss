@@ -15,6 +15,7 @@
             <Setter Property="HeightRequest" Value="600" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
         </Style>
     </mct:Popup.Resources>
 
@@ -26,44 +27,42 @@
             HorizontalTextAlignment="Center"
             FontSize="Large" 
             Margin="0,0,0,10"
+            TextColor="Black"
             />
 
-        <Grid Grid.Row="2" ColumnDefinitions="*,*" >
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="10" >
 
             <ContentView Grid.Column="0" Grid.Row="1">
                 <!-- Left Column: Purchased Articles with border -->
-                <Border Grid.Column="0" Stroke="Gray" StrokeThickness="2" Padding="10" Margin="0,0,10,0">
-                    <Grid RowDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Stroke="{StaticResource Black}" StrokeThickness="2" Margin="0,0,10,0">
+                    <Grid RowDefinitions="Auto,2,*,2,Auto">
                         <!-- Header Row -->
-                        <Grid ColumnDefinitions="*,50,40" ColumnSpacing="12" Grid.Row="0">
-                            <Label Text="Name" Grid.Column="0" FontAttributes="Bold" />
-                            <Label Text="Menge" Grid.Column="1" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                            <Label Text="Preis" Grid.Column="2" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                            <!-- Bottom border for header -->
-                            <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="3" VerticalOptions="End"/>
+                        <Grid Grid.Row="0" ColumnDefinitions="*,70,50" ColumnSpacing="12" BackgroundColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource TertiaryDark}}" Padding="10" >
+                            <Label FontSize="20" Text="Name" Grid.Column="0" FontAttributes="Bold" VerticalTextAlignment="Center" />
+                            <Label FontSize="20" Text="Menge" Grid.Column="1" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                            <Label FontSize="20" Text="Preis" Grid.Column="2" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                         </Grid>
-
+                        <BoxView Grid.Row="1" HeightRequest="2" BackgroundColor="{StaticResource Black}" Grid.ColumnSpan="3" VerticalOptions="End"/>
                         <!-- Invoice Items Collection -->
-                        <CollectionView ItemsSource="{Binding InvoiceItems}" Grid.Row="1">
+                        <CollectionView ItemsSource="{Binding InvoiceItems}" Grid.Row="2">
                             <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
+                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="*,40,40" ColumnSpacing="12">
-                                        <Label Text="{Binding Article.Name}" Grid.Column="0"/>
-                                        <Label Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="Center" />
-                                        <Label Text="{Binding TotalPrice, StringFormat='{0}€'}" Grid.Column="2" HorizontalTextAlignment="Center" />
+                                    <Grid ColumnDefinitions="*,70,50" ColumnSpacing="12" Padding="10">
+                                        <Label FontSize="20" Text="{Binding Article.Name}" Grid.Column="0" />
+                                        <Label FontSize="20" Text="{Binding Amount}" Grid.Column="1" HorizontalTextAlignment="Center" />
+                                        <Label FontSize="20" Text="{Binding TotalPrice, StringFormat='{0}€'}" Grid.Column="2" HorizontalTextAlignment="Center" />
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
-
+                        <BoxView Grid.Row="3" HeightRequest="2" BackgroundColor="{StaticResource Black}" Grid.ColumnSpan="3" VerticalOptions="End"/>
                         <!-- Total Row pinned at bottom with top border -->
-                        <Grid ColumnDefinitions="*,Auto" Grid.Row="2" Padding="0,10,0,0">
-                            <BoxView HeightRequest="2" BackgroundColor="Gray" Grid.ColumnSpan="2" VerticalOptions="Start"/>
-                            <Label Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" Margin="0,5,0,0"/>
-                            <Label Text="{Binding InvoiceTotal, StringFormat='{0}€'}" FontAttributes="Bold" Grid.Column="1" Margin="0,5,0,0"/>
+                        <Grid ColumnDefinitions="*,Auto" Grid.Row="4" Padding="10">
+                            <Label FontSize="20" Text="Gesamt:" FontAttributes="Bold" Grid.Column="0" VerticalTextAlignment="Center" />
+                            <Label FontSize="20" Text="{Binding InvoiceTotal, StringFormat='{0}€'}" FontAttributes="Bold" Grid.Column="1" VerticalTextAlignment="Center"/>
                         </Grid>
                     </Grid>
                 </Border>
@@ -80,18 +79,19 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Text="Bezahlen"
-                    Grid.Row="0"
-                    Style="{StaticResource SubmitButton}"
-                    FontSize="Medium"
-                    Command="{Binding PayCommand}"
-                    Margin="0,0,0,15"
+                        Grid.Row="0"
+                        BackgroundColor="{StaticResource Primary}"
+                        FontSize="Medium"
+                        Command="{Binding PayCommand}"
+                        Margin="0,0,0,15"
                     />
 
                 <Button Text="Zurück"
-                    Style="{StaticResource CancelButton}"
-                    Grid.Row="2"
-                    FontSize="Medium"
-                    Command="{Binding CloseCommand}"
+                        BackgroundColor="{StaticResource Tertiary}"
+                        Grid.Row="2"
+                        FontSize="Medium"
+                        Command="{Binding CloseCommand}"
+                        TextColor="{StaticResource Black}"
                     />
 
             </Grid>

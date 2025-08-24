@@ -14,8 +14,7 @@ public static class MauiProgram
             {
                 options.SetPopupDefaults(new DefaultPopupSettings
                 {
-                    CanBeDismissedByTappingOutsideOfPopup = true,
-                    BackgroundColor = Color.FromArgb("1f1f1f"), 
+                    CanBeDismissedByTappingOutsideOfPopup = true
                 });
             })
             .ConfigureFonts(fonts =>
