@@ -112,6 +112,10 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         {
             List<InvoiceItem> openInvoiceItems = await _invoiceItemDb.GetInvoiceItemsOfInvoiceAsync(openInvoice);
             openInvoice.InvoiceItems = openInvoiceItems;
+            foreach (InvoiceItem item in openInvoiceItems)
+            {
+                item.Article = await new ArticleDatabase().GetOneAsync(item.ArticleId);
+            }
             Invoice = openInvoice;
             Invoice.Person = person; 
             InvoiceItems = new ObservableCollection<InvoiceItem>(openInvoice.InvoiceItems);
