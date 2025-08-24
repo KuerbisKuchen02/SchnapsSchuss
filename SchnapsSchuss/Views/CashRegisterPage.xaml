@@ -75,7 +75,7 @@
                             <GridItemsLayout Orientation="Vertical" Span="4" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
                         </CollectionView.ItemsLayout>
                         <CollectionView.EmptyView>
-                            <Label Text="No articles to show" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" FontSize="20"/>
+                            <Label Text="Keinen Artikel gefunden." TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" FontSize="20"/>
                         </CollectionView.EmptyView>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>

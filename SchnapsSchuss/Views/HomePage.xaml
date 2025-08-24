@@ -26,6 +26,9 @@
                     Orientation="Vertical"
                     ItemSpacing="5"/>
                 </CollectionView.ItemsLayout>
+                <CollectionView.EmptyView>
+                    <Label Text="Es ist noch keiner da ._. Klicke auf den Button unten, um Personen hinzuzufügen!" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" FontSize="20"/>
+                </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource RowEntry}" >
