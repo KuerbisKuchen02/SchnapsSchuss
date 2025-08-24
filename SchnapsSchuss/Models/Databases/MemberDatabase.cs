@@ -37,14 +37,12 @@ public class MemberDatabase : Database<Member>
 
     public async Task<List<Member>> GetAllAsync()
     {
-        await Init();
-        return await database.GetAllWithChildrenAsync<Member>(recursive: true);
+        return await _database.GetAllWithChildrenAsync<Member>(recursive: true);
     }
 
     public async Task<Member> GetOneAsync(int id)
     {
-        await Init();
-        return await database.Table<Member>().Where(m => m.PersonId == Id).FirstOrDefaultAsync();
+        return await _database.Table<Member>().Where(m => m.PersonId == id).FirstOrDefaultAsync();
     }
 
     public async Task<Member?> CheckIfUserExists(string username, string password)
@@ -60,17 +58,14 @@ public class MemberDatabase : Database<Member>
     
     public async Task<int> SaveAsync(Member member)
     {
-        await Init();
-        if (member.Id == 0) await database.InsertWithChildrenAsync(member, recursive: true);
-        else await database.UpdateWithChildrenAsync(member);
-        return 0;
+        if (member.Id == 0) await _database.InsertWithChildrenAsync(member, recursive: true);
+        else await _database.UpdateWithChildrenAsync(member);
+        return member.Id;
     }
 
     public async Task<int> DeleteAsync(Member member)
     {
-        await Init();
-        await database.DeleteAsync(member, recursive: true);
+        await _database.DeleteAsync(member, recursive: true);
         return 0;
     }
-    
 }
