@@ -98,7 +98,7 @@ public class HomePageViewModel
     {
         if (query.TryGetValue("Member", out var memberObj) && memberObj is Member member)
         {
-            IsAdmin = member.person.Role == RoleType.ADMINISTRATOR;
+            IsAdmin = member.Person.Role == RoleType.ADMINISTRATOR;
         }
         if (query.TryGetValue("NewPerson", out var newPerson) && newPerson is int newPersonId)
         {

@@ -9,7 +9,13 @@ namespace SchnapsSchuss.Tests.Models.Entities
         public ArticleType Type { get; set; }
         public int Stock { get; set; }
         public List<InvoiceItem> InvoiceItems { get; set; }
-        public static readonly List<string> Columns = ["Name", "PriceMember", "PriceGuest", "Stock"];
+        public static readonly Dictionary<string, string> Columns = new()
+    {
+        {nameof(Name), "Name"},
+        {nameof(PriceMember), "Preis für Mitglieder"},
+        {nameof(PriceGuest), "Preis für Gäste"},
+        {nameof(Stock), "Bestand"},
+    };
     }
 
 }
