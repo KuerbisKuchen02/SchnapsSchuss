@@ -2,28 +2,34 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SchnapsSchuss.Views.CrudPage" Padding="40">
-    <ContentPage.Content>
-        <VerticalStackLayout>
-            <FlexLayout JustifyContent="SpaceBetween" Margin="0, 0, 0, 20">
-                <Label Text="{Binding Title}" FontSize="40"/>
-                <HorizontalStackLayout>
-                    <Label Text="Suche:"
-                           VerticalTextAlignment="Center"
-                           FontSize="30"/>
-                    <Entry 
-                        Text="{Binding SearchText}"
-                        Placeholder="Nach Einträgen suchen"
-                        WidthRequest="300"
-                        Margin="20, 0"/>
-                    <Button Text="Hinzufügen" 
-                            Style="{StaticResource SubmitButton}"
-                            FontSize="20"
-                            Margin="5"
-                            Command="{Binding AddItem}"/>
-                </HorizontalStackLayout>
-            </FlexLayout>
-            <ContentView x:Name="Table" />
-        </VerticalStackLayout>
-    </ContentPage.Content>
+             x:Class="SchnapsSchuss.Views.CrudPage"
+             Padding="40">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Header/Search Bar -->
+        <FlexLayout Grid.Row="0" JustifyContent="SpaceBetween" Margin="0,0,0,20">
+            <Label Text="{Binding Title}" FontSize="40" />
+            <HorizontalStackLayout>
+                <Label Text="Suche:"
+                       VerticalTextAlignment="Center"
+                       FontSize="30"/>
+                <Entry 
+                    Text="{Binding SearchText}"
+                    Placeholder="Nach Einträgen suchen"
+                    WidthRequest="300"
+                    Margin="20,0"/>
+                <Button Text="Hinzufügen" 
+                        Style="{StaticResource SubmitButton}"
+                        FontSize="20"
+                        Margin="5"
+                        Command="{Binding AddItem}"/>
+            </HorizontalStackLayout>
+        </FlexLayout>
+
+        <!-- Scrollable table - Fill Makes is expand vertically and horizontally-->
+        <ContentView x:Name="Table"
+                     Grid.Row="1"
+                     VerticalOptions="Fill"
+                     HorizontalOptions="Fill"/>
+    </Grid>
 </ContentPage>
