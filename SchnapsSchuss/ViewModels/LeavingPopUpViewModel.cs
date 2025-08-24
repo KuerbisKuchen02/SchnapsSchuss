@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Extensions;
+﻿using CommunityToolkit.Maui.Extensions;
 using SchnapsSchuss.Models.Databases;
 using SchnapsSchuss.Models.Entities;
 using System.Collections.ObjectModel;

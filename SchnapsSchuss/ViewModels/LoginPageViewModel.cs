@@ -8,15 +8,15 @@ namespace SchnapsSchuss.ViewModels;
 
 public class LoginPageViewModel : BaseViewModel
 {
-    private MemberDatabase _MemberDatabase;
-    private string _LoginButtonText = "Login";
+    private readonly MemberDatabase _memberDatabase;
+    private string _loginButtonText = "Login";
 
     public ICommand LoginCommand { get; }
 
     public string LoginButtonText
     {
-        get => this._LoginButtonText;
-        set => this.SetProperty(ref this._LoginButtonText, value);
+        get => _loginButtonText;
+        set => SetProperty(ref _loginButtonText, value);
     }
 
     private string _username = string.Empty;
@@ -44,8 +44,8 @@ public class LoginPageViewModel : BaseViewModel
 
     public LoginPageViewModel()
     {
-        _ = new PersonDatabase();
-        _MemberDatabase = new MemberDatabase();
+        _ = new PersonDatabase(); 
+        _memberDatabase = new MemberDatabase();
         _ = new InvoiceDatabase();
         _ = new InvoiceItemDatabase();
         _ = new ArticleDatabase();
@@ -93,6 +93,6 @@ public class LoginPageViewModel : BaseViewModel
 
         private async Task<Member?> ValidatePassword(string username, string password)
     {
-        return await _MemberDatabase.CheckIfUserExists(Username, Password);
+        return await _memberDatabase.CheckIfUserExists(username, password);
     }
 }
