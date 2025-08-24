@@ -72,6 +72,7 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
     public void OnAppearing()
     {
         Debug.WriteLine("HomePage onAppearing is called");
+        // Avoid reloading if coming back from a popup
         if (_isFromPopUp)
         {
             _isFromPopUp = false;
@@ -83,6 +84,7 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
     public void OnDisappearing()
     {
+        // Save the current state when the page is disappearing
         Debug.WriteLine("HomePage onDisAppearing is called");
         StoreIdsToPreferences();
     }
@@ -93,6 +95,8 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
 
         var showGunOwnershipPopup = false;
         var openInvoice = await new InvoiceDatabase().GetOpenInvoiceForPerson(person.Id);
+
+        // If there is an open invoice, show the LeavingPopUp first
         if (openInvoice is not null)
         {
             _isFromPopUp = true;
@@ -115,6 +119,7 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         
         if (result.WasDismissedByTappingOutsideOfPopup) return;
     
+        // update person list if person left
         PersonIds.Remove(person.Id);
         StoreIdsToPreferences();
         LoadPersonList();
@@ -138,7 +143,8 @@ public class HomePageViewModel : BaseViewModel, IQueryAttributable
         var invoiceItemDatabase = new InvoiceItemDatabase();
         
         var personsList = await personDatabase.GetPersonToIdsAsync(PersonIds);
-        
+
+        // Load open invoices for each person for total of invoice
         foreach (var person in personsList)
         {
             var invoice = await invoiceDatabase.GetOpenInvoiceForPerson(person.Id);
