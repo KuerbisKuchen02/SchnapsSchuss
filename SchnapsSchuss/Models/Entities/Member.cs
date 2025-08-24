@@ -57,6 +57,7 @@ public class Member
         {nameof(Password), "Passwort"},
         {nameof(FirstName), "Vorname"},
         {nameof(LastName), "Nachname"},
+        {nameof(DateOfBirth), "Geburtsdatum"},
         {nameof(Entities.Person.Role), "Rolle"},
         {nameof(IsRangeSupervisor), "Ist Standaufsicht"},
         {nameof(OwnsGunOwnershipCard), "Hat Waffenkarte"},
