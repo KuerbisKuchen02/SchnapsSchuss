@@ -19,4 +19,13 @@ public partial class CashRegisterPage : ContentPage
 
         return base.OnBackButtonPressed();
     }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        if (BindingContext is CashRegisterViewModel vm)
+        {
+            vm.OnDisappearing();
+        }
+    }
 }

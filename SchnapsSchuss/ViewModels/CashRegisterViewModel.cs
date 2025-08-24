@@ -85,6 +85,12 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
         FilterArticlesByType(ArticleType.DRINK);
     }
 
+    public async void OnDisappearing()
+    {
+        if(Invoice.InvoiceItems.Count == 0)
+            await _invoiceDb.DeleteAsync(Invoice);
+    }
+
     private async Task LoadArticlesAsync()
     {
         List<Article> articles = await _articleDb.GetAllAsync();
@@ -94,16 +100,15 @@ public class CashRegisterViewModel : BaseViewModel, IQueryAttributable
 
     private async Task LoadInvoiceAsync(Person person)
     {
-        List<Invoice> openInvoices = await _invoiceDb.GetAllAsync();
-        openInvoices = openInvoices.Where(i => i.isPaidFor == false && i.PersonId == person.Id).ToList();
+        Invoice openInvoice = await _invoiceDb.GetOpenInvoiceForPerson(person.Id);
 
         // If there is an open Invoice, show it. If not, create a new Invoice.
-        if (openInvoices.Count() == 1)
+        if (openInvoice is not null)
         {
-            Invoice = openInvoices[0];
-            InvoiceItems = new ObservableCollection<InvoiceItem>(openInvoices[0].InvoiceItems);
+            Invoice = openInvoice;
+            InvoiceItems = new ObservableCollection<InvoiceItem>(openInvoice.InvoiceItems);
         }
-        else if (openInvoices.Count == 0)
+        else 
         {
             Invoice = new Invoice
             {
