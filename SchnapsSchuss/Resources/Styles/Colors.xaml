@@ -11,8 +11,13 @@
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#aec8a4</Color>
     <Color x:Key="SecondaryDarkText">#394f30</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <Color x:Key="Tertiary">#dad7cd</Color>
+    <Color x:Key="TertiaryDark">#36342b</Color>
+
+    <Color x:Key="Brown">#3b3b1a</Color>
+    <Color x:Key="Beige">#bebea1</Color>
     
+
     <Color x:Key="Cancel">#ffc9c9</Color>
     <Color x:Key="Accept">#588157</Color>
     <Color x:Key="AcceptDark">#6f926e</Color>
